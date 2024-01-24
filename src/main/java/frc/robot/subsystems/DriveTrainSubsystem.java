@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.AnalogInput;
 import com.swervedrivespecialties.swervelib.Mk3ModuleConfiguration;
@@ -144,7 +144,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         swerveModules.add(backRightModule);
 
         for (SwerveModule module : swerveModules) {
-            TalonFX driveMotor = module.getTalonDriveMotor();
+            TalonFX driveMotor = module.;
 
             driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
             driveMotor.config_kF(0, 0.048);
