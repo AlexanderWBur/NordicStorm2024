@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.AnalogInput;
@@ -119,37 +120,43 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_LEFT_MODULE_STEER_MOTOR, Constants.FRONT_LEFT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-356.65740966796875 + 180));
+                Units.degreesToRadians(-18.669891357421875));
 
         frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_RIGHT_MODULE_STEER_MOTOR, Constants.FRONT_RIGHT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-327.83203125));
+                Units.degreesToRadians(-258.2267761230469));
+                //SmartDashboard.putNumber("Front right" , )
 
         backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_LEFT_MODULE_STEER_MOTOR, Constants.BACK_LEFT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-75.05035400390625 + 180));
+                Units.degreesToRadians(-147.67684936523438));
 
         backRightModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_RIGHT_MODULE_STEER_MOTOR, Constants.BACK_RIGHT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-292.57965087890625));
+                Units.degreesToRadians(0));
         swerveModules.add(frontLeftModule);
         swerveModules.add(frontRightModule);
         swerveModules.add(backLeftModule);
         swerveModules.add(backRightModule);
 
         for (SwerveModule module : swerveModules) {
-            TalonFX driveMotor = module.;
+            TalonFX driveMotor = module.getTalonDriveMotor();
 
-            driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
-            driveMotor.config_kF(0, 0.048);
-            driveMotor.config_kP(0, 0.04);
-            
+            //driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
+           // driveMotor.config_kF(0, 0.048);
+           // driveMotor.config_kP(0, 0.04);
+
+           var slot0Configs = new Slot0Configs();
+           slot0Configs.kP = 0.096093;
+           slot0Configs.kV = 0.11531;
+           driveMotor.getConfigurator().apply(slot0Configs, 0.01);
+
         }
         drivetrainConfig.maxAcceleration = 3; 
         drivetrainConfig.maxVelocity = 4; 
@@ -243,10 +250,12 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
         SmartDashboard.putNumber("NavX Gyro Pitch", getGyroPitch());
 
-        for(int i = 0; i<swerveModules.size(); i++){
+        for(int i = 0; i < swerveModules.size(); i++){
             currentSwerveStates[i]=Util.stateFromModule(swerveModules.get(i));
 
             SmartDashboard.putNumber("Module " + i, Units.radiansToDegrees(swerveModules.get(i).getSteerAngle()));
+             SmartDashboard.putNumber("Module speed " + i, (swerveModules.get(i).getDriveVelocity()));
+
         }
         updateModulePositions();
 
@@ -283,15 +292,18 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
     private void driveActualMotors(ChassisSpeeds chassisSpeeds) {
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);
-        
+        //SmartDashboard.putNumber("targetspeed", states[0].speedMetersPerSecond);
         frontLeftModule.setWithVelocity(states[0].speedMetersPerSecond,
                 states[0].angle.getRadians());
         frontRightModule.setWithVelocity(states[1].speedMetersPerSecond,
                 states[1].angle.getRadians());
+                SmartDashboard.putNumber("Front right", states[1].speedMetersPerSecond);
         backLeftModule.setWithVelocity(states[2].speedMetersPerSecond,
                 states[2].angle.getRadians());
         backRightModule.setWithVelocity(states[3].speedMetersPerSecond,
                 states[3].angle.getRadians());
+         //SmartDashboard.putNumber("radian speed", chassisSpeeds.omegaRadiansPerSecond);
+
 
     }
 
@@ -323,6 +335,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
                 Rotation2d.fromDegrees(getGyroDegrees()));
 
         drive(targetLocalSpeeds, rotPrivilege);
+        SmartDashboard.putNumber("inner local", targetLocalSpeeds.vxMetersPerSecond);
 
         // Robot.drivetrain.drive(forward * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
         // sideways * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, rot *
@@ -387,6 +400,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
                 states[2].angle.getRadians());
         backRightModule.set(states[3].speedMetersPerSecond,
                 states[3].angle.getRadians());
+                
     }
 
     public void drive(double x, double y, double rot) {

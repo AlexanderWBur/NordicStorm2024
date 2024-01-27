@@ -4,6 +4,7 @@ package frc.robot.commands;
 //import frc.robot.Utils.*;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
@@ -30,6 +31,8 @@ public class OperatorControl extends Command {
         double forward = -rightStick.getY();
         double sideways = -rightStick.getX();
         double rot = -rightStick.getTwist();
+        SmartDashboard.putNumber("stick", rot);
+
         double throttle = rightStick.getThrottle();
         throttle=Util.map(throttle, 1, -1, 0.1, 1);
         if(forward<0.008 && rot>=0.14){//weird thing with joystick
@@ -51,7 +54,7 @@ public class OperatorControl extends Command {
         
         ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, rot), RobotContainer.driveTrain.getGyroRadians() + RobotContainer.AllianceAngleRad);
     
-        
+        SmartDashboard.putNumber("Local Speed", localSpeeds.vyMetersPerSecond);
         RobotContainer.driveTrain.limitDrive(localSpeeds, 0);
         
     }
