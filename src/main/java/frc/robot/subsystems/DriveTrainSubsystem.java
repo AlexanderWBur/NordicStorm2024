@@ -120,26 +120,29 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_LEFT_MODULE_STEER_MOTOR, Constants.FRONT_LEFT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-18.669891357421875));
-
+                //-Math.toRadians(231.26907348632812));
+                Math.PI/2);
+               // Units.degreesToRadians(.5)); //-15.341033935546879
+                
         frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_RIGHT_MODULE_STEER_MOTOR, Constants.FRONT_RIGHT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-258.2267761230469));
-                //SmartDashboard.putNumber("Front right" , )
-
+            
+            Units.degreesToRadians(-339.7247314453125));
+            //-Math.toRadians(197.80059814453125 + 180));
+                //SmartDashboard.putNumber("Front right" , ) -258.2267761230469
         backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_LEFT_MODULE_STEER_MOTOR, Constants.BACK_LEFT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-147.67684936523438));
+                Units.degreesToRadians(-266.748046875)); //-155.30548095703125
 
         backRightModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_RIGHT_MODULE_STEER_MOTOR, Constants.BACK_RIGHT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(0));
+                Units.degreesToRadians(-51.568450927734396)); //-271.7536926269531
         swerveModules.add(frontLeftModule);
         swerveModules.add(frontRightModule);
         swerveModules.add(backLeftModule);
@@ -254,7 +257,8 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
             currentSwerveStates[i]=Util.stateFromModule(swerveModules.get(i));
 
             SmartDashboard.putNumber("Module " + i, Units.radiansToDegrees(swerveModules.get(i).getSteerAngle()));
-             SmartDashboard.putNumber("Module speed " + i, (swerveModules.get(i).getDriveVelocity()));
+            SmartDashboard.putNumber("Module speed " + i, (swerveModules.get(i).getDriveVelocity()));
+            SmartDashboard.putNumber("Modulex raw " + i, (swerveModules.get(i).getSteerAngle()));
 
         }
         updateModulePositions();
