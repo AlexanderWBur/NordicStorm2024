@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI.Port;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -116,33 +117,35 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         fieldDisplay = new Field2d();
         SmartDashboard.putData(fieldDisplay);
 
+        ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive train");
+
         frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
-                null, new Mk3ModuleConfiguration(),
+                shuffleboardTab.getLayout("Front left", BuiltInLayouts.kList).withSize(2, 4).withPosition(0,0), new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_LEFT_MODULE_STEER_MOTOR, Constants.FRONT_LEFT_MODULE_STEER_ENCODER,
                 //-Math.toRadians(231.26907348632812));
-                Math.PI/2);
-               // Units.degreesToRadians(.5)); //-15.341033935546879
+                //0);
+                Units.degreesToRadians(-183.07342529296875)); //-175.60546875
                 
         frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
-                null, new Mk3ModuleConfiguration(),
+                 shuffleboardTab.getLayout("Front Right", BuiltInLayouts.kList).withSize(2, 4).withPosition(2,0), new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_RIGHT_MODULE_STEER_MOTOR, Constants.FRONT_RIGHT_MODULE_STEER_ENCODER,
             
-            Units.degreesToRadians(-339.7247314453125));
+            Units.degreesToRadians(-30.937499999999996)); //-332.40234375
             //-Math.toRadians(197.80059814453125 + 180));
                 //SmartDashboard.putNumber("Front right" , ) -258.2267761230469
         backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
-                null, new Mk3ModuleConfiguration(),
+                 shuffleboardTab.getLayout("Back left", BuiltInLayouts.kList).withSize(2, 4).withPosition(4,0), new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_LEFT_MODULE_STEER_MOTOR, Constants.BACK_LEFT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-266.748046875)); //-155.30548095703125
+                Units.degreesToRadians(-30.937499999999996)); //-255.849609375
 
         backRightModule = Mk3SwerveModuleHelper.createFalcon500(
-                null, new Mk3ModuleConfiguration(),
+                 shuffleboardTab.getLayout("Back Right", BuiltInLayouts.kList).withSize(2, 4).withPosition(6,0), new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_RIGHT_MODULE_STEER_MOTOR, Constants.BACK_RIGHT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-51.568450927734396)); //-271.7536926269531
+                Units.degreesToRadians(-62.13867187499999)); //-292.412109375
         swerveModules.add(frontLeftModule);
         swerveModules.add(frontRightModule);
         swerveModules.add(backLeftModule);

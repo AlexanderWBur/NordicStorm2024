@@ -10,6 +10,7 @@ import frc.robot.commands.OperatorControl;
 import frc.robot.commands.auto.StraightAuto;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.Pixy;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 import java.util.function.BooleanSupplier;
@@ -58,6 +59,7 @@ public class RobotContainer {
   public static double AllianceAngleRad;
 
   public static DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
+  public static ShooterSubsystem shooter = new ShooterSubsystem();
   public static Pixy pixyController = new Pixy();
 
   
