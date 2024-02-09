@@ -66,8 +66,11 @@ private RelativeEncoder topWheelEncoder = topWheel.getEncoder();
             System.out.println("Error tried to set shooter to negative RPM");
         }
 
-        topTargetRPM = topRPM;
-        bottomTargetRPM = bottomRPM;
+    topTargetRPM = topRPM;
+       bottomTargetRPM = bottomRPM;
+
+    
+
 
         topWheelPID.setReference(topRPM, CANSparkMax.ControlType.kVelocity);
         bottomWheelPID.setReference(bottomRPM, CANSparkMax.ControlType.kVelocity);
