@@ -23,12 +23,15 @@ public class VisionSubsystem extends SubsystemBase {
 
     public static PhotonCamera photonCamera;
     public static AprilTagFieldLayout layout;
+    public boolean canSeeTarget = false;
 
     public static PhotonPoseEstimator poseEstimator;
 
     public static RollingAverage distanceAverage = new RollingAverage(5);
+    
 
     public VisionSubsystem() {
+        
 
         try {
             layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
