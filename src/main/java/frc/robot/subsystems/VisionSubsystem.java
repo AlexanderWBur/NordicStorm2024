@@ -5,16 +5,11 @@ import java.io.IOException;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.targeting.TargetCorner;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Utils.RollingAverage;
@@ -23,12 +18,15 @@ public class VisionSubsystem extends SubsystemBase {
 
     public static PhotonCamera photonCamera;
     public static AprilTagFieldLayout layout;
+    public boolean canSeeTarget = false;
 
     public static PhotonPoseEstimator poseEstimator;
 
     public static RollingAverage distanceAverage = new RollingAverage(5);
+    
 
     public VisionSubsystem() {
+        
 
         try {
             layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);

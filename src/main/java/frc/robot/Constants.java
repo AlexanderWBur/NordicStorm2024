@@ -14,29 +14,8 @@ package frc.robot;
  */
 public final class Constants {
 
-  public static final int ArmPitchMotorId = 14;
-  public static final int ArmExtensionMotorId = 18;
-
-  public static final int VacuumMotorId = 10;
-
-  //Servo ids
-  public static final int ArmHandRollServoId = 0;
-  public static final int ArmHandPitchServoId = 1;
-  public static final int IntakeActuator = 2;
-
-  //change this once we know motor ids!!!!
-  public static final int IntakeWheelRMotorId = 15;
-  public static final int IntakeWheelLMotorId = 20;
-
-  public static final int IntakeBeltMotorId= 13;
-
-  //Edit these to proper values
-  public static final double ArmExtendOutPos = 45;
-  public static final double ArmExtendInPos = 5;
-
-  //Edit these to proper values
-  public static final double ArmPitchOutPos = 1234;
-  public static final double ArmPitchNominalPos = 1234;
+  public static final int lowerFlywheelID = 10;
+  public static final int upperFlywheelID = 11;
 
 
   public static class OperatorConstants {
@@ -65,10 +44,10 @@ public final class Constants {
   public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 7;
   public static final int BACK_LEFT_MODULE_STEER_MOTOR = 8;
   public static final int BACK_LEFT_MODULE_STEER_ENCODER = 4;
-  public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(257.16522216796875+180);
+  //public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(257.16522216796875+180);
 
   public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 1;
   public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 2;
   public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 1;
-  public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(294.43359375+180);
+  // public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(294.43359375+180);
 }

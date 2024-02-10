@@ -63,12 +63,12 @@ public class RobotContainer {
   public static Pixy pixyController = new Pixy();
 
   
-
+  public static ShooterSubsystem shooterSubsystem = new ShooterSubsystem(); // Added to actually make the shooter shoot or turn or what not
   public static VisionSubsystem visionSubsystem = new VisionSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-  
+
 
     //CommandScheduler.getInstance().setDefaultCommand(driveTrain, new OperatorControl());
     driveTrain.setDefaultCommand(new OperatorControl());
@@ -95,6 +95,35 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+    //Does blah
+      new JoystickButton(rightJoystick, 7).onTrue(new Command() { // change the joystick and button number parameters (later of course)
+          //what to do here... i wonder
+          @Override
+          public void execute() {
+              // intakeSubsystem
+          }
+      });
+
+
+      //Does blah2 (to avoid ambivalence?? ambiguity?? (dont know whats the right word for that))
+      new JoystickButton(rightJoystick, 1).whileTrue(new Command(){ //whileTrue and onTrue is 2024's way of deciphering whether the button is held down or simply pressed
+        @Override // How can we make the shooterSubsystem lock onto an april tag? Creating a command for that!
+        public void execute() {
+          // shooterSubsystem
+        }
+
+      });
+
+
+      //Reset gyro
+new JoystickButton(rightJoystick, 8).onTrue(new InstantCommand() { // buttonNumber can be changed to any button agreed upon
+  @Override //rightJoystick can be changed, but I wouldn't argue for that
+  public void execute(){
+    driveTrain.zeroGyroscope();
+  }
+});
+    
   }
 
   /**

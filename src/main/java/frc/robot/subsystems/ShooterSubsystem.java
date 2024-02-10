@@ -8,15 +8,16 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-private CANSparkMax bottomWheel = new CANSparkMax(10, MotorType.kBrushless);
+private CANSparkMax bottomWheel = new CANSparkMax(Constants.lowerFlywheelID, MotorType.kBrushless);
 private SparkPIDController bottomWheelPID = bottomWheel.getPIDController();
 private RelativeEncoder bottomWheelEncoder = bottomWheel.getEncoder();
 
-private CANSparkMax topWheel = new CANSparkMax(11, MotorType.kBrushless);
+private CANSparkMax topWheel = new CANSparkMax(Constants.upperFlywheelID, MotorType.kBrushless);
 private SparkPIDController topWheelPID = topWheel.getPIDController();
 private RelativeEncoder topWheelEncoder = topWheel.getEncoder();
 
@@ -34,8 +35,8 @@ private RelativeEncoder topWheelEncoder = topWheel.getEncoder();
 
     @Override
     public void periodic(){
-        updateShooter();
-        setFlywheelsRaw( .5* RobotContainer.leftJoystick.getY(),.5 *-RobotContainer.leftJoystick.getY());
+        updateShooter(); // top then bottom
+        setFlywheelsRaw(.25* RobotContainer.leftJoystick.getY(),-.4 *RobotContainer.leftJoystick.getY());
     }
 
     private double topCurrentRPM;
@@ -65,8 +66,11 @@ private RelativeEncoder topWheelEncoder = topWheel.getEncoder();
             System.out.println("Error tried to set shooter to negative RPM");
         }
 
-        topTargetRPM = topRPM;
-        bottomTargetRPM = bottomRPM;
+    topTargetRPM = topRPM;
+       bottomTargetRPM = bottomRPM;
+
+    
+
 
         topWheelPID.setReference(topRPM, CANSparkMax.ControlType.kVelocity);
         bottomWheelPID.setReference(bottomRPM, CANSparkMax.ControlType.kVelocity);
