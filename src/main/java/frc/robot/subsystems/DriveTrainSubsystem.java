@@ -170,7 +170,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         drivetrainConfig.rotationCorrectionP = 2;
         drivetrainConfig.maxCentripetalAcceleration = 8;
 
-        pose = new Pose2d(6, 4, Rotation2d.fromDegrees(0));
+        pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         updateModulePositions();
         odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(0), currentSwervePositions, pose);
         //SmartDashboard.putNumber("MaxAccel", 4);
@@ -274,16 +274,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         //SmartDashboard.putNumber("Pitch", navx.getRoll());
       
        SmartDashboard.putNumber("driveAng", getGyroDegrees());
-        if (RobotContainer.rightJoystick.getRawButton(12)) {
-            resetAngle();
-            setAngleOffset(RobotContainer.AllianceAngleDeg);
-        }
-        if (RobotContainer.rightJoystick.getRawButton(8)) {
-            setPose(0, 0, 0);
-        }
-        if (RobotContainer.rightJoystick.getRawButton(7)) {
-            setPose(-1, 1, 0);
-        }
+       
         
     }
 
@@ -314,7 +305,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     }
 
     public void limitDrive(ChassisSpeeds localSpeeds, int rotPrivilege) {
-        boolean vWalls = false;// Robot.vision.hasSeenTarget;
+        boolean vWalls = true;// Robot.vision.hasSeenTarget;
         var currentLocalSpeeds = getSpeeds();
 
         double maxAccelLocal = 3;
@@ -326,12 +317,12 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         var targetFieldSpeeds = Util.rotateSpeeds(localSpeeds, -getGyroRadians());
 
         double fixX = enforceWalls(targetFieldSpeeds.vxMetersPerSecond, drivetrainConfig.maxAcceleration,
-                pose.getX(), -5, 0);
+                pose.getX(), 2, 6.953);
         if (vWalls){
             targetFieldSpeeds.vxMetersPerSecond = fixX;
         }
         double fixY = enforceWalls(targetFieldSpeeds.vyMetersPerSecond, drivetrainConfig.maxAcceleration,
-                pose.getY(), 0, 6);
+                pose.getY(), 3, 7.35);
         if (vWalls){
             targetFieldSpeeds.vyMetersPerSecond = fixY;
         }
