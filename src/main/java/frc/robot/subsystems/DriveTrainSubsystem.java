@@ -98,7 +98,6 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
     private Pose2d pose;
     private final AHRS navx = new AHRS(Port.kMXP);
-    private final AHRS mininavx = new AHRS(SerialPort.Port.kUSB1);
 
     // this is basically the 'privilege level' the rotation control ability is at.
     // So 0 means it will take anything, 1 means 1 or higher.
@@ -181,7 +180,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     }
 
     public void zeroGyroscope() {
-        mininavx.zeroYaw();
+        navx.zeroYaw();
     }
 
     /**
@@ -190,7 +189,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
      * @return current angle in degrees
      */
     public double getGyroDegrees() {
-        return -mininavx.getAngle();
+        return -navx.getAngle();
     }
 
     
@@ -202,7 +201,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
      * @return
      */
     public double getGyroPitch(){
-        return mininavx.getPitch(); // because of orientation of navx this is pitch
+        return navx.getPitch(); // because of orientation of navx this is pitch
     }
     
     public Pose2d getPose() {
@@ -219,7 +218,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     }
 
     public void resetAngle() {
-        mininavx.reset();
+        navx.reset();
     }
     /**
      * This will get added to the angle result to offset it.
@@ -228,7 +227,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
      * @param degrees
      */
     public void setAngleOffset(double degrees){
-        mininavx.setAngleAdjustment(-degrees);
+        navx.setAngleAdjustment(-degrees);
     }
 
   
