@@ -63,7 +63,7 @@ public class RobotContainer {
 
   public static ShooterSubsystem shooterSubsystem = new ShooterSubsystem(); // Added to actually make the shooter shoot
                                                                             // or turn or what not
-  // public static VisionSubsystem visionSubsystem = new VisionSubsystem();
+   public static VisionSubsystem visionSubsystem = new VisionSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
