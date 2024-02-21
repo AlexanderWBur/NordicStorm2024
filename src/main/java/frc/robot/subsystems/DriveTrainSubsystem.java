@@ -219,6 +219,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
     public void resetAngle() {
         navx.reset();
+        odometry.resetPosition(new Rotation2d(getGyroRadians()), currentSwervePositions, pose);
     }
     /**
      * This will get added to the angle result to offset it.
@@ -228,6 +229,8 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
      */
     public void setAngleOffset(double degrees){
         navx.setAngleAdjustment(-degrees);
+        odometry.resetPosition(new Rotation2d(getGyroRadians()), currentSwervePositions, pose);
+
     }
 
   

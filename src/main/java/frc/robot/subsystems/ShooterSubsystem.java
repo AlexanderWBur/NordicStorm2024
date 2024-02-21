@@ -24,7 +24,6 @@ public class ShooterSubsystem extends SubsystemBase {
     public ShooterSubsystem() {
         configureFlywheelMotor(topWheel);
         configureFlywheelMotor(bottomWheel);
-
     }
 
     private void configureFlywheelMotor(CANSparkMax motor) {
