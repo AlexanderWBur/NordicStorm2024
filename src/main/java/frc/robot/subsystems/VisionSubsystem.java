@@ -31,7 +31,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     public static RollingAverage distanceAverage = new RollingAverage(5);
     public PhotonTrackedTarget bestTarget = null;
-    double camHeight = Units.inchesToMeters(27); // 27
+    double camHeight = Units.inchesToMeters(27); // 
 
     public VisionSubsystem() {
 
@@ -42,22 +42,32 @@ public class VisionSubsystem extends SubsystemBase {
             e.printStackTrace();
         }
 
-        Transform3d transform3d = new Transform3d(new Translation3d(0.17145, 0.5588, -0.2159), new Rotation3d(0, 0, 0));
+        Transform3d transform3d = new Transform3d(new Translation3d(0, -0.0508, -0.368), new Rotation3d(0, 0, 0));
 
-        photonCamera = new PhotonCamera("ArduCam_OV9281_USB_Camera");
+        photonCamera = new PhotonCamera("Arducam_OV9281_USB_Camera"); // Need to find out what to name this
         poseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, photonCamera,
                 transform3d);
+
     }
 
     @Override
     public void periodic() {
-        poseEstimator.setReferencePose(RobotContainer.driveTrain.getPose());
+        poseEstimator.setReferencePose(RobotContainer.driveTrain.getPose()); // sets reference pose to (0,0, Rotation2d.fromDegrees(0))
         var estimated = poseEstimator.update();
 
         if (estimated.isPresent()) {
             var newPose = estimated.get();
-
             RobotContainer.driveTrain.setPose(newPose.estimatedPose.toPose2d());
-        }
+            
+            // In photonvision, need to have matching photonvision versions, also, need NT connected as well.
+        
+        }   
+
+        SmartDashboard.putBoolean("Can it see a tag? ",estimated.isPresent());
+
+        
+        
+
+
     }
 }

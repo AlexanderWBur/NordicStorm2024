@@ -110,9 +110,9 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     public int enemyBallColor = 0;
 
     public Field2d fieldDisplay;
+
     public DriveTrainSubsystem() {
        
-  
         fieldDisplay = new Field2d();
         SmartDashboard.putData(fieldDisplay);
 
@@ -170,7 +170,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         drivetrainConfig.rotationCorrectionP = 2;
         drivetrainConfig.maxCentripetalAcceleration = 8;
 
-        pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+        pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0)); // x1
         updateModulePositions();
         odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(0), currentSwervePositions, pose);
         //SmartDashboard.putNumber("MaxAccel", 4);
@@ -250,7 +250,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
             currentSwervePositions[i]=Util.positionFromModule(swerveModules.get(i));
         }
     }
-    @Override
+    @Override 
     public void periodic() {
 
         SmartDashboard.putNumber("NavX Gyro Pitch", getGyroPitch());
