@@ -308,7 +308,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     }
 
     public void limitDrive(ChassisSpeeds localSpeeds, int rotPrivilege) {
-        boolean vWalls = true;// Robot.vision.hasSeenTarget;
+        boolean vWalls = false;// Robot.vision.hasSeenTarget;
         var currentLocalSpeeds = getSpeeds();
 
         double maxAccelLocal = 3;

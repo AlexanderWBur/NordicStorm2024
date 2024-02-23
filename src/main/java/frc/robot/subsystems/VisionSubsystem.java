@@ -31,7 +31,7 @@ public class VisionSubsystem extends SubsystemBase {
     public boolean canSeeTarget = false;
 
     final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(13.75);
-     
+
 
     // Angle between horizontal and the camera.
     final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
@@ -42,7 +42,7 @@ public class VisionSubsystem extends SubsystemBase {
 
 
     public PhotonTrackedTarget bestTarget = null;
-    double camHeight = Units.inchesToMeters(27); // 
+    double camHeight = Units.inchesToMeters(27); //
 
     public VisionSubsystem() {
 
@@ -61,6 +61,13 @@ public class VisionSubsystem extends SubsystemBase {
 
     }
 
+    public static double visToRealDistance(double distanceV){
+
+        double x = distanceV;
+        double result = 0.36617022865927057*x*x + -0.861823000875111*x + 2.523746695214376; // CURVE:distance,09:25,02/22
+        return result;
+    }
+
     @Override
     public void periodic() {
         poseEstimator.setReferencePose(RobotContainer.driveTrain.getPose()); // sets reference pose to (0,0, Rotation2d.fromDegrees(0))
@@ -68,15 +75,16 @@ public class VisionSubsystem extends SubsystemBase {
 
         if (estimated.isPresent()) {
             var newPose = estimated.get();
-            RobotContainer.driveTrain.setPose(newPose.estimatedPose.toPose2d());
-            
+            // RobotContainer.driveTrain.setPose(newPose.estimatedPose.toPose2d());
+
             // In photonvision, need to have matching photonvision versions, also, need NT connected as well.
-        
-        }   
 
-        SmartDashboard.putBoolean("Can it see a tag? ",estimated.isPresent());
+        }
 
-        var result = photonCamera.getLatestResult();
+    var result = photonCamera.getLatestResult();
+
+    SmartDashboard.putBoolean("Can it see a tag? ", result.hasTargets());
+
 
          if(result.hasTargets() && Math.abs(result.getBestTarget().getYaw()) < 20){
 
@@ -91,24 +99,25 @@ public class VisionSubsystem extends SubsystemBase {
 
                 double height = bottomCorner.y - topCorner.y;
 
-                double distance =PhotonUtils.calculateDistanceToTargetMeters(
+                double distance = PhotonUtils.calculateDistanceToTargetMeters(
                     CAMERA_HEIGHT_METERS,
                     tagPose.get().getZ(),
                     CAMERA_PITCH_RADIANS,
-                    Units.degreesToRadians(result.getBestTarget().getPitch()));
+                   1.452*  Units.degreesToRadians(result.getBestTarget().getPitch()));
 
                 distanceAverage.put(distance);
+                SmartDashboard.putNumber("Pitch",  Units.degreesToRadians(result.getBestTarget().getPitch()));
                 SmartDashboard.putNumber("Height", height);
                 SmartDashboard.putNumber("Distance", distance);
 
                 double y = Math.sin(Math.toRadians(yaw)) * distanceAverage.get();
                 double x = Math.cos(Math.toRadians(yaw)) * distanceAverage.get();
-               
+
                 double robotX = tagPose.get().getX() + -x;
                 double robotY = tagPose.get().getY() + y;
-                
+
                 RobotContainer.driveTrain.setPose(robotX, robotY, 0);
-                return;   
+                return;
             }
 
 
