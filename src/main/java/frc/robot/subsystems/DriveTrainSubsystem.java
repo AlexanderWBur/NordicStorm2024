@@ -23,6 +23,7 @@ import com.swervedrivespecialties.swervelib.Mk3ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -51,30 +52,34 @@ import frc.robot.Util;
 import frc.robot.commands.paths.DriveTrainConfig;
 import frc.robot.commands.paths.PathableDrivetrain;
 
-
-
 /**
  * Speed gains detection:
- * Set chassis volts to 12. Read peak raw speed = rs, write down. Read peak getStateVelocity, write down. 
- now Kf*input must equal 1023 when input = rs. So Kf = 1023/rs. 
- 
- * set chassis volts to 9. Read raw speed, write down. kf*input = 0.75. Kf = 767/rs
+ * Set chassis volts to 12. Read peak raw speed = rs, write down. Read peak
+ * getStateVelocity, write down.
+ * now Kf*input must equal 1023 when input = rs. So Kf = 1023/rs.
+ * 
+ * set chassis volts to 9. Read raw speed, write down. kf*input = 0.75. Kf =
+ * 767/rs
  * Take the avg of those two Kf values to use
- * Then do a bunch of testing speeds: Use the velocity in meters per sec, set to a solid 2.5 forward (for example). SmartDashboard output the readStateVelocity(). 
-
-    Tweak kP up by 0.005 and see if it improves. Keep tuning up kP until the velocity to close to what you want. Then repeat at a different velocity. You might need to reduce kF
-	  a bit as well.
-	  
-         double rawSpeed = frontLeftModule.getTalonDriveMotor().getSelectedSensorVelocity();
-		 frontLeftModule.readStateVelocity();
+ * Then do a bunch of testing speeds: Use the velocity in meters per sec, set to
+ * a solid 2.5 forward (for example). SmartDashboard output the
+ * readStateVelocity().
+ * 
+ * Tweak kP up by 0.005 and see if it improves. Keep tuning up kP until the
+ * velocity to close to what you want. Then repeat at a different velocity. You
+ * might need to reduce kF
+ * a bit as well.
+ * 
+ * double rawSpeed =
+ * frontLeftModule.getTalonDriveMotor().getSelectedSensorVelocity();
+ * frontLeftModule.readStateVelocity();
  *
  */
 public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivetrain {
 
-
     private static final double MAX_VOLTAGE = 12.0;
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 4.00;
-    //Ticks: -18000
+    // Ticks: -18000
     private final SwerveModule frontLeftModule;
     private final SwerveModule frontRightModule;
     private final SwerveModule backLeftModule;
@@ -91,10 +96,10 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
             new Translation2d(-Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
                     -Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
-    private final SwerveDriveOdometry odometry;
+    private final SwerveDrivePoseEstimator odometry;
     private ChassisSpeeds targetChassisSpeeds;
-    private SwerveModuleState currentSwerveStates [] = new SwerveModuleState[4];
-    private SwerveModulePosition currentSwervePositions [] = new SwerveModulePosition[4];
+    private SwerveModuleState currentSwerveStates[] = new SwerveModuleState[4];
+    private SwerveModulePosition currentSwervePositions[] = new SwerveModulePosition[4];
 
     private Pose2d pose;
     private final AHRS navx = new AHRS(Port.kMXP);
@@ -104,47 +109,51 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     // when a raw "drive" is used, privilege level is 0.
     // Each tick, whatever thing gave the highest rotation privilege gets used.
     private int currentRotationPrivilegeNeeded = 0;
-    
-    //Pixy pixy;
+
+    // Pixy pixy;
     public int myBallColor = 0;
     public int enemyBallColor = 0;
 
     public Field2d fieldDisplay;
 
     public DriveTrainSubsystem() {
-       
+
         fieldDisplay = new Field2d();
         SmartDashboard.putData(fieldDisplay);
 
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive train");
 
         frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
-                shuffleboardTab.getLayout("Front left", BuiltInLayouts.kList).withSize(2, 4).withPosition(0,0), new Mk3ModuleConfiguration(),
+                shuffleboardTab.getLayout("Front left", BuiltInLayouts.kList).withSize(2, 4).withPosition(0, 0),
+                new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_LEFT_MODULE_STEER_MOTOR, Constants.FRONT_LEFT_MODULE_STEER_ENCODER,
-                //-Math.toRadians(231.26907348632812));
-                //0);
-                Units.degreesToRadians(-183.07342529296875)); //-175.60546875
-                
+                // -Math.toRadians(231.26907348632812));
+                // 0);
+                Units.degreesToRadians(-183.07342529296875)); // -175.60546875
+
         frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
-                 shuffleboardTab.getLayout("Front Right", BuiltInLayouts.kList).withSize(2, 4).withPosition(2,0), new Mk3ModuleConfiguration(),
+                shuffleboardTab.getLayout("Front Right", BuiltInLayouts.kList).withSize(2, 4).withPosition(2, 0),
+                new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_RIGHT_MODULE_STEER_MOTOR, Constants.FRONT_RIGHT_MODULE_STEER_ENCODER,
-            
-            Units.degreesToRadians(-30.937499999999996)); //-332.40234375
-            //-Math.toRadians(197.80059814453125 + 180));
-                //SmartDashboard.putNumber("Front right" , ) -258.2267761230469
+
+                Units.degreesToRadians(-30.937499999999996)); // -332.40234375
+        // -Math.toRadians(197.80059814453125 + 180));
+        // SmartDashboard.putNumber("Front right" , ) -258.2267761230469
         backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
-                 shuffleboardTab.getLayout("Back left", BuiltInLayouts.kList).withSize(2, 4).withPosition(4,0), new Mk3ModuleConfiguration(),
+                shuffleboardTab.getLayout("Back left", BuiltInLayouts.kList).withSize(2, 4).withPosition(4, 0),
+                new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_LEFT_MODULE_STEER_MOTOR, Constants.BACK_LEFT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(0)); //-255.849609375
+                Units.degreesToRadians(0)); // -255.849609375
 
         backRightModule = Mk3SwerveModuleHelper.createFalcon500(
-                 shuffleboardTab.getLayout("Back Right", BuiltInLayouts.kList).withSize(2, 4).withPosition(6,0), new Mk3ModuleConfiguration(),
+                shuffleboardTab.getLayout("Back Right", BuiltInLayouts.kList).withSize(2, 4).withPosition(6, 0),
+                new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_RIGHT_MODULE_STEER_MOTOR, Constants.BACK_RIGHT_MODULE_STEER_ENCODER,
-                Units.degreesToRadians(-62.13867187499999)); //-292.412109375
+                Units.degreesToRadians(-62.13867187499999)); // -292.412109375
         swerveModules.add(frontLeftModule);
         swerveModules.add(frontRightModule);
         swerveModules.add(backLeftModule);
@@ -153,18 +162,19 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         for (SwerveModule module : swerveModules) {
             TalonFX driveMotor = module.getTalonDriveMotor();
 
-            //driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
-           // driveMotor.config_kF(0, 0.048);
-           // driveMotor.config_kP(0, 0.04);
+            // driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0,
+            // 0);
+            // driveMotor.config_kF(0, 0.048);
+            // driveMotor.config_kP(0, 0.04);
 
-           var slot0Configs = new Slot0Configs();
-           slot0Configs.kP = 0.096093;
-           slot0Configs.kV = 0.11531;
-           driveMotor.getConfigurator().apply(slot0Configs, 0.01);
+            var slot0Configs = new Slot0Configs();
+            slot0Configs.kP = 0.096093;
+            slot0Configs.kV = 0.11531;
+            driveMotor.getConfigurator().apply(slot0Configs, 0.01);
 
         }
-        drivetrainConfig.maxAcceleration = 3; 
-        drivetrainConfig.maxVelocity = 4; 
+        drivetrainConfig.maxAcceleration = 3;
+        drivetrainConfig.maxVelocity = 4;
         drivetrainConfig.maxAnglularVelocity = 10;
         drivetrainConfig.maxAngularAcceleration = 5;
         drivetrainConfig.rotationCorrectionP = 2;
@@ -172,8 +182,10 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
         pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0)); // x1
         updateModulePositions();
-        odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(0), currentSwervePositions, pose);
-        //SmartDashboard.putNumber("MaxAccel", 4);
+        odometry = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(0), currentSwervePositions, pose,
+                VecBuilder.fill(.05, .05, Units.degreesToRadians(5)),
+                VecBuilder.fill(.05, .05, Units.degreesToRadians(30)));
+        // SmartDashboard.putNumber("MaxAccel", 4);
         targetChassisSpeeds = new ChassisSpeeds(0, 0, 0);
         drive(0, 0, 0);
 
@@ -192,74 +204,81 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         return -navx.getAngle();
     }
 
-    
     public double getGyroRadians() {
         return Math.toRadians(getGyroDegrees());
     }
+
     /**
      * Get the pitch value in degrees, aka forward/back tilt
+     * 
      * @return
      */
-    public double getGyroPitch(){
+    public double getGyroPitch() {
         return navx.getPitch(); // because of orientation of navx this is pitch
     }
-    
+
     public Pose2d getPose() {
         return pose;
     }
+
     /**
      * Resets the position
+     * 
      * @param x
      * @param y
      * @param rot in radians, but this is ignored.
      */
     public void setPose(double x, double y, double rot) {
-       odometry.resetPosition(Rotation2d.fromDegrees(getGyroDegrees()), currentSwervePositions, new Pose2d(x, y, Rotation2d.fromDegrees(getGyroDegrees())));        
+        odometry.resetPosition(Rotation2d.fromDegrees(getGyroDegrees()), currentSwervePositions,
+                new Pose2d(x, y, Rotation2d.fromDegrees(getGyroDegrees())));
     }
+    public void addVisionMeasurment(Pose2d pos, double timeStamp){
 
+        odometry.addVisionMeasurement(pos, timeStamp);
+    }
     public void resetAngle() {
         navx.reset();
         odometry.resetPosition(new Rotation2d(getGyroRadians()), currentSwervePositions, pose);
     }
+
     /**
      * This will get added to the angle result to offset it.
      * A positive
      * value means that the robot is pointing x degrees counterclockwise
+     * 
      * @param degrees
      */
-    public void setAngleOffset(double degrees){
+    public void setAngleOffset(double degrees) {
         navx.setAngleAdjustment(-degrees);
         odometry.resetPosition(new Rotation2d(getGyroRadians()), currentSwervePositions, pose);
 
     }
 
-  
     public ChassisSpeeds getSpeeds() {
         return kinematics.toChassisSpeeds(currentSwerveStates);
     }
-
 
     public DriveTrainConfig getConfig() {
         return drivetrainConfig;
     }
 
-
     public void drive(ChassisSpeeds chassisSpeeds) {
         drive(chassisSpeeds, 0);
     }
 
-    private void updateModulePositions(){
-        for(int i = 0; i<swerveModules.size(); i++){
-            currentSwervePositions[i]=Util.positionFromModule(swerveModules.get(i));
+    private void updateModulePositions() {
+        for (int i = 0; i < swerveModules.size(); i++) {
+            currentSwervePositions[i] = Util.positionFromModule(swerveModules.get(i));
         }
     }
-    @Override 
+
+    @Override
     public void periodic() {
 
         SmartDashboard.putNumber("NavX Gyro Pitch", getGyroPitch());
 
-        for(int i = 0; i < swerveModules.size(); i++){
-            currentSwerveStates[i]=Util.stateFromModule(swerveModules.get(i));
+        for (int i = 0; i < swerveModules.size(); i++) {
+            currentSwerveStates[i] = Util.stateFromModule(swerveModules.get(i));
 
             SmartDashboard.putNumber("Module " + i, Units.radiansToDegrees(swerveModules.get(i).getSteerAngle()));
             SmartDashboard.putNumber("Module speed " + i, (swerveModules.get(i).getDriveVelocity()));
@@ -270,15 +289,14 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
         // Update the pose
         pose = odometry.update(Rotation2d.fromDegrees(getGyroDegrees()), currentSwervePositions);
-        
+
         driveActualMotors(targetChassisSpeeds);
         currentRotationPrivilegeNeeded = 0;
         fieldDisplay.setRobotPose(pose.getX(), pose.getY(), new Rotation2d(getGyroRadians()));
-        //SmartDashboard.putNumber("Pitch", navx.getRoll());
-      
-       SmartDashboard.putNumber("driveAng", getGyroDegrees());
-       
-        
+        // SmartDashboard.putNumber("Pitch", navx.getRoll());
+
+        SmartDashboard.putNumber("driveAng", getGyroDegrees());
+
     }
 
     public void drive(ChassisSpeeds chassisSpeeds, int rotPrivilege) {
@@ -292,18 +310,18 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
     private void driveActualMotors(ChassisSpeeds chassisSpeeds) {
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);
-        //SmartDashboard.putNumber("targetspeed", states[0].speedMetersPerSecond);
+        // SmartDashboard.putNumber("targetspeed", states[0].speedMetersPerSecond);
         frontLeftModule.setWithVelocity(states[0].speedMetersPerSecond,
                 states[0].angle.getRadians());
         frontRightModule.setWithVelocity(states[1].speedMetersPerSecond,
                 states[1].angle.getRadians());
-                SmartDashboard.putNumber("Front right", states[1].speedMetersPerSecond);
+        SmartDashboard.putNumber("Front right", states[1].speedMetersPerSecond);
         backLeftModule.setWithVelocity(states[2].speedMetersPerSecond,
                 states[2].angle.getRadians());
         backRightModule.setWithVelocity(states[3].speedMetersPerSecond,
                 states[3].angle.getRadians());
-         //SmartDashboard.putNumber("radian speed", chassisSpeeds.omegaRadiansPerSecond);
-
+        // SmartDashboard.putNumber("radian speed",
+        // chassisSpeeds.omegaRadiansPerSecond);
 
     }
 
@@ -321,12 +339,12 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
         double fixX = enforceWalls(targetFieldSpeeds.vxMetersPerSecond, drivetrainConfig.maxAcceleration,
                 pose.getX(), 2, 6.953);
-        if (vWalls){
+        if (vWalls) {
             targetFieldSpeeds.vxMetersPerSecond = fixX;
         }
         double fixY = enforceWalls(targetFieldSpeeds.vyMetersPerSecond, drivetrainConfig.maxAcceleration,
                 pose.getY(), 3, 7.35);
-        if (vWalls){
+        if (vWalls) {
             targetFieldSpeeds.vyMetersPerSecond = fixY;
         }
         var targetLocalSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(targetFieldSpeeds.vxMetersPerSecond,
@@ -388,6 +406,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
     /**
      * Raw drive the motors, units in VOLTS!
+     * 
      * @param chassisSpeeds
      */
     public void driveVolts(ChassisSpeeds chassisSpeeds) {
@@ -400,7 +419,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
                 states[2].angle.getRadians());
         backRightModule.set(states[3].speedMetersPerSecond,
                 states[3].angle.getRadians());
-                
+
     }
 
     public void drive(double x, double y, double rot) {
@@ -419,16 +438,14 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         }
     }
 
-
     public void setPose(Pose2d pose) {
         setPose(pose.getX(), pose.getY(), pose.getRotation().getRadians());
     }
 
-    public void resetSwerve(){
-        for(int i = 0; i<600; ++i){
+    public void resetSwerve() {
+        for (int i = 0; i < 600; ++i) {
             driveActualMotors(new ChassisSpeeds());
         }
     }
-
 
 }

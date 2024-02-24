@@ -20,9 +20,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import frc.robot.Util;
 import frc.robot.Utils.RollingAverage;
-
-
 
 public class VisionSubsystem extends SubsystemBase {
 
@@ -32,14 +31,12 @@ public class VisionSubsystem extends SubsystemBase {
 
     final double CAMERA_HEIGHT_METERS = Units.inchesToMeters(13.75);
 
-
     // Angle between horizontal and the camera.
     final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
 
     public static PhotonPoseEstimator poseEstimator;
 
     public static RollingAverage distanceAverage = new RollingAverage(5);
-
 
     public PhotonTrackedTarget bestTarget = null;
     double camHeight = Units.inchesToMeters(27); //
@@ -61,65 +58,74 @@ public class VisionSubsystem extends SubsystemBase {
 
     }
 
-    public static double visToRealDistance(double distanceV){
+    public static double visToRealDistance(double distanceV) {
 
         double x = distanceV;
-        double result = 0.36617022865927057*x*x + -0.861823000875111*x + 2.523746695214376; // CURVE:distance,09:25,02/22
+        double result = 0.36617022865927057 * x * x + -0.861823000875111 * x + 2.523746695214376; // CURVE:distance,09:25,02/22
         return result;
     }
 
     @Override
     public void periodic() {
-        poseEstimator.setReferencePose(RobotContainer.driveTrain.getPose()); // sets reference pose to (0,0, Rotation2d.fromDegrees(0))
+        poseEstimator.setReferencePose(RobotContainer.driveTrain.getPose()); // sets reference pose to (0,0,
+                                                                             // Rotation2d.fromDegrees(0))
         var estimated = poseEstimator.update();
+        var result = photonCamera.getLatestResult();
 
-        if (estimated.isPresent()) {
+        if (estimated.isPresent() /** && result.targets.size() >= 2 **/
+        ) {
             var newPose = estimated.get();
             // RobotContainer.driveTrain.setPose(newPose.estimatedPose.toPose2d());
 
-            // In photonvision, need to have matching photonvision versions, also, need NT connected as well.
+            //RobotContainer.driveTrain.addVisionMeasurment(
+                //newPose.estimatedPose.toPose2d(),
+                 //   result.getTimestampSeconds());
+            // In photonvision, need to have matching photonvision versions, also, need NT
+            // connected as well.
 
         }
 
-    var result = photonCamera.getLatestResult();
+        SmartDashboard.putBoolean("Can it see a tag? ", result.hasTargets());
+        SmartDashboard.putNumber("Tags Visible", result.targets.size());
 
-    SmartDashboard.putBoolean("Can it see a tag? ", result.hasTargets());
+        if(result.hasTargets() && Math.abs(result.getBestTarget().getYaw()) < 20){
 
+        var bestTarget = result.getBestTarget();
 
-         if(result.hasTargets() && Math.abs(result.getBestTarget().getYaw()) < 20){
+        var tagPose = layout.getTagPose(bestTarget.getFiducialId());
 
-                var bestTarget = result.getBestTarget();
+        double yaw = 180 + bestTarget.getYaw() -
+        RobotContainer.driveTrain.getGyroDegrees();
 
-                 var tagPose = layout.getTagPose(bestTarget.getFiducialId());
+        TargetCorner bottomCorner = bestTarget.getDetectedCorners().get(0);
+        TargetCorner topCorner = bestTarget.getDetectedCorners().get(3);
 
-                double yaw = 180 + bestTarget.getYaw() - RobotContainer.driveTrain.getGyroDegrees();
+        double height = bottomCorner.y - topCorner.y;
+        double targetsY = topCorner.y + height/2;
+        SmartDashboard.putNumber("targetsY", targetsY);
 
-                TargetCorner bottomCorner = bestTarget.getDetectedCorners().get(0);
-                TargetCorner topCorner = bestTarget.getDetectedCorners().get(3);
+        double pitch = Util.map(targetsY, 0, 600, 47.26, -47.26);
 
-                double height = bottomCorner.y - topCorner.y;
+        double distance = PhotonUtils.calculateDistanceToTargetMeters(
+        CAMERA_HEIGHT_METERS,
+        tagPose.get().getZ(),
+        CAMERA_PITCH_RADIANS,
+         Units.degreesToRadians(pitch));
 
-                double distance = PhotonUtils.calculateDistanceToTargetMeters(
-                    CAMERA_HEIGHT_METERS,
-                    tagPose.get().getZ(),
-                    CAMERA_PITCH_RADIANS,
-                   1.452*  Units.degreesToRadians(result.getBestTarget().getPitch()));
+        distanceAverage.put(distance);
+        SmartDashboard.putNumber("Pitch", pitch);
+        SmartDashboard.putNumber("Height", height);
+        SmartDashboard.putNumber("Distance", distance);
 
-                distanceAverage.put(distance);
-                SmartDashboard.putNumber("Pitch",  Units.degreesToRadians(result.getBestTarget().getPitch()));
-                SmartDashboard.putNumber("Height", height);
-                SmartDashboard.putNumber("Distance", distance);
+        double y = Math.sin(Math.toRadians(yaw)) * distanceAverage.get();
+        double x = Math.cos(Math.toRadians(yaw)) * distanceAverage.get();
 
-                double y = Math.sin(Math.toRadians(yaw)) * distanceAverage.get();
-                double x = Math.cos(Math.toRadians(yaw)) * distanceAverage.get();
+        double robotX = tagPose.get().getX() + -x;
+        double robotY = tagPose.get().getY() + y;
 
-                double robotX = tagPose.get().getX() + -x;
-                double robotY = tagPose.get().getY() + y;
-
-                RobotContainer.driveTrain.setPose(robotX, robotY, 0);
-                return;
-            }
-
+        RobotContainer.driveTrain.setPose(robotX, robotY, 0);
+        return;
+        }
 
     }
 }
