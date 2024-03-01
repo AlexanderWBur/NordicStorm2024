@@ -183,8 +183,8 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0)); // x1
         updateModulePositions();
         odometry = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(0), currentSwervePositions, pose,
-                VecBuilder.fill(.05, .05, Units.degreesToRadians(5)),
-                VecBuilder.fill(.05, .05, Units.degreesToRadians(30)));
+                VecBuilder.fill(.5, .05, Units.degreesToRadians(5)),
+                VecBuilder.fill(.5, .5, Units.degreesToRadians(30)));
         // SmartDashboard.putNumber("MaxAccel", 4);
         targetChassisSpeeds = new ChassisSpeeds(0, 0, 0);
         drive(0, 0, 0);
