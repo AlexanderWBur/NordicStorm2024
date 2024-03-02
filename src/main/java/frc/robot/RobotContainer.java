@@ -6,11 +6,13 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoWithInit;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OperatorControl;
 import frc.robot.commands.auto.StraightAuto;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Pixy;
-import frc.robot.subsystems.ShooterSubsystem;
+//import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 import java.util.function.BooleanSupplier;
@@ -61,9 +63,12 @@ public class RobotContainer {
   public static DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   // public static Pixy pixyController = new Pixy();
 
-  public static ShooterSubsystem shooterSubsystem = new ShooterSubsystem(); // Added to actually make the shooter shoot
-                                                                            // or turn or what not
-   public static VisionSubsystem visionSubsystem = new VisionSubsystem();
+  // public static ShooterSubsystem shooterSubsystem = new ShooterSubsystem(); //
+  // Added to actually make the shooter shoot
+  // or turn or what not
+  public static VisionSubsystem visionSubsystem = new VisionSubsystem();
+
+  public static IntakeSubsystem intake = new IntakeSubsystem();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -96,52 +101,32 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
-    // Does blah
-    new JoystickButton(rightJoystick, 7).onTrue(new Command() { // change the joystick and button number parameters
-                                                                // (later of course)
-      // what to do here... i wonder
-      @Override
-      public void execute() {
-        // intakeSubsystem
-      }
-    });
-
-    // Does blah2 (to avoid ambivalence?? ambiguity?? (dont know whats the right
-    // word for that))
-    new JoystickButton(rightJoystick, 1).whileTrue(new Command() { // whileTrue and onTrue is 2024's way of deciphering
-                                                                   // whether the button is held down or simply pressed
-      @Override // How can we make the shooterSubsystem lock onto an april tag? Creating a
-                // command for that!
-      public void execute() {
-        // shooterSubsystem
-      }
-
-    });
+    new JoystickButton(rightJoystick, 1).onTrue(new IntakeCommand(0, 0));
 
     // Reset gyro
-    new JoystickButton(rightJoystick, 9).onTrue(new InstantCommand() { // buttonNumber can be changed to any button
-                                                                       // agreed upon
-      @Override // rightJoystick can be changed, but I wouldn't argue for that
+    new JoystickButton(rightJoystick, 9).onTrue(new InstantCommand() { 
+                                                                       
+      @Override 
       public void execute() {
         driveTrain.zeroGyroscope();
       }
- @Override
-      public boolean runsWhenDisabled(){
+
+      @Override
+      public boolean runsWhenDisabled() {
         return true;
       }
     });
 
-    new JoystickButton(rightJoystick, 7).onTrue(new InstantCommand() { // buttonNumber can be changed to any button
-                                                                       // agreed upon
-      @Override // rightJoystick can be changed, but I wouldn't argue for that
+    new JoystickButton(rightJoystick, 7).onTrue(new InstantCommand() { 
+                                                                       
+      @Override
       public void execute() {
 
         driveTrain.setPose(4.81, 3.7686, 0);
       }
 
       @Override
-      public boolean runsWhenDisabled(){
+      public boolean runsWhenDisabled() {
         return true;
       }
     });

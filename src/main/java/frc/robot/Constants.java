@@ -14,6 +14,8 @@ package frc.robot;
  */
 public final class Constants {
 
+  public static final double minIntakePower = 0.6; // 12 stack neo 550
+  public static final int intakeID = 0;
   public static final int lowerFlywheelID = 10;
   public static final int upperFlywheelID = 11;
 
