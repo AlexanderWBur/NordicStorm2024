@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.photonvision.PhotonCamera;
@@ -26,6 +27,7 @@ import frc.robot.Utils.RollingAverage;
 public class VisionSubsystem extends SubsystemBase {
 
     public static PhotonCamera photonCamera;
+    public static PhotonCamera noteCamera;
     public static AprilTagFieldLayout layout;
     public boolean canSeeTarget = false;
 
@@ -37,6 +39,9 @@ public class VisionSubsystem extends SubsystemBase {
     public static PhotonPoseEstimator poseEstimator;
 
     public static RollingAverage distanceAverage = new RollingAverage(5);
+
+    List<PhotonTrackedTarget> notes = new ArrayList<PhotonTrackedTarget>();
+    
 
     public PhotonTrackedTarget bestTarget = null;
     double camHeight = Units.inchesToMeters(27); //
@@ -52,7 +57,8 @@ public class VisionSubsystem extends SubsystemBase {
 
         Transform3d transform3d = new Transform3d(new Translation3d(0, -0.0508, -0.368), new Rotation3d(0, 0, 0));
 
-        photonCamera = new PhotonCamera("Arducam_OV9281_USB_Camera"); // Need to find out what to name this
+        noteCamera = new PhotonCamera("USB_2M_GS_camera"); 
+        photonCamera = new PhotonCamera("Arducam_OV9281_USB_Camera"); 
         poseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
                 transform3d);
 
@@ -65,8 +71,14 @@ public class VisionSubsystem extends SubsystemBase {
         return result;
     }
 
+    public List<PhotonTrackedTarget> getTargets(){
+
+        return  notes;
+    }
     @Override
     public void periodic() {
+
+       notes = noteCamera.getLatestResult().targets;
         poseEstimator.setReferencePose(RobotContainer.driveTrain.getPose()); // sets reference pose to (0,0,
                                                                              // Rotation2d.fromDegrees(0))
         var estimated = poseEstimator.update();

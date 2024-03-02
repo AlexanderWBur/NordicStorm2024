@@ -65,6 +65,9 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("has note", hasNote);
     }
 
+    public void stopIntake(){
+        timeToStop = 0;
+    }
     private double currentRPM;
 
     public void setMotorRaw(double rpm) {
