@@ -139,8 +139,8 @@ public class FollowNote extends CommandPathPiece {
             forwardValue = chargeSpeed;
             turnValue = 0;
         }
-        turnValue *= Math.abs(RobotContainer.rightJoystick.getY());
-        forwardValue *= Math.abs(RobotContainer.rightJoystick.getY());
+        //turnValue *= Math.abs(RobotContainer.rightJoystick.getY());
+        //forwardValue *= Math.abs(RobotContainer.rightJoystick.getY());
         RobotContainer.driveTrain.limitDrive(new ChassisSpeeds(forwardValue, -turnValue * 0.1, -turnValue), 2);
 
     }

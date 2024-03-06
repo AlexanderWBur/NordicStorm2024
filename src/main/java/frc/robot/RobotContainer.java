@@ -104,7 +104,7 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(rightJoystick, 2).onTrue(new IntakeCommand(0, 0));
 
-    new JoystickButton(rightJoystick, 1).whileTrue(new FollowNote( true, false, 4, 3, false , 300));
+    new JoystickButton(rightJoystick, 1).whileTrue(new FollowNote( true, false, 3.3, 3, false , 300));
 
     // Reset gyro
     new JoystickButton(rightJoystick, 9).onTrue(new InstantCommand() { 

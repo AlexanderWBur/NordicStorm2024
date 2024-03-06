@@ -37,7 +37,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void doIntake(long timeOut) {
-        triggered = false;
+        triggered = hasNote;
         timeToStop = System.currentTimeMillis() + timeOut;
         
     }
