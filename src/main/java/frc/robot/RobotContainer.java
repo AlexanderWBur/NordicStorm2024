@@ -11,6 +11,7 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OperatorControl;
 import frc.robot.commands.RawAmpCommand;
 import frc.robot.commands.RawPinionCommand;
+import frc.robot.commands.TurnAndShoot;
 import frc.robot.commands.RawIndexerCommand;
 import frc.robot.commands.auto.StraightAuto;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -86,7 +87,7 @@ public class RobotContainer {
 
     AllianceAngleDeg = isRed ? 180 : 0;
     AllianceAngleRad = Units.degreesToRadians(AllianceAngleDeg);
-    SmartDashboard.putNumber("Alliance Angle", AllianceAngleDeg);
+    // SmartDashboard.putNumber("Alliance Angle", AllianceAngleDeg);
     configureBindings();
   }
 
@@ -111,10 +112,8 @@ public class RobotContainer {
 
     new JoystickButton(rightJoystick, 1).whileTrue(new FollowNote(true, false, 3.3, 3, false, 300));
 
-    new JoystickButton(leftJoystick, 3).whileTrue(new RawPinionCommand());
-    new JoystickButton(leftJoystick, 2).whileTrue(new RawIndexerCommand());
-    new JoystickButton(leftJoystick, 4).whileTrue(new RawAmpCommand());
-        new JoystickButton(leftJoystick, 5).whileTrue(new RawIndexerCommand());
+    new JoystickButton(leftJoystick, 3).whileTrue(new TurnAndShoot());
+
 
 
     // Reset gyro

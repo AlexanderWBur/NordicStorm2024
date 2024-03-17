@@ -19,12 +19,16 @@ public class IntakeSubsystem extends SubsystemBase {
     private SparkPIDController motorPID = motor.getPIDController();
     private RelativeEncoder motorEncoder = motor.getEncoder();
 
+    private CANSparkMax indexer = new CANSparkMax(Constants.indexerID, MotorType.kBrushless);
+    private SparkPIDController indexerPID = indexer.getPIDController();
+    private RelativeEncoder indexerEncoder = indexer.getEncoder();
+
     private boolean hasNote;
     private long timeOut;
     private long timeToStop = 0;
     private boolean triggered = false;
-    private double ticksToStop;
-
+    private double ticksToStopIntake;
+    private double ticksToStopFeed;
 
     public IntakeSubsystem() {
         configureIntakeMotor(motor);
@@ -39,35 +43,47 @@ public class IntakeSubsystem extends SubsystemBase {
     public void doIntake(long timeOut) {
         triggered = hasNote;
         timeToStop = System.currentTimeMillis() + timeOut;
-        
-    }
 
+    }
 
     @Override
     public void periodic() {
-        updateMotorStats(); 
+        updateMotorStats();
         hasNote = !prox.get();
-        if(!triggered && hasNote){
-            ticksToStop = motorEncoder.getPosition() + 3;
+        if (!triggered && hasNote) {
+            ticksToStopIntake = motorEncoder.getPosition() + 3;
             timeToStop = 0;
         }
         if (hasNote) {
             triggered = true;
-        } 
-        if(motorEncoder.getPosition() < ticksToStop){
-            setMotorRaw(Constants.minIntakePower);
         }
-        else if(System.currentTimeMillis() < timeToStop){
+
+        if(motorEncoder.getPosition() < ticksToStopFeed){
+            setMotorRaw(1);
+            indexer.set(1);
+        } else if (motorEncoder.getPosition() < ticksToStopIntake) {
+            setMotorRaw(Constants.minIntakePower);
+        } else if (System.currentTimeMillis() < timeToStop) {
             setMotorRaw(Constants.minIntakePower);
         } else {
             setMotorRaw(0);
         }
+
+        if(motorEncoder.getPosition() > ticksToStopFeed){
+            indexer.set(0);
+        }
         SmartDashboard.putBoolean("has note", hasNote);
     }
 
-    public void stopIntake(){
+    public void sendToShooter(){
+        ticksToStopFeed = motorEncoder.getPosition() + 100;
+
+    }
+
+    public void stopIntake() {
         timeToStop = 0;
     }
+
     private double currentRPM;
 
     public void setMotorRaw(double rpm) {
@@ -81,8 +97,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     }
 
-    public boolean hasNote(){
-
+    public boolean hasNote() {
 
         return false;
     }

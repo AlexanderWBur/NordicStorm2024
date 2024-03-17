@@ -14,9 +14,11 @@ import frc.robot.RobotContainer;
 
 public class ShooterSubsystem extends SubsystemBase {
 
+    double targetAngle = 0;
+
     private CANSparkMax pinion = new CANSparkMax(Constants.shooterPitchID, MotorType.kBrushless);
   private SparkPIDController pinionPID = pinion.getPIDController();
-//   private AbsoluteEncoder pinionEncoder = pinion.getEncoder();
+   private RelativeEncoder pinionEncoder = pinion.getEncoder();
 
     private CANSparkMax bottomWheel = new CANSparkMax(Constants.lowerFlywheelID, MotorType.kBrushless);
     private SparkPIDController bottomWheelPID = bottomWheel.getPIDController();
@@ -29,10 +31,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private CANSparkMax amp = new CANSparkMax(Constants.ampID, MotorType.kBrushless);
     private SparkPIDController ampPID = amp.getPIDController();
     private RelativeEncoder ampEncoder = amp.getEncoder();
-
-    private CANSparkMax indexer = new CANSparkMax(Constants.indexerID, MotorType.kBrushless);
-    private SparkPIDController indexerPID = indexer.getPIDController();
-    private RelativeEncoder indexerEncoder = indexer.getEncoder();
 
     private CANSparkMax topWheel = new CANSparkMax(Constants.upperFlywheelID, MotorType.kBrushless);
     private SparkPIDController topWheelPID = topWheel.getPIDController();
@@ -57,7 +55,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // SmartDashboard.putNumber("Pinion", pinionEncoder.getPosition());
+        
+         SmartDashboard.putNumber("Pinion", pinionEncoder.getPosition());
         //  updateShooter(); // top then bottom
     // setFlywheelsRaw(.25 * RobotContainer.leftJoystick.getY(), -.4 * RobotContainer.leftJoystick.getY());
     }
@@ -77,8 +76,8 @@ public class ShooterSubsystem extends SubsystemBase {
         topCurrentRPM = topWheelEncoder.getVelocity();
         bottomCurrentRPM = bottomWheelEncoder.getVelocity();
 
-        SmartDashboard.putNumber("Top wheel velocity", topCurrentRPM);
-        SmartDashboard.putNumber("Bottom wheel velocity", bottomCurrentRPM);
+        // SmartDashboard.putNumber("Top wheel velocity", topCurrentRPM);
+        // SmartDashboard.putNumber("Bottom wheel velocity", bottomCurrentRPM);
 
     }
 
@@ -87,12 +86,17 @@ public class ShooterSubsystem extends SubsystemBase {
         pinionPID.setReference(power, CANSparkMax.ControlType.kDutyCycle);
     }
 
+    public double getAngleError(){
+        return pinionEncoder.getPosition() - targetAngle;
+    }
+
     private void setPinion(){
 
     }
 
-    public void setShooter(){
-
+    public void setShooterAngle(double ticks){
+        targetAngle = ticks;
+        pinionPID.setReference(ticks, CANSparkMax.ControlType.kPosition);
     }
 
     public void setShooterRaw(double power){
@@ -105,10 +109,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setAmp(){
 
-    }
-
-    public void setIndexerRaw(double power){
-        indexerPID.setReference(power, CANSparkMax.ControlType.kDutyCycle);
     }
 
     private double topTargetRPM;

@@ -41,7 +41,6 @@ public class VisionSubsystem extends SubsystemBase {
     public static RollingAverage distanceAverage = new RollingAverage(5);
 
     List<PhotonTrackedTarget> notes = new ArrayList<PhotonTrackedTarget>();
-    
 
     public PhotonTrackedTarget bestTarget = null;
     double camHeight = Units.inchesToMeters(27); //
@@ -57,8 +56,8 @@ public class VisionSubsystem extends SubsystemBase {
 
         Transform3d transform3d = new Transform3d(new Translation3d(0, -0.0508, -0.368), new Rotation3d(0, 0, 0));
 
-        noteCamera = new PhotonCamera("USB_2M_GS_camera"); 
-        photonCamera = new PhotonCamera("Arducam_OV9281_USB_Camera"); 
+        noteCamera = new PhotonCamera("USB_2M_GS_camera");
+        photonCamera = new PhotonCamera("Arducam_OV9281_USB_Camera");
         poseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
                 transform3d);
 
@@ -71,14 +70,15 @@ public class VisionSubsystem extends SubsystemBase {
         return result;
     }
 
-    public List<PhotonTrackedTarget> getTargets(){
+    public List<PhotonTrackedTarget> getTargets() {
 
-        return  notes;
+        return notes;
     }
+
     @Override
     public void periodic() {
 
-       notes = noteCamera.getLatestResult().targets;
+        notes = noteCamera.getLatestResult().targets;
         poseEstimator.setReferencePose(RobotContainer.driveTrain.getPose()); // sets reference pose to (0,0,
                                                                              // Rotation2d.fromDegrees(0))
         var estimated = poseEstimator.update();
@@ -88,13 +88,13 @@ public class VisionSubsystem extends SubsystemBase {
         ) {
 
             var newPose = estimated.get();
-                              SmartDashboard.putNumber("Tags Visible", newPose.targetsUsed.size());
+            SmartDashboard.putNumber("Tags Visible", newPose.targetsUsed.size());
 
             // RobotContainer.driveTrain.setPose(newPose.estimatedPose.toPose2d());
 
-        RobotContainer.driveTrain.addVisionMeasurment(
-                newPose.estimatedPose.toPose2d(),
-                  result.getTimestampSeconds());
+            RobotContainer.driveTrain.addVisionMeasurment(
+                    newPose.estimatedPose.toPose2d(),
+                    result.getTimestampSeconds());
             // In photonvision, need to have matching photonvision versions, also, need NT
             // connected as well.
 
@@ -124,7 +124,7 @@ public class VisionSubsystem extends SubsystemBase {
         // CAMERA_HEIGHT_METERS,
         // tagPose.get().getZ(),
         // CAMERA_PITCH_RADIANS,
-        //  Units.degreesToRadians(pitch));
+        // Units.degreesToRadians(pitch));
 
         // distanceAverage.put(distance);
         // SmartDashboard.putNumber("Pitch", pitch);

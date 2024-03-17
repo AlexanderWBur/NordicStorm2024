@@ -9,7 +9,7 @@ public class AmpDump extends Command {
     
   @Override
   public void initialize() {
-
+    
   }
 
   @Override

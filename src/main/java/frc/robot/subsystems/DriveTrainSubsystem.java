@@ -276,14 +276,14 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     @Override
     public void periodic() {
 
-        SmartDashboard.putNumber("NavX Gyro Pitch", getGyroPitch());
+        // SmartDashboard.putNumber("NavX Gyro Pitch", getGyroPitch());
 
         for (int i = 0; i < swerveModules.size(); i++) {
             currentSwerveStates[i] = Util.stateFromModule(swerveModules.get(i));
 
-            SmartDashboard.putNumber("Module " + i, Units.radiansToDegrees(swerveModules.get(i).getSteerAngle()));
-            SmartDashboard.putNumber("Module speed " + i, (swerveModules.get(i).getDriveVelocity()));
-            SmartDashboard.putNumber("Modulex raw " + i, (swerveModules.get(i).getSteerAngle()));
+            // SmartDashboard.putNumber("Module " + i, Units.radiansToDegrees(swerveModules.get(i).getSteerAngle()));
+            // SmartDashboard.putNumber("Module speed " + i, (swerveModules.get(i).getDriveVelocity()));
+            // SmartDashboard.putNumber("Modulex raw " + i, (swerveModules.get(i).getSteerAngle()));
 
         }
         updateModulePositions();
@@ -296,7 +296,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         fieldDisplay.setRobotPose(pose.getX(), pose.getY(), new Rotation2d(getGyroRadians()));
         // SmartDashboard.putNumber("Pitch", navx.getRoll());
 
-        SmartDashboard.putNumber("driveAng", getGyroDegrees());
+         SmartDashboard.putNumber("driveAng", getGyroDegrees());
 
     }
 
@@ -316,7 +316,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
                 states[0].angle.getRadians());
         frontRightModule.setWithVelocity(states[1].speedMetersPerSecond,
                 states[1].angle.getRadians());
-        SmartDashboard.putNumber("Front right", states[1].speedMetersPerSecond);
+        // SmartDashboard.putNumber("Front right", states[1].speedMetersPerSecond);
         backLeftModule.setWithVelocity(states[2].speedMetersPerSecond,
                 states[2].angle.getRadians());
         backRightModule.setWithVelocity(states[3].speedMetersPerSecond,
@@ -354,7 +354,6 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
                 Rotation2d.fromDegrees(getGyroDegrees()));
 
         drive(targetLocalSpeeds, rotPrivilege);
-        SmartDashboard.putNumber("inner local", targetLocalSpeeds.vxMetersPerSecond);
 
         // Robot.drivetrain.drive(forward * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
         // sideways * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND, rot *

@@ -164,7 +164,7 @@ public class Pixy{
         PixyResult result = getPixyData();
         if (result.result == ResultType.NORMAL) {
             knownObjects = result.blocks;
-            SmartDashboard.putNumber("numPixyObjects", result.blocks.size());
+            // SmartDashboard.putNumber("numPixyObjects", result.blocks.size());
             //System.out.println(knownObjects.size());
         }
     }

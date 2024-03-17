@@ -18,13 +18,13 @@ public class RawIndexerCommand extends Command {
 
   @Override
   public void execute() {
-    RobotContainer.shooterSubsystem.setIndexerRaw(RobotContainer.leftJoystick.getY());
+    // RobotContainer.shooterSubsystem.setIndexerRaw(RobotContainer.leftJoystick.getY());
 
   }
 
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.shooterSubsystem.setIndexerRaw(0);
+    // RobotContainer.shooterSubsystem.setIndexerRaw(0);
 
     
 

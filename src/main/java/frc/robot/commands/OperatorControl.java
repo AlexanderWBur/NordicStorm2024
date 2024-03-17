@@ -61,7 +61,7 @@ public class OperatorControl extends Command {
 
         ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, rot),
         RobotContainer.driveTrain.getGyroRadians() + RobotContainer.AllianceAngleRad);
-        SmartDashboard.putNumber("Local Speed", localSpeeds.vyMetersPerSecond);
+        // SmartDashboard.putNumber("Local Speed", localSpeeds.vyMetersPerSecond);
         RobotContainer.driveTrain.limitDrive(localSpeeds, 0);
 
         

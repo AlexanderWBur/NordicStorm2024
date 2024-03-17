@@ -20,7 +20,7 @@ public class RawAmpCommand extends Command {
   public void execute() {
     RobotContainer.shooterSubsystem.setAmpRaw(-RobotContainer.leftJoystick.getY());
     RobotContainer.shooterSubsystem.setShooterRaw(RobotContainer.leftJoystick.getY());
-    RobotContainer.shooterSubsystem.setIndexerRaw(-RobotContainer.leftJoystick.getY());
+    // RobotContainer.shooterSubsystem.setIndexerRaw(-RobotContainer.leftJoystick.getY());
 
 
   }
@@ -29,7 +29,7 @@ public class RawAmpCommand extends Command {
   public void end(boolean interrupted) {
     RobotContainer.shooterSubsystem.setAmpRaw(0);
     RobotContainer.shooterSubsystem.setShooterRaw(0);
-    RobotContainer.shooterSubsystem.setIndexerRaw(0);
+    // RobotContainer.shooterSubsystem.setIndexerRaw(0);
 
 
   }
