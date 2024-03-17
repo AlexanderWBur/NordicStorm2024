@@ -81,6 +81,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
     }
 
+    public boolean hasNote(){
+
+
+        return false;
+    }
+
     public boolean noteDetected() {
 
         return false;

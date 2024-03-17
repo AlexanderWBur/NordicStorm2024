@@ -9,10 +9,14 @@ import frc.robot.commands.AutoWithInit;
 import frc.robot.commands.FollowNote;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OperatorControl;
+import frc.robot.commands.RawAmpCommand;
+import frc.robot.commands.RawPinionCommand;
+import frc.robot.commands.RawIndexerCommand;
 import frc.robot.commands.auto.StraightAuto;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Pixy;
+import frc.robot.subsystems.ShooterSubsystem;
 //import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -25,6 +29,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,6 +60,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final Joystick leftJoystick = new Joystick(1);
   public static final Joystick rightJoystick = new Joystick(0);
+  public static final XboxController xbox = new XboxController(2);
 
   public static boolean isRed;
   public static double AllianceAngleDeg;
@@ -64,7 +70,7 @@ public class RobotContainer {
   public static DriveTrainSubsystem driveTrain = new DriveTrainSubsystem();
   // public static Pixy pixyController = new Pixy();
 
-  // public static ShooterSubsystem shooterSubsystem = new ShooterSubsystem(); //
+  public static ShooterSubsystem shooterSubsystem = new ShooterSubsystem(); //
   // Added to actually make the shooter shoot
   // or turn or what not
   public static VisionSubsystem visionSubsystem = new VisionSubsystem();
@@ -76,11 +82,8 @@ public class RobotContainer {
    */
   public RobotContainer() {
 
-    // CommandScheduler.getInstance().setDefaultCommand(driveTrain, new
-    // OperatorControl());
     driveTrain.setDefaultCommand(new OperatorControl());
-    // vacuumSubsystem.setDefaultCommand(new VacuumDefaultCommand(vacuumSubsystem));
-    // isRed = DriverStation.getAlliance() == Alliance.Red;
+
     AllianceAngleDeg = isRed ? 180 : 0;
     AllianceAngleRad = Units.degreesToRadians(AllianceAngleDeg);
     SmartDashboard.putNumber("Alliance Angle", AllianceAngleDeg);
@@ -104,12 +107,20 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(rightJoystick, 2).onTrue(new IntakeCommand(0, 0));
 
-    new JoystickButton(rightJoystick, 1).whileTrue(new FollowNote( true, false, 3.3, 3, false , 300));
+    new JoystickButton(xbox, 3).whileTrue(new FollowNote(true, false, 3.3, 3, false, 300));
+
+    new JoystickButton(rightJoystick, 1).whileTrue(new FollowNote(true, false, 3.3, 3, false, 300));
+
+    new JoystickButton(leftJoystick, 3).whileTrue(new RawPinionCommand());
+    new JoystickButton(leftJoystick, 2).whileTrue(new RawIndexerCommand());
+    new JoystickButton(leftJoystick, 4).whileTrue(new RawAmpCommand());
+        new JoystickButton(leftJoystick, 5).whileTrue(new RawIndexerCommand());
+
 
     // Reset gyro
-    new JoystickButton(rightJoystick, 9).onTrue(new InstantCommand() { 
-                                                                       
-      @Override 
+    new JoystickButton(rightJoystick, 9).onTrue(new InstantCommand() {
+
+      @Override
       public void execute() {
         driveTrain.zeroGyroscope();
       }
@@ -120,8 +131,8 @@ public class RobotContainer {
       }
     });
 
-    new JoystickButton(rightJoystick, 7).onTrue(new InstantCommand() { 
-                                                                       
+    new JoystickButton(rightJoystick, 7).onTrue(new InstantCommand() {
+
       @Override
       public void execute() {
 

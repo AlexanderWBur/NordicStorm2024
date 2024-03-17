@@ -15,9 +15,18 @@ package frc.robot;
 public final class Constants {
 
   public static final double minIntakePower = 0.6; // 12 stack neo 550
-  public static final int intakeID = 0;
-  public static final int lowerFlywheelID = 10;
-  public static final int upperFlywheelID = 11;
+
+  public static final int intakeID = 10;
+  public static final int indexerID = 11;
+  public static final int shooterID = 16;
+  public static final int ampID = 17;
+  public static final int shooterPitchID = 18;
+  public static final int climberLeftID = 12;
+  public static final int climberRightID = 13;
+
+  
+   public static final int lowerFlywheelID = 2;
+   public static final int upperFlywheelID = 3;
 
 
   public static class OperatorConstants {

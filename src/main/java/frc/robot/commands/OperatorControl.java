@@ -32,17 +32,21 @@ public class OperatorControl extends Command {
 
         var leftStick = RobotContainer.leftJoystick;
         var rightStick = RobotContainer.rightJoystick;
-        double forward = -rightStick.getY();
-        double sideways = -rightStick.getX();
-        double rot = -rightStick.getTwist();
-        SmartDashboard.putNumber("stick", rot);
+        // double forward = -rightStick.getY();
+        // double sideways = -rightStick.getX();
+        // double rot = -rightStick.getTwist();
+        // SmartDashboard.putNumber("stick", rot);
+        var xbox = RobotContainer.xbox;
+        double forward = -xbox.getLeftY();
+        double sideways = -xbox.getLeftX();
+        double rot = -xbox.getRightX();
 
         double throttle = rightStick.getThrottle();
         throttle = Util.map(throttle, 1, -1, 0.1, 1);
-        if (forward < 0.008 && rot >= 0.14) {// weird thing with joystick
-            // rot = Util.map(rot, 0.15, in_max, out_min, out_max);
-            rot -= 0.14;
-        }
+        // if (forward < 0.008 && rot >= 0.14) {// weird thing with joystick
+        //     // rot = Util.map(rot, 0.15, in_max, out_min, out_max);
+        //     rot -= 0.14;
+        // }
         if (forward > 0.7 && false) {
             RobotContainer.driveTrain.driveVolts(new ChassisSpeeds(12, 0, 0));
             return;
