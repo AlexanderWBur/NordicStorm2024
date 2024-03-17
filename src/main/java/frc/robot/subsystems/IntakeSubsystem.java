@@ -48,6 +48,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("feed", ticksToStopFeed);
+        SmartDashboard.putNumber("stop", ticksToStopIntake);
+        SmartDashboard.putNumber("current", motorEncoder.getPosition());
+
+        // indexerPID.setReference(1, CANSparkMax.ControlType.kDutyCycle);
         updateMotorStats();
         hasNote = !prox.get();
         if (!triggered && hasNote) {
@@ -59,18 +64,24 @@ public class IntakeSubsystem extends SubsystemBase {
         }
 
         if(motorEncoder.getPosition() < ticksToStopFeed){
-            setMotorRaw(1);
-            indexer.set(1);
+            setMotorRaw(0.1);
+            indexerPID.setReference(.1,CANSparkMax.ControlType.kDutyCycle);
+
         } else if (motorEncoder.getPosition() < ticksToStopIntake) {
             setMotorRaw(Constants.minIntakePower);
+                         indexerPID.setReference(0,CANSparkMax.ControlType.kDutyCycle);
+
         } else if (System.currentTimeMillis() < timeToStop) {
             setMotorRaw(Constants.minIntakePower);
+                        //  indexerPID.setReference(0,CANSparkMax.ControlType.kDutyCycle);
+
         } else {
             setMotorRaw(0);
+            //  indexerPID.setReference(0,CANSparkMax.ControlType.kDutyCycle);
+
         }
 
         if(motorEncoder.getPosition() > ticksToStopFeed){
-            indexer.set(0);
         }
         SmartDashboard.putBoolean("has note", hasNote);
     }

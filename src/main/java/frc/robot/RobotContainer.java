@@ -106,7 +106,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new JoystickButton(rightJoystick, 2).onTrue(new IntakeCommand(0, 0));
+    new JoystickButton(rightJoystick, 2).onTrue(new IntakeCommand(.5, 0));
 
     new JoystickButton(xbox, 3).whileTrue(new FollowNote(true, false, 3.3, 3, false, 300));
 

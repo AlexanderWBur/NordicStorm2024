@@ -24,9 +24,6 @@ public final class Constants {
   public static final int climberLeftID = 12;
   public static final int climberRightID = 13;
 
-  
-   public static final int lowerFlywheelID = 2;
-   public static final int upperFlywheelID = 3;
 
 
   public static class OperatorConstants {
