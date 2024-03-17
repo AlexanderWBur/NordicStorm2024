@@ -69,7 +69,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
         } else if (motorEncoder.getPosition() < ticksToStopIntake) {
             setMotorRaw(Constants.minIntakePower);
-                         indexerPID.setReference(0,CANSparkMax.ControlType.kDutyCycle);
+                        //  indexerPID.setReference(0,CANSparkMax.ControlType.kDutyCycle);
 
         } else if (System.currentTimeMillis() < timeToStop) {
             setMotorRaw(Constants.minIntakePower);
