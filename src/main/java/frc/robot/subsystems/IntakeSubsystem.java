@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Util;
 
 public class IntakeSubsystem extends SubsystemBase {
 
@@ -52,7 +53,8 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("stop", ticksToStopIntake);
         SmartDashboard.putNumber("current", motorEncoder.getPosition());
 
-        // indexerPID.setReference(1, CANSparkMax.ControlType.kDutyCycle);
+        // indexerPID.setReference(Util.leftDebug(),
+        // CANSparkMax.ControlType.kDutyCycle);
         updateMotorStats();
         hasNote = !prox.get();
         if (!triggered && hasNote) {
@@ -63,30 +65,30 @@ public class IntakeSubsystem extends SubsystemBase {
             triggered = true;
         }
 
-        if(motorEncoder.getPosition() < ticksToStopFeed){
-            setMotorRaw(0.1);
-            indexerPID.setReference(.1,CANSparkMax.ControlType.kDutyCycle);
+        if (motorEncoder.getPosition() < ticksToStopFeed) {
+            setMotorRaw(1);
+            indexerPID.setReference(.1, CANSparkMax.ControlType.kDutyCycle);
 
         } else if (motorEncoder.getPosition() < ticksToStopIntake) {
             setMotorRaw(Constants.minIntakePower);
-                        //  indexerPID.setReference(0,CANSparkMax.ControlType.kDutyCycle);
+            indexerPID.setReference(0, CANSparkMax.ControlType.kDutyCycle);
 
         } else if (System.currentTimeMillis() < timeToStop) {
             setMotorRaw(Constants.minIntakePower);
-                        //  indexerPID.setReference(0,CANSparkMax.ControlType.kDutyCycle);
+            indexerPID.setReference(0, CANSparkMax.ControlType.kDutyCycle);
 
         } else {
             setMotorRaw(0);
-            //  indexerPID.setReference(0,CANSparkMax.ControlType.kDutyCycle);
+            indexerPID.setReference(0, CANSparkMax.ControlType.kDutyCycle);
 
         }
 
-        if(motorEncoder.getPosition() > ticksToStopFeed){
+        if (motorEncoder.getPosition() > ticksToStopFeed) {
         }
         SmartDashboard.putBoolean("has note", hasNote);
     }
 
-    public void sendToShooter(){
+    public void sendToShooter() {
         ticksToStopFeed = motorEncoder.getPosition() + 100;
 
     }

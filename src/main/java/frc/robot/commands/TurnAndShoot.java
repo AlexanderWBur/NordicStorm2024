@@ -23,19 +23,19 @@ public class TurnAndShoot extends Command {
   public void execute() {
     
     if(Math.abs(RobotContainer.shooterSubsystem.getAngleError()) < .5 && !hasSent){
-        RobotContainer.intake.sendToShooter();
-        hasSent = true;
+         RobotContainer.intake.sendToShooter();
+         hasSent = true;
     }
   }
 
   @Override
   public void end(boolean interrupted) {
-        RobotContainer.shooterSubsystem.setShooterAngle(-5);
+         RobotContainer.shooterSubsystem.setShooterAngle(-5);
 
   }
 
   @Override
   public boolean isFinished() {
     return false;
-  }
-}
+  } 
+} 
