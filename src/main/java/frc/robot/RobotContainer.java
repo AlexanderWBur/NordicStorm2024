@@ -14,6 +14,7 @@ import frc.robot.commands.RawPinionCommand;
 import frc.robot.commands.TurnAndShoot;
 import frc.robot.commands.RawIndexerCommand;
 import frc.robot.commands.auto.StraightAuto;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Pixy;
@@ -81,6 +82,8 @@ public class RobotContainer {
   public static IntakeSubsystem intake = new IntakeSubsystem();
 
   public static Pose2d targetLocation;
+
+  public static ClimberSubsystem climberSubsystem = new ClimberSubsystem();
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */

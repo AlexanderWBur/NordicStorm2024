@@ -20,7 +20,6 @@ private double power;
   @Override
   public void initialize() {
 
-    RobotContainer.intake.doIntake(5000);
   }
 
   @Override
