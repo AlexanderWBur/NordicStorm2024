@@ -24,8 +24,6 @@ public final class Constants {
   public static final int climberLeftID = 12;
   public static final int climberRightID = 13;
 
-
-
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }

@@ -26,6 +26,8 @@ import java.util.function.BooleanSupplier;
 import com.kauailabs.navx.frc.AHRS;
 import com.playingwithfusion.TimeOfFlight;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -78,10 +80,20 @@ public class RobotContainer {
 
   public static IntakeSubsystem intake = new IntakeSubsystem();
 
+  public static Pose2d targetLocation;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
+    
+    isRed = DriverStation.getAlliance().get() == Alliance.Red;
+
+    if(isRed){
+      targetLocation = new Pose2d(16.32, 5.546, new Rotation2d(0));
+    } else {
+      targetLocation = new Pose2d(0.239, 5.626, new Rotation2d(0));
+    }
 
     driveTrain.setDefaultCommand(new OperatorControl());
 
@@ -114,6 +126,9 @@ public class RobotContainer {
 
     new JoystickButton(leftJoystick, 3).whileTrue(new TurnAndShoot());
 
+    new JoystickButton(rightJoystick, 3).whileTrue(new TurnAndShoot());
+
+
 
 
     // Reset gyro
@@ -135,7 +150,7 @@ public class RobotContainer {
       @Override
       public void execute() {
 
-        driveTrain.setPose(4.81, 3.7686, 0);
+        driveTrain.setPose(1.492, 3.7624, 0);
       }
 
       @Override
