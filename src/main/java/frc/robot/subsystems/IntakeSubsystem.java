@@ -67,7 +67,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
         if (motorEncoder.getPosition() < ticksToStopFeed) {
             setMotorRaw(1);
-            indexerPID.setReference(.1, CANSparkMax.ControlType.kDutyCycle);
+            indexerPID.setReference(.3, CANSparkMax.ControlType.kDutyCycle);
 
         } else if (motorEncoder.getPosition() < ticksToStopIntake) {
             setMotorRaw(Constants.minIntakePower);
@@ -89,7 +89,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void sendToShooter() {
-        ticksToStopFeed = motorEncoder.getPosition() + 100;
+        ticksToStopFeed = motorEncoder.getPosition() + 300;
 
     }
 

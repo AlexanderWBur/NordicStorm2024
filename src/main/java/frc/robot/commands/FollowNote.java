@@ -74,7 +74,7 @@ public class FollowNote extends CommandPathPiece {
     @Override
     public void initialize() {
         targetTracker = new DriveToObject(pVal, forwardMod, maxTurn, stopWidth * 0, proxPVal, camWidth, camHeight);
-        targetTracker.setOffset(-55);
+        targetTracker.setOffset(0);
         RobotContainer.intake.doIntake(99999999);
     }
 

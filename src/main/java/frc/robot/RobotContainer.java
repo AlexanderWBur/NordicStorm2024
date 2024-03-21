@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoWithInit;
+import frc.robot.commands.DisableClimberLimits;
 import frc.robot.commands.FollowNote;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OperatorControl;
@@ -125,13 +126,15 @@ public class RobotContainer {
 
     new JoystickButton(xbox, 3).whileTrue(new FollowNote(true, false, 3.3, 3, false, 300));
 
-    new JoystickButton(rightJoystick, 1).whileTrue(new FollowNote(true, false, 3.3, 3, false, 300));
+    // new JoystickButton(rightJoystick, 1).whileTrue(new FollowNote(true, false, 3.3, 3, false, 300));
 
     new JoystickButton(leftJoystick, 3).whileTrue(new TurnAndShoot());
 
     new JoystickButton(rightJoystick, 3).whileTrue(new TurnAndShoot());
 
+    new JoystickButton(leftJoystick, 9).whileTrue(new DisableClimberLimits());
 
+    // new JoystickButton(xbox,)
 
 
     // Reset gyro

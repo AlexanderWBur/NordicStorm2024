@@ -56,7 +56,7 @@ public class VisionSubsystem extends SubsystemBase {
 
         Transform3d transform3d = new Transform3d(new Translation3d(0, -0.0508, -0.368), new Rotation3d(0, 0, 0));
 
-        noteCamera = new PhotonCamera("USB_2M_GS_camera");
+        noteCamera = new PhotonCamera("Arducam_OV9281_USB_Camera (1)");
         photonCamera = new PhotonCamera("Arducam_OV9281_USB_Camera");
         poseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
                 transform3d);

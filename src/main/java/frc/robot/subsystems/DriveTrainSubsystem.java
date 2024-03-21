@@ -173,7 +173,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
             driveMotor.getConfigurator().apply(slot0Configs, 0.01);
 
         }
-        drivetrainConfig.maxAcceleration = 3;
+        drivetrainConfig.maxAcceleration = 1;
         drivetrainConfig.maxVelocity = 4;
         drivetrainConfig.maxAnglularVelocity = 10;
         drivetrainConfig.maxAngularAcceleration = 5;
