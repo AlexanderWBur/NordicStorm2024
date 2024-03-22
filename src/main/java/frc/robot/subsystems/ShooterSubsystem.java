@@ -49,7 +49,7 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         
-         SmartDashboard.putNumber("Pinion", pinionEncoder.getPosition());
+        SmartDashboard.putNumber("Pinion", pinionEncoder.getPosition());
         //  updateShooter(); // top then bottom
     // setFlywheelsRaw(.25 * RobotContainer.leftJoystick.getY(), -.4 * RobotContainer.leftJoystick.getY());
     }

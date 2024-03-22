@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoWithInit;
 import frc.robot.commands.DisableClimberLimits;
+import frc.robot.commands.DoAmpSequence;
 import frc.robot.commands.FollowNote;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OperatorControl;
@@ -133,6 +134,9 @@ public class RobotContainer {
     new JoystickButton(rightJoystick, 3).whileTrue(new TurnAndShoot());
 
     new JoystickButton(leftJoystick, 9).whileTrue(new DisableClimberLimits());
+    new JoystickButton(leftJoystick, 1).whileTrue(new DoAmpSequence());
+
+
 
     // new JoystickButton(xbox,)
 

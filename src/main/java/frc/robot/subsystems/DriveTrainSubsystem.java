@@ -18,6 +18,8 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
+import com.playingwithfusion.TimeOfFlight;
+import com.playingwithfusion.TimeOfFlight.RangingMode;
 import com.revrobotics.AnalogInput;
 import com.swervedrivespecialties.swervelib.Mk3ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
@@ -103,6 +105,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
     private Pose2d pose;
     private final AHRS navx = new AHRS(Port.kMXP);
+    private final TimeOfFlight timeOf = new TimeOfFlight(0);
 
     // this is basically the 'privilege level' the rotation control ability is at.
     // So 0 means it will take anything, 1 means 1 or higher.
@@ -118,8 +121,10 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
     public DriveTrainSubsystem() {
 
+        timeOf.setRangingMode(RangingMode.Short, 25);
         fieldDisplay = new Field2d();
         SmartDashboard.putData(fieldDisplay);
+        
 
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive train");
 
@@ -195,6 +200,13 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         navx.zeroYaw();
     }
 
+    public double getRange(){
+        return timeOf.getRange();
+    }
+
+    public boolean isRangeValid(){
+        return timeOf.isRangeValid();
+    }
 
     /**
      * Goes positive as it goes counterclockwise. Degrees!
@@ -276,7 +288,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     @Override
     public void periodic() {
 
-        // SmartDashboard.putNumber("NavX Gyro Pitch", getGyroPitch());
+         SmartDashboard.putNumber("Time of", timeOf.getRange());
 
         for (int i = 0; i < swerveModules.size(); i++) {
             currentSwerveStates[i] = Util.stateFromModule(swerveModules.get(i));

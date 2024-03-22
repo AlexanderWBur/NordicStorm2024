@@ -7,9 +7,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
+import frc.robot.commands.paths.CommandPathPiece;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class TurnAndShoot extends Command {
+public class TurnAndShoot extends CommandPathPiece {
 
     boolean hasSent;
 

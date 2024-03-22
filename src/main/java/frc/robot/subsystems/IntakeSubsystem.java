@@ -97,6 +97,10 @@ public class IntakeSubsystem extends SubsystemBase {
         timeToStop = 0;
     }
 
+    public void idleIndexer(){
+        
+    }
+
     private double currentRPM;
 
     public void setMotorRaw(double rpm) {
