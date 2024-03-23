@@ -58,6 +58,7 @@ public class TrajectoryFollowPiece extends CommandPathPiece {
 
     @Override
     public void initialize() {
+        done = false;
         Pose2d currentPose = drivetrain.getPose();
         ChassisSpeeds currentSpeeds = drivetrain.getSpeeds();
         double speed = PathUtil.linearSpeedFromChassisSpeeds(currentSpeeds);

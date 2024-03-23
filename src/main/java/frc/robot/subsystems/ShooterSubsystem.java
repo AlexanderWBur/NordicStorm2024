@@ -7,6 +7,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -15,6 +16,8 @@ import frc.robot.RobotContainer;
 public class ShooterSubsystem extends SubsystemBase {
 
     double targetAngle = 0;
+
+        private DigitalInput prox = new DigitalInput(1);
 
     private CANSparkMax pinion = new CANSparkMax(Constants.shooterPitchID, MotorType.kBrushless);
    private SparkPIDController pinionPID = pinion.getPIDController();
@@ -27,6 +30,11 @@ public class ShooterSubsystem extends SubsystemBase {
     private CANSparkMax amp = new CANSparkMax(Constants.ampID, MotorType.kBrushless);
     private SparkPIDController ampPID = amp.getPIDController();
     private RelativeEncoder ampEncoder = amp.getEncoder();
+
+    private CANSparkMax indexer = new CANSparkMax(Constants.indexerID, MotorType.kBrushless);
+    private SparkPIDController indexerPID = indexer.getPIDController();
+    private RelativeEncoder indexerEncoder = indexer.getEncoder();
+
 
     
 
@@ -48,7 +56,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        
+        shooter.set(-.3);
+        indexer.set(.15);
+        amp.set(.4);
         SmartDashboard.putNumber("Pinion", pinionEncoder.getPosition());
         //  updateShooter(); // top then bottom
     // setFlywheelsRaw(.25 * RobotContainer.leftJoystick.getY(), -.4 * RobotContainer.leftJoystick.getY());

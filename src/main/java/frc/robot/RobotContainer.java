@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoWithInit;
 import frc.robot.commands.DisableClimberLimits;
 import frc.robot.commands.DoAmpSequence;
+import frc.robot.commands.DriveToPos;
 import frc.robot.commands.FollowNote;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OperatorControl;
@@ -123,9 +124,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new JoystickButton(rightJoystick, 2).onTrue(new IntakeCommand(.5, 0));
+    new JoystickButton(rightJoystick, 2).onTrue(new IntakeCommand(1, 0));
 
-    new JoystickButton(xbox, 3).whileTrue(new FollowNote(true, false, 3.3, 3, false, 300));
+    new JoystickButton(xbox, 3).whileTrue(new FollowNote(true, false, 3.3, 2.5, false, 300));
 
     // new JoystickButton(rightJoystick, 1).whileTrue(new FollowNote(true, false, 3.3, 3, false, 300));
 
@@ -135,6 +136,7 @@ public class RobotContainer {
 
     new JoystickButton(leftJoystick, 9).whileTrue(new DisableClimberLimits());
     new JoystickButton(leftJoystick, 1).whileTrue(new DoAmpSequence());
+    new JoystickButton(rightJoystick, 11).whileTrue(new DriveToPos());
 
 
 
@@ -160,7 +162,7 @@ public class RobotContainer {
       @Override
       public void execute() {
 
-        driveTrain.setPose(1.492, 3.7624, 0);
+        driveTrain.setPose(1.589, 3.7624, 0); // x was 1.38
       }
 
       @Override

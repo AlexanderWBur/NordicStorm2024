@@ -54,12 +54,12 @@ public class VisionSubsystem extends SubsystemBase {
             e.printStackTrace();
         }
 
-        Transform3d transform3d = new Transform3d(new Translation3d(0, -0.0508, -0.368), new Rotation3d(0, 0, 0));
+        Transform3d transform3d = new Transform3d(new Translation3d(-0.381, -0.1845, -0.2159), new Rotation3d(0, Math.toRadians(25), 0));
 
-        noteCamera = new PhotonCamera("Arducam_OV9281_USB_Camera (1)");
-        photonCamera = new PhotonCamera("Arducam_OV9281_USB_Camera");
+        noteCamera = new PhotonCamera("NoteCam");
+        photonCamera = new PhotonCamera("AmpCam");
         poseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera,
-                transform3d);
+         transform3d);
 
     }
 
@@ -84,13 +84,13 @@ public class VisionSubsystem extends SubsystemBase {
         var estimated = poseEstimator.update();
         var result = photonCamera.getLatestResult();
 
-        if (estimated.isPresent() /** && result.targets.size() >= 2 **/
+        if (estimated.isPresent()  && result.targets.size() >= 2 
         ) {
 
             var newPose = estimated.get();
             SmartDashboard.putNumber("Tags Visible", newPose.targetsUsed.size());
 
-            // RobotContainer.driveTrain.setPose(newPose.estimatedPose.toPose2d());
+            //  RobotContainer.driveTrain.setPose(newPose.estimatedPose.toPose2d());
 
             RobotContainer.driveTrain.addVisionMeasurment(
                     newPose.estimatedPose.toPose2d(),

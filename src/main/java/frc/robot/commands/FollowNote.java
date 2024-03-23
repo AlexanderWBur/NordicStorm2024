@@ -32,10 +32,10 @@ public class FollowNote extends CommandPathPiece {
     double turnValue = 0;
     double forwardValue = 0;
     double maxTurn = 3;
-    double pVal = 3; // 5
+    double pVal = 2; // 5
     double proxPVal = 0.07 * 0;
     double stopWidth = 80;
-    double forwardMod = 2;
+    double forwardMod = 1.8;
     boolean fullAuto = true;
     boolean hasGotABall = false;
     boolean shouldStop = false;
@@ -75,7 +75,7 @@ public class FollowNote extends CommandPathPiece {
     public void initialize() {
         targetTracker = new DriveToObject(pVal, forwardMod, maxTurn, stopWidth * 0, proxPVal, camWidth, camHeight);
         targetTracker.setOffset(0);
-        RobotContainer.intake.doIntake(99999999);
+        RobotContainer.intake.doIntake(999999999);
     }
 
     private ProcessedTarget findTarget(List<PhotonTrackedTarget> possibleTargets) {
@@ -104,11 +104,11 @@ public class FollowNote extends CommandPathPiece {
                 System.out.println("width:" + object.width);
                 System.out.println("height:" + object.height);
                 System.out.println("y:" + object.y);
-                if (object.y > 220) {
+                if (object.y + object.height > 220) {
                     if (endWhenClose) {
                         hasGotABall = true;
                     }
-                    // System.out.println("charge!");
+                     System.out.println("charge!");
 
                     timeToEndDrive = System.currentTimeMillis() + chargeTime;
                 }
@@ -142,7 +142,10 @@ public class FollowNote extends CommandPathPiece {
         //turnValue *= Math.abs(RobotContainer.rightJoystick.getY());
         //forwardValue *= Math.abs(RobotContainer.rightJoystick.getY());
         RobotContainer.driveTrain.limitDrive(new ChassisSpeeds(forwardValue, -turnValue * 0.1, -turnValue), 2);
-
+        if(RobotContainer.intake.hasNote()){
+            turnValue = 0;
+            shouldStop = true;
+        }
     }
 
     // Make this return true when this Command no longer needs to run execute()

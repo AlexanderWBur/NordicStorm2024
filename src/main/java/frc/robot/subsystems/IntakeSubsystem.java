@@ -20,10 +20,6 @@ public class IntakeSubsystem extends SubsystemBase {
     private SparkPIDController motorPID = motor.getPIDController();
     private RelativeEncoder motorEncoder = motor.getEncoder();
 
-    private CANSparkMax indexer = new CANSparkMax(Constants.indexerID, MotorType.kBrushless);
-    private SparkPIDController indexerPID = indexer.getPIDController();
-    private RelativeEncoder indexerEncoder = indexer.getEncoder();
-
     private boolean hasNote;
     private long timeOut;
     private long timeToStop = 0;
@@ -44,7 +40,9 @@ public class IntakeSubsystem extends SubsystemBase {
     public void doIntake(long timeOut) {
         triggered = hasNote;
         timeToStop = System.currentTimeMillis() + timeOut;
-
+        if(hasNote){
+            timeToStop = 0;
+        }
     }
 
     @Override
@@ -67,19 +65,19 @@ public class IntakeSubsystem extends SubsystemBase {
 
         if (motorEncoder.getPosition() < ticksToStopFeed) {
             setMotorRaw(1);
-            indexerPID.setReference(.3, CANSparkMax.ControlType.kDutyCycle);
+            // indexerPID.setReference(.3, CANSparkMax.ControlType.kDutyCycle);
 
         } else if (motorEncoder.getPosition() < ticksToStopIntake) {
             setMotorRaw(Constants.minIntakePower);
-            indexerPID.setReference(0, CANSparkMax.ControlType.kDutyCycle);
+            // indexerPID.setReference(0, CANSparkMax.ControlType.kDutyCycle);
 
         } else if (System.currentTimeMillis() < timeToStop) {
             setMotorRaw(Constants.minIntakePower);
-            indexerPID.setReference(0, CANSparkMax.ControlType.kDutyCycle);
+            // indexerPID.setReference(0, CANSparkMax.ControlType.kDutyCycle);
 
         } else {
             setMotorRaw(0);
-            indexerPID.setReference(0, CANSparkMax.ControlType.kDutyCycle);
+            // indexerPID.setReference(0, CANSparkMax.ControlType.kDutyCycle);
 
         }
 

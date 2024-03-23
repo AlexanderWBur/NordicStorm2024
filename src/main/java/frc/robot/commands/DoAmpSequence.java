@@ -85,7 +85,7 @@ public class DoAmpSequence extends SequentialCommandGroup {
                     if (forward < .1) {
                         forward = .1;
                     }
-                    if (RobotContainer.driveTrain.getRange() < 100) {
+                    if (RobotContainer.driveTrain.getRange() < 150) {
                         timeToEnd = System.currentTimeMillis() + 1000;
                     }
                 } else {
@@ -142,11 +142,11 @@ public class DoAmpSequence extends SequentialCommandGroup {
     public double getStrafeSpeed(double targetX) {
         double currentX = RobotContainer.driveTrain.getPose().getX();
         double error = targetX - currentX;
-        return Util.absClamp(error, 1.5);
+        return Util.absClamp(-error, 1.5);
     }
 
     public double snapToSide() {
-        double angleNeeded = -90;
+        double angleNeeded = 90;
 
         double angleDiff = Util.angleDiff(RobotContainer.driveTrain.getGyroDegrees(), angleNeeded);
         double p = 0.115;

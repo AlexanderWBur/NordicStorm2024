@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 
 // import com.ctre.phoenix.Util;
@@ -16,7 +17,7 @@ public class TurnAndShoot extends CommandPathPiece {
 
     public TurnAndShoot() {
         addRequirements(RobotContainer.intake);
-
+        // rotationPID.enableContinuousInput(-180, 180);
     }
 
     public static double getNeededTurnAngle(){
@@ -27,16 +28,15 @@ public class TurnAndShoot extends CommandPathPiece {
         return Math.toDegrees(angleNeeded);
 
     }
-
+     private PIDController rotationPID = new PIDController(0.115,0 , 0.007);
     public boolean rotateTowardTarget() {
         double angleNeeded = getNeededTurnAngle();
 
         double angleDiff = Util.angleDiff(RobotContainer.driveTrain.getGyroDegrees(), angleNeeded);
-        double p = 0.115;
         // if (vision.canSeeTarget) {
         //     angleDiff = -vision.bestTarget.getYaw();
         // }
-        double correction = angleDiff * p; // rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
+        double correction = rotationPID.calculate(-angleDiff , 0); // rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
 
         correction = Util.absClamp(correction, 5);
         RobotContainer.driveTrain.setRotationSpeed(correction, 1);
