@@ -26,7 +26,7 @@ public class PivotPiece extends CommandPathPiece {
 
     @Override
     public double getRequestedStartSpeed() {
-        return 0; // TODO?
+        return 0;
     }
 
     @Override

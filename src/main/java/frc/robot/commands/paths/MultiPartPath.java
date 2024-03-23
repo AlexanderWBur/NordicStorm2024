@@ -7,6 +7,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -194,6 +195,38 @@ public class MultiPartPath {
      */
     public void resetPosition(double x, double y){
         addParallelCommand(new ResetPosePiece(this, new Pose2d(x, y, new Rotation2d()))); // the rot 
+    }
+
+    /**
+     * Flips all waypoints in this command over the short center line on the field.
+     * Doesn't change any angles set, so the auto must do that itself.
+     * Used for making a blue autonomous work for the red side also.
+     */
+    public void flipAllX(){
+        for (var pieceInfo : pieces) {
+            var piece = pieceInfo.getFirst();
+            if (piece.getPieceType() == PieceType.Waypoint) {
+                WaypointPiece wpPiece = (WaypointPiece) piece;
+                Translation2d point = wpPiece.getPoint();
+                wpPiece.setPoint(new Translation2d(point.getX() - , point.getY()));
+            }
+        }
+    }
+
+    /**
+     * Flips all waypoints in this command over the long center line on the field.
+     * Doesn't change any angles set, so the auto must do that itself.
+     * On a year where the sides are 180* rotations of each other, this 
+     * along with flipAllX allows you to use true field positioning if you want, 
+     * meaning 0 is always the blue side.
+     */
+    public void flipAllY(){
+        for (var pieceInfo : pieces) {
+            var piece = pieceInfo.getFirst();
+            if (piece.getPieceType() == PieceType.Waypoint) {
+                ((WaypointPiece) piece).getClass();
+            }
+        }
     }
 
     public SequentialCommandGroup finalizePath() {
