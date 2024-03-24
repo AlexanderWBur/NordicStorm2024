@@ -30,6 +30,7 @@ import java.util.function.BooleanSupplier;
 import com.kauailabs.navx.frc.AHRS;
 import com.playingwithfusion.TimeOfFlight;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -109,6 +110,7 @@ public class RobotContainer {
     configureBindings();
   }
 
+  
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
    * created via the
@@ -126,17 +128,18 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(rightJoystick, 2).onTrue(new IntakeCommand(1, 0));
 
-    new JoystickButton(xbox, 3).whileTrue(new FollowNote(true, false, 3.3, 2.5, false, 300));
+    // new JoystickButton(xbox, 3).whileTrue(new FollowNote(true, false, 3.3, 2.5, false, 300));
 
     // new JoystickButton(rightJoystick, 1).whileTrue(new FollowNote(true, false, 3.3, 3, false, 300));
 
-    new JoystickButton(leftJoystick, 3).whileTrue(new TurnAndShoot());
+    // new JoystickButton(leftJoystick, 3).whileTrue(new TurnAndShoot());
 
-    new JoystickButton(rightJoystick, 3).whileTrue(new TurnAndShoot());
+    // new JoystickButton(rightJoystick, 3).whileTrue(new TurnAndShoot());
 
     new JoystickButton(leftJoystick, 9).whileTrue(new DisableClimberLimits());
-    new JoystickButton(leftJoystick, 1).whileTrue(new DoAmpSequence());
+    new JoystickButton(xbox, 5).whileTrue(new DoAmpSequence());
     new JoystickButton(rightJoystick, 11).whileTrue(new DriveToPos());
+    // new JoystickButton(xbox,)
 
 
 
@@ -144,7 +147,7 @@ public class RobotContainer {
 
 
     // Reset gyro
-    new JoystickButton(rightJoystick, 9).onTrue(new InstantCommand() {
+    new JoystickButton(xbox, XboxController.Button.kBack.value).onTrue(new InstantCommand() {
 
       @Override
       public void execute() {
@@ -157,7 +160,7 @@ public class RobotContainer {
       }
     });
 
-    new JoystickButton(rightJoystick, 7).onTrue(new InstantCommand() {
+    new JoystickButton(xbox, XboxController.Button.kStart.value).onTrue(new InstantCommand() {
 
       @Override
       public void execute() {

@@ -26,6 +26,7 @@ import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -124,7 +125,6 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         timeOf.setRangingMode(RangingMode.Short, 25);
         fieldDisplay = new Field2d();
         SmartDashboard.putData(fieldDisplay);
-        
 
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive train");
 
@@ -200,11 +200,11 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         navx.zeroYaw();
     }
 
-    public double getRange(){
+    public double getRange() {
         return timeOf.getRange();
     }
 
-    public boolean isRangeValid(){
+    public boolean isRangeValid() {
         return timeOf.isRangeValid();
     }
 
@@ -245,10 +245,12 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         odometry.resetPosition(Rotation2d.fromDegrees(getGyroDegrees()), currentSwervePositions,
                 new Pose2d(x, y, Rotation2d.fromDegrees(getGyroDegrees())));
     }
-    public void addVisionMeasurment(Pose2d pos, double timeStamp){
+
+    public void addVisionMeasurment(Pose2d pos, double timeStamp) {
 
         odometry.addVisionMeasurement(pos, timeStamp);
     }
+
     public void resetAngle() {
         navx.reset();
         odometry.resetPosition(new Rotation2d(getGyroRadians()), currentSwervePositions, pose);
@@ -265,6 +267,17 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         navx.setAngleAdjustment(-degrees);
         odometry.resetPosition(new Rotation2d(getGyroRadians()), currentSwervePositions, pose);
 
+    }
+
+    private PIDController rotationPID = new PIDController(0.115, 0, 0.007);
+
+    public double getTurnToTarget(double target) {
+        double angleDiff = Util.angleDiff(RobotContainer.driveTrain.getGyroDegrees(), target);
+        double correction = rotationPID.calculate(-angleDiff, 0); // rotController.calculate(drivetrain.getGyroRadians(),
+                                                                  // angleNeeded);
+
+        correction = Util.absClamp(correction, 5);
+        return correction;
     }
 
     public ChassisSpeeds getSpeeds() {
@@ -288,14 +301,17 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     @Override
     public void periodic() {
 
-         SmartDashboard.putNumber("Time of", timeOf.getRange());
+        SmartDashboard.putNumber("Time of", timeOf.getRange());
 
         for (int i = 0; i < swerveModules.size(); i++) {
             currentSwerveStates[i] = Util.stateFromModule(swerveModules.get(i));
 
-            // SmartDashboard.putNumber("Module " + i, Units.radiansToDegrees(swerveModules.get(i).getSteerAngle()));
-            // SmartDashboard.putNumber("Module speed " + i, (swerveModules.get(i).getDriveVelocity()));
-            // SmartDashboard.putNumber("Modulex raw " + i, (swerveModules.get(i).getSteerAngle()));
+            // SmartDashboard.putNumber("Module " + i,
+            // Units.radiansToDegrees(swerveModules.get(i).getSteerAngle()));
+            // SmartDashboard.putNumber("Module speed " + i,
+            // (swerveModules.get(i).getDriveVelocity()));
+            // SmartDashboard.putNumber("Modulex raw " + i,
+            // (swerveModules.get(i).getSteerAngle()));
 
         }
         updateModulePositions();
@@ -308,7 +324,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         fieldDisplay.setRobotPose(pose.getX(), pose.getY(), new Rotation2d(getGyroRadians()));
         // SmartDashboard.putNumber("Pitch", navx.getRoll());
 
-         SmartDashboard.putNumber("driveAng", getGyroDegrees());
+        SmartDashboard.putNumber("driveAng", getGyroDegrees());
 
     }
 

@@ -28,18 +28,11 @@ public class TurnAndShoot extends CommandPathPiece {
         return Math.toDegrees(angleNeeded);
 
     }
-     private PIDController rotationPID = new PIDController(0.115,0 , 0.007);
+     
     public boolean rotateTowardTarget() {
         double angleNeeded = getNeededTurnAngle();
-
         double angleDiff = Util.angleDiff(RobotContainer.driveTrain.getGyroDegrees(), angleNeeded);
-        // if (vision.canSeeTarget) {
-        //     angleDiff = -vision.bestTarget.getYaw();
-        // }
-        double correction = rotationPID.calculate(-angleDiff , 0); // rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
-
-        correction = Util.absClamp(correction, 5);
-        RobotContainer.driveTrain.setRotationSpeed(correction, 1);
+        RobotContainer.driveTrain.setRotationSpeed(RobotContainer.driveTrain.getTurnToTarget(angleNeeded), 1);
         return Math.abs(angleDiff) < 3;
     }
 

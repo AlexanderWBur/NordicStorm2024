@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import frc.robot.commands.FollowNote;
 // import frc.robot.subsystems.TimeOfFlightSubsystem;
+import frc.robot.commands.TurnAndShoot;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -105,10 +107,24 @@ public class Robot extends TimedRobot {
     }
   }
 
+  public static TurnAndShoot turnAndShoot = new TurnAndShoot();
+  public static FollowNote followNote = new FollowNote(true, false, 3.3, 2.5, false, 300);
+
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    
+    if(RobotContainer.xbox.getRightTriggerAxis() > .7 && !turnAndShoot.isScheduled()){
+      turnAndShoot.schedule();
+    }
+    if(RobotContainer.xbox.getRightTriggerAxis() < .7 && turnAndShoot.isScheduled()){
+      turnAndShoot.cancel();
+    }
+    if(RobotContainer.xbox.getLeftTriggerAxis() > .7 && !followNote.isScheduled()){
+      followNote.schedule();
+    }
+    if(RobotContainer.xbox.getLeftTriggerAxis() < .7 && followNote.isScheduled()){
+      followNote.cancel();
+    }
   }
 
   @Override
