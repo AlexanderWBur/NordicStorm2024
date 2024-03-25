@@ -203,7 +203,10 @@ while running:
                 graph_all_points(curves, graphSurf)
 
             if e.key == pygame.K_w:
-                choices = easygui.multchoicebox("which to write?", choices=curves.keys())
+                if len(curves) >= 2:
+                    choices = easygui.multchoicebox("which to write?", choices=curves.keys())
+                else:
+                    choices = curves.keys()[0]
                 if choices:
                     for choice in choices:
                         write_java_file(curves[choice])
