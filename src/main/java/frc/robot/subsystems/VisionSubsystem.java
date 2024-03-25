@@ -66,10 +66,10 @@ public class VisionSubsystem extends SubsystemBase {
 
     }
 
-    public static double visToRealDistance(double distanceV) {
+    public static double visToRealAngle(double ang) {
 
-        double x = distanceV;
-        double result = 0.36617022865927057 * x * x + -0.861823000875111 * x + 2.523746695214376; // CURVE:distance,09:25,02/22
+        double x = ang;
+        double result = -0.0001186658485288733*x*x + 1.006091360515186*x + -0.9259037493455889; // CURVE:real,08:39,03/24
         return result;
     }
 
@@ -104,7 +104,7 @@ public class VisionSubsystem extends SubsystemBase {
 
         SmartDashboard.putBoolean("Can it see a tag? ", estimated.isPresent());
 
-        if (result.hasTargets() && Math.abs(result.getBestTarget().getYaw()) < 2) {
+        if (result.hasTargets() && Math.abs(result.getBestTarget().getYaw()) < 3) {
 
             var bestTarget = result.getBestTarget();
 
@@ -119,12 +119,12 @@ public class VisionSubsystem extends SubsystemBase {
             double height = bottomCorner.y - topCorner.y;
             double targetsY = topCorner.y + height / 2;
             SmartDashboard.putNumber("targetsY", targetsY);
-
+            double pitch = visToRealAngle(bestTarget.getPitch());
             double distance = PhotonUtils.calculateDistanceToTargetMeters(
                     CAMERA_HEIGHT_METERS,
                     tagPose.get().getZ(),
                     CAMERA_PITCH_RADIANS,
-                    Units.degreesToRadians(bestTarget.getPitch()));
+                    Units.degreesToRadians(pitch));
 
             /*Pose2d newPose = PhotonUtils.estimateFieldToRobot(CAMERA_HEIGHT_METERS, tagPose.get().getZ(), CAMERA_PITCH_RADIANS,
                     Units.degreesToRadians(bestTarget.getPitch()), Rotation2d.fromDegrees(bestTarget.getYaw()),
@@ -142,13 +142,15 @@ public class VisionSubsystem extends SubsystemBase {
             double robotX = tagPose.get().getX() + -x;
             double robotY = tagPose.get().getY() + y;
 
-            // robotX +=(transform3d.getX() *
-            // Math.cos(RobotContainer.driveTrain.getGyroRadians())) - (transform3d.getY() *
-            // Math.sin(RobotContainer.driveTrain.getGyroRadians()));
-            // robotY+= (transform3d.getX() *
-            // Math.sin(RobotContainer.driveTrain.getGyroRadians())) + (transform3d.getY() *
-            // Math.cos(RobotContainer.driveTrain.getGyroRadians()));
+            robotX +=(transform3d.getX() *
+            Math.cos(RobotContainer.driveTrain.getGyroRadians())) - (transform3d.getY() *
+            Math.sin(RobotContainer.driveTrain.getGyroRadians()));
+            robotY+= (transform3d.getX() *
+            Math.sin(RobotContainer.driveTrain.getGyroRadians())) + (transform3d.getY() *
+            Math.cos(RobotContainer.driveTrain.getGyroRadians()));
+
             RobotContainer.driveTrain.setPose(robotX, robotY, 0);
+            //RobotContainer.driveTrain.addVisionMeasurment(new Pose2d(robotX, robotY, new Rotation2d(RobotContainer.driveTrain.getGyroRadians())), System.currentTimeMillis() - result.getLatencyMillis());
             return;
         }
 

@@ -193,7 +193,10 @@ while running:
                 curves=load_curves()
                 #graph_all_points(curves, graphSurf)
             if e.key == pygame.K_o:
-                choice = easygui.choicebox("which to change order of?", choices=curves.keys())
+                if len(curves)>1:
+                    choice = easygui.choicebox("which to change order of?", choices=curves.keys())
+                else:
+                    choice = list(curves.keys())[0]
                 if choice is None: continue
                 curve = curves[choice]
                 
@@ -206,10 +209,11 @@ while running:
                 if len(curves) >= 2:
                     choices = easygui.multchoicebox("which to write?", choices=curves.keys())
                 else:
-                    choices = curves.keys()[0]
+                    choices = [list(curves.keys())[0]]
                 if choices:
                     for choice in choices:
                         write_java_file(curves[choice])
+                    easygui.msgbox("Wrote %i curves" % len(choices))
         if e.type == pygame.MOUSEMOTION:
             disp_point = None
             for curve in curves.values():
