@@ -104,7 +104,7 @@ public class FollowNote extends CommandPathPiece {
                 System.out.println("width:" + object.width);
                 System.out.println("height:" + object.height);
                 System.out.println("y:" + object.y);
-                if (object.y + object.height > 220) {
+                if (object.y + object.height > 170) {
                     if (endWhenClose) {
                         hasGotABall = true;
                     }

@@ -99,7 +99,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
             new Translation2d(-Constants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0,
                     -Constants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
-    private final SwerveDrivePoseEstimator odometry;
+    private final SwerveDriveOdometry odometry;
     private ChassisSpeeds targetChassisSpeeds;
     private SwerveModuleState currentSwerveStates[] = new SwerveModuleState[4];
     private SwerveModulePosition currentSwervePositions[] = new SwerveModulePosition[4];
@@ -187,9 +187,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
         pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0)); // x1
         updateModulePositions();
-        odometry = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(0), currentSwervePositions, pose,
-                VecBuilder.fill(.5, .05, Units.degreesToRadians(5)),
-                VecBuilder.fill(.5, .5, Units.degreesToRadians(30)));
+        odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(0), currentSwervePositions, pose);
         // SmartDashboard.putNumber("MaxAccel", 4);
         targetChassisSpeeds = new ChassisSpeeds(0, 0, 0);
         drive(0, 0, 0);
@@ -248,7 +246,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
     public void addVisionMeasurment(Pose2d pos, double timeStamp) {
 
-        odometry.addVisionMeasurement(pos, timeStamp);
+        // odometry.addVisionMeasurement(pos, timeStamp);
     }
 
     public void resetAngle() {

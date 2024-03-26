@@ -81,12 +81,9 @@ public class DoAmpSequence extends SequentialCommandGroup {
                 double error = targetX - currentX;
                 double forward;
                 if (RobotContainer.driveTrain.isRangeValid()) {
-                    forward = RobotContainer.driveTrain.getRange() * 0.001;
-                    if (forward < .1) {
-                        forward = .1;
-                    }
+                    forward = 0.75; //RobotContainer.driveTrain.getRange() * 0.001;
                     if (RobotContainer.driveTrain.getRange() < 150 && timeToEnd == 0) {
-                        timeToEnd = System.currentTimeMillis() + 200;
+                        timeToEnd = System.currentTimeMillis() + 100;
                     }
                 } else {
                     forward = 2;
@@ -130,7 +127,7 @@ public class DoAmpSequence extends SequentialCommandGroup {
 
             @Override
             public void end(boolean isInterupted) {
-                RobotContainer.shooterSubsystem.setShooterAngle(-5);
+                RobotContainer.shooterSubsystem.setShooterAngle(-2);
             }
 
             @Override

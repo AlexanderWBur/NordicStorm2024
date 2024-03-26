@@ -53,7 +53,7 @@ public class TurnAndShoot extends CommandPathPiece {
 
     @Override
     public void end(boolean interrupted) {
-        RobotContainer.shooterSubsystem.setShooterAngle(-5);
+        RobotContainer.shooterSubsystem.setShooterAngle(-2);
 
     }
 

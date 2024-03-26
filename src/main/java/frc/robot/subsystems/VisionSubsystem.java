@@ -73,6 +73,13 @@ public class VisionSubsystem extends SubsystemBase {
         return result;
     }
 
+     public static double visToRealYaw(double ang) {
+
+        double x = ang;
+        double result = 3.234345372689341e-05*x*x*x + 0.0004929175979537224*x*x + 0.9054243758812673*x + -0.3461211847874382; // CURVE:realyaw,09:06,03/25
+        return result;
+    }
+
     public List<PhotonTrackedTarget> getTargets() {
 
         return notes;
@@ -103,14 +110,22 @@ public class VisionSubsystem extends SubsystemBase {
         }
 
         SmartDashboard.putBoolean("Can it see a tag? ", estimated.isPresent());
+        PhotonTrackedTarget bestTarget = null;
+        if(result.hasTargets()){
+            bestTarget = result.targets.get(0);
+            for(PhotonTrackedTarget possible: result.targets){
+                if(Math.abs(possible.getYaw()) < Math.abs(bestTarget.getYaw())){
+                    bestTarget = possible;
+                }
+            }
+        }
+        if (result.hasTargets() && Math.abs(bestTarget.getYaw()) < 10) {
 
-        if (result.hasTargets() && Math.abs(result.getBestTarget().getYaw()) < 3) {
-
-            var bestTarget = result.getBestTarget();
-
+            // var bestTarget = result.getBestTarget();
+            System.out.println("used "+bestTarget.getFiducialId());
             var tagPose = layout.getTagPose(bestTarget.getFiducialId());
 
-            double yaw = 180 + bestTarget.getYaw() -
+            double yaw = 180 + visToRealYaw(bestTarget.getYaw()) -
                     RobotContainer.driveTrain.getGyroDegrees();
 
             TargetCorner bottomCorner = bestTarget.getDetectedCorners().get(0);
