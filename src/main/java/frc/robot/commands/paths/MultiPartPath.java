@@ -199,6 +199,7 @@ public class MultiPartPath {
 
     /**
      * Flips all waypoints in this command over the short center line on the field.
+     * It also flips the resetPosition pieces. 
      * Doesn't change any angles set, so the auto must do that itself.
      * Used for making a blue autonomous work for the red side also.
      */
@@ -208,13 +209,15 @@ public class MultiPartPath {
             if (piece.getPieceType() == PieceType.Waypoint) {
                 WaypointPiece wpPiece = (WaypointPiece) piece;
                 Translation2d point = wpPiece.getPoint();
-                wpPiece.setPoint(new Translation2d(point.getX() - , point.getY()));
+                double totalWidth = 16.54;
+                wpPiece.setPoint(new Translation2d(totalWidth - point.getX(), point.getY()));
             }
         }
     }
 
     /**
      * Flips all waypoints in this command over the long center line on the field.
+     * It also flips the resetPosition pieces. 
      * Doesn't change any angles set, so the auto must do that itself.
      * On a year where the sides are 180* rotations of each other, this 
      * along with flipAllX allows you to use true field positioning if you want, 
@@ -224,7 +227,10 @@ public class MultiPartPath {
         for (var pieceInfo : pieces) {
             var piece = pieceInfo.getFirst();
             if (piece.getPieceType() == PieceType.Waypoint) {
-                ((WaypointPiece) piece).getClass();
+                WaypointPiece wpPiece = (WaypointPiece) piece;
+                Translation2d point = wpPiece.getPoint();
+                double totalHeight = 8.21;
+                wpPiece.setPoint(new Translation2d(point.getX(), totalHeight - point.getY()));
             }
         }
     }
