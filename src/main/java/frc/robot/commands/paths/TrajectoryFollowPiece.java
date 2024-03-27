@@ -7,7 +7,6 @@ import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -16,7 +15,6 @@ import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstrain
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.math.Pair;
 
@@ -50,7 +48,6 @@ public class TrajectoryFollowPiece extends CommandPathPiece {
         this.drivetrainConfig = path.getDrivetrainConfig();
     }
 
-
     @Override
     public double getRequestedStartSpeed() {
         return 0; // TODO?
@@ -70,20 +67,21 @@ public class TrajectoryFollowPiece extends CommandPathPiece {
         if (Math.abs(speed) < 1) {
             Translation2d firstPoint; // calculate the direction from the second-to-last to the last point.
 
-            if(interiorPoints.size()>0){
+            if (interiorPoints.size() > 0) {
                 firstPoint = interiorPoints.get(0);
-            }else{
+            } else {
                 firstPoint = endPosition;
             }
-            startMovementDirection = new Rotation2d(firstPoint.getX() - currentPose.getX(), firstPoint.getY() - currentPose.getY());
+            startMovementDirection = new Rotation2d(firstPoint.getX() - currentPose.getX(),
+                    firstPoint.getY() - currentPose.getY());
 
         } else {
             // the time to stop times 1/2 to allow curve
-            double futureMultiplier = 2.5/drivetrainConfig.maxAcceleration; 
+            /*double futureMultiplier = 2.5 / drivetrainConfig.maxAcceleration;
             Pose2d futurePose = currentPose
                     .plus(new Transform2d(new Translation2d(globalSpeeds.vxMetersPerSecond * futureMultiplier,
-                            globalSpeeds.vyMetersPerSecond * futureMultiplier), new Rotation2d()));
-            //interiorPoints.add(futurePose.getTranslation());
+                            globalSpeeds.vyMetersPerSecond * futureMultiplier), new Rotation2d()));*/
+            // interiorPoints.add(futurePose.getTranslation());
             startMovementDirection = new Rotation2d(globalSpeeds.vxMetersPerSecond, globalSpeeds.vyMetersPerSecond);
         }
         currentPose = new Pose2d(currentPose.getTranslation(), startMovementDirection);
@@ -91,7 +89,7 @@ public class TrajectoryFollowPiece extends CommandPathPiece {
         for (int i = 0; i < waypoints.size() - 1; i++) { // don't add the last waypoint, it is not interior.
             interiorPoints.add(waypoints.get(i).getPoint());
         }
-      
+
         double endDirection;
         if (end.forcedEndDirection == null) {
             Translation2d from; // calculate the direction from the second-to-last to the last point.
@@ -114,18 +112,18 @@ public class TrajectoryFollowPiece extends CommandPathPiece {
         trajectory = TrajectoryGenerator.generateTrajectory(currentPose, interiorPoints, endPose, trajectoryConfig);
 
         List<State> states = trajectory.getStates();
+        int j = 0;
         for (int i = 0; i < waypoints.size(); i++) {
-            // TODO this is all wrong, states does not equal waypoints
-
-            SequentialCommandGroup group = new SequentialCommandGroup();
-            State state = states.get(i + 1); // +1 because state 0 is start position, there cannot be commands
-                                             // there.
-            for (CommandPathPiece command : waypoints.get(i).parallelCommands) {
-                group.addCommands(command);
+            while (!states.get(j).poseMeters.getTranslation().equals(waypoints.get(i).getPoint())){ // loop until the state = the waypoint
+                j++;
             }
             if (waypoints.get(i).parallelCommands.size() > 0) {
+                SequentialCommandGroup group = new SequentialCommandGroup();
+                for (CommandPathPiece command : waypoints.get(i).parallelCommands) {
+                    group.addCommands(command);
+                }
                 commandTriggerTimes
-                        .add(new Pair<>(Double.valueOf(state.timeSeconds), group));
+                        .add(new Pair<>(Double.valueOf(states.get(j).timeSeconds), group));
             }
 
         }
@@ -137,11 +135,10 @@ public class TrajectoryFollowPiece extends CommandPathPiece {
                         drivetrainConfig.positionCorrectionD),
                 path.getRotationController()); // uses the path's rotation controller for consistency
         controller.setTolerance(new Pose2d(
-                    new Translation2d(drivetrainConfig.endOfTrajectoryPositionTolerance,
-                            drivetrainConfig.endOfTrajectoryPositionTolerance),
-                    new Rotation2d(drivetrainConfig.endOfTrajectoryAngleTolerance)));
+                new Translation2d(drivetrainConfig.endOfTrajectoryPositionTolerance,
+                        drivetrainConfig.endOfTrajectoryPositionTolerance),
+                new Rotation2d(drivetrainConfig.endOfTrajectoryAngleTolerance)));
         startTime = System.currentTimeMillis();
-
     }
 
     @Override
@@ -168,9 +165,9 @@ public class TrajectoryFollowPiece extends CommandPathPiece {
 
         ChassisSpeeds speeds = controller.calculate(currentPose, goal, new Rotation2d(targetRotation));
         drivetrain.drive(speeds);
-        //System.out.println(speeds);
+        // System.out.println(speeds);
         if (timeProgressSeconds >= trajectory.getTotalTimeSeconds()) {
-            
+
             if (controller.atReference()) {
                 done = true;
             }

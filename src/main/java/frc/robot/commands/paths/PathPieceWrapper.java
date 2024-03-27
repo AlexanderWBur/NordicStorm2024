@@ -1,7 +1,6 @@
 package frc.robot.commands.paths;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 /**
  * This class takes any standard Command and makes into a CommandPathPiece. This

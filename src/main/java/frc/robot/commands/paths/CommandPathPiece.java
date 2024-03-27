@@ -3,7 +3,7 @@ package frc.robot.commands.paths;
 import edu.wpi.first.wpilibj2.command.*;
 
 public class CommandPathPiece extends Command implements PathPiece {
-    
+
     /**
      * Is used only needed if interruptsTrajectory is true.
      * 
@@ -12,13 +12,10 @@ public class CommandPathPiece extends Command implements PathPiece {
     public double getRequestedStartSpeed() {
         return 0;
     }
-    boolean interrupts = false;
 
     @Override
-    public  PieceType getPieceType() {
+    public PieceType getPieceType() {
         return PieceType.Command;
     }
-   
-    
 
 }
