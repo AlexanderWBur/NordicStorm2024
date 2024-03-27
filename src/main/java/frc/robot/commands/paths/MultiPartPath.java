@@ -20,15 +20,15 @@ import frc.robot.commands.paths.PathPiece.PieceType;
  * autonomous. Used for making a smooth, continous motion with some actions
  * along the way. All units are in meters or degrees!
  * <p>
- * Coordinates are all in meters. The axis directions are generally oriented
- * based on what alliance you are on.
+ * Coordinates are all in meters. You should use a consistent coordinate system,
+ * with the origin on the blue right corner.
  * <p>
- * Everywhere, x represents the axis the long way on the field, eg between the
- * red and blue alliance stations. Positive x means forward! Toward the opposite
+ * Everywhere, x represents the axis the long way on the field, between the
+ * red and blue alliance stations. Positive x means forward! Toward the red
  * alliance's station.
  * <p>
  * While y represents the short axis, between the two side walls. Positive y
- * means to the left, from your driver station's perspective.
+ * means to the left, from the blue driver station's perspective.
  * <p>
  * It's like you are looking at the field from the stands.
  * <p>
@@ -85,9 +85,7 @@ public class MultiPartPath {
     /**
      * If the piece will have an effect on the trajectory, so it needs to be
      * interrupted. You should use addParallelCommand if it is an instant
-     * instruction, such as setting
-     * shooter speed.
-     * 
+     * instruction, such as setting shooter speed.
      */
 
     public void addSequentialCommand(CommandPathPiece command) {
@@ -171,8 +169,8 @@ public class MultiPartPath {
     /**
      * When this part is run, the maxVelocity on the drivetrainConfig will be
      * changed. This will affect the speed while moving in a trajectory between
-     * waypoints, but it will not be enforced for user commands.
-     * 
+     * waypoints, but it will not be enforced for user commands. It won't take effect
+     * until the next trajectory, so after some sequential command.
      * @param maxVelocity new max speed in meters per second.
      */
     public void changeMaxVelocity(double maxVelocity) {
@@ -182,7 +180,8 @@ public class MultiPartPath {
     /**
      * When this part is run, the maxAcceleration on the drivetrainConfig will be
      * changed. This will affect the acceleration while moving in a trajectory
-     * between waypoints, but it will not be enforced for user commands.
+     * between waypoints, but it will not be enforced for user commands. It won't take effect
+     * until the next trajectory, so after some sequential command.
      * 
      * @param maxAcceleration new max acceleration in meters per second per second.
      */
