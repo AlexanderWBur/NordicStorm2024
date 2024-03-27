@@ -2,8 +2,6 @@ package frc.robot.commands.paths;
 
 import java.lang.reflect.Field;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
 /**
  * Used to set the value of a DrivetrainConfig at runtime using reflection
  */

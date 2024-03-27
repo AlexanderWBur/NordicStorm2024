@@ -1,60 +1,47 @@
 package frc.robot.commands.paths;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import edu.wpi.first.math.controller.HolonomicDriveController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.Command;
 
 public class PivotPiece extends CommandPathPiece {
 
     private PathableDrivetrain drivetrain;
     private DriveTrainConfig drivetrainConfig;
-    private HolonomicDriveController controller;
+    private ProfiledPIDController controller;
+    private double targetAngle;
 
-    PivotPiece(PathableDrivetrain drivetrain, List<WaypointPiece> waypoints, double endVelocity,
-            MultiPartPath path) {
+    PivotPiece(PathableDrivetrain drivetrain, double targetAngle, MultiPartPath path) {
         this.drivetrain = drivetrain;
- 
+        this.targetAngle = Math.toRadians(targetAngle);
         this.drivetrainConfig = path.getDrivetrainConfig();
+        controller = path.getRotationController();
     }
-
 
     @Override
     public double getRequestedStartSpeed() {
-        return 0; // TODO?
+        return 0;
     }
 
     @Override
     public void initialize() {
-        Pose2d currentPose = drivetrain.getPose();
-        ChassisSpeeds currentSpeeds = drivetrain.getSpeeds();
-        double speed = PathUtil.linearSpeedFromChassisSpeeds(currentSpeeds);
-        ChassisSpeeds globalSpeeds = PathUtil.rotateSpeeds(currentSpeeds, drivetrain.getGyroRadians());
-        List<Translation2d> interiorPoints = new ArrayList<>();
-        Rotation2d startMovementDirection = null;
-
 
     }
 
     @Override
     public void execute() {
-        
-
+        drivetrain.drive(new ChassisSpeeds(0, 0, controller.calculate(drivetrain.getGyroRadians(), targetAngle)));
     }
 
     @Override
     public void end(boolean interrupted) {
+        drivetrain.drive(new ChassisSpeeds(0, 0, 0));
 
     }
 
     @Override
     public boolean isFinished() {
-        return true;
+        return controller.getPositionError() < Math.toRadians(5)
+                && controller.getVelocityError() < drivetrainConfig.stopAngularVelocityTolerance;
     }
 
 }

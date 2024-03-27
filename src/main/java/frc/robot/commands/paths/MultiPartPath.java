@@ -7,11 +7,9 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-///import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -46,10 +44,11 @@ public class MultiPartPath {
     DriveTrainConfig drivetrainConfig;
     ProfiledPIDController rotationController;
 
-    private MultiPartPath parent;
-    
-    //contains the piece and if it interrupts
+    //private MultiPartPath parent;
+
+    // contains the piece and if it interrupts
     private List<Pair<PathPiece, Boolean>> pieces = new ArrayList<>();
+
     /**
      * Constructs a path.
      * 
@@ -70,7 +69,7 @@ public class MultiPartPath {
                         drivetrainConfig.maxAngularAcceleration));
         rotationController.enableContinuousInput(Math.toRadians(-180), Math.toRadians(180));
         this.drivetrain = drivetrain;
-        this.parent = parent;
+        //this.parent = parent;
     }
 
     /**
@@ -85,7 +84,8 @@ public class MultiPartPath {
 
     /**
      * If the piece will have an effect on the trajectory, so it needs to be
-     * interrupted. You should use addParallelCommand if it is an instant instruction, such as setting
+     * interrupted. You should use addParallelCommand if it is an instant
+     * instruction, such as setting
      * shooter speed.
      * 
      */
@@ -93,17 +93,19 @@ public class MultiPartPath {
     public void addSequentialCommand(CommandPathPiece command) {
         pieces.add(new Pair<>(command, true));
     }
-    
+
     /**
      * Wraps a plain command so it can be used in the path
+     * 
      * @param command
      */
     public void addSequentialCommand(Command command, double startSpeed) {
         addSequentialCommand(new PathPieceWrapper(command, startSpeed));
     }
+
     /**
      * If the piece will not have an effect on the trajectory, so it can keep going.
-     * You should use addSequentialCommand if it is an driving instruction, such as 
+     * You should use addSequentialCommand if it is an driving instruction, such as
      * auto-following a ball.
      * 
      */
@@ -111,6 +113,7 @@ public class MultiPartPath {
     public void addParallelCommand(CommandPathPiece command) {
         pieces.add(new Pair<>(command, false));
     }
+
     /**
      * Bring the robot to a complete stop, and wait for the specified number of
      * milliseconds.
@@ -133,7 +136,7 @@ public class MultiPartPath {
     /**
      * Set the heading that the robot wants to achieve. Note, this will NOT just
      * stop and pivot to there. It will take effect when moving between waypoints.
-     * To stop and pivot, use the pivotInPlace method (todo).
+     * To stop and pivot, use the pivotInPlace method
      * 
      * @param degrees
      */
@@ -150,6 +153,19 @@ public class MultiPartPath {
      */
     public void setHeadingFollowMovement(double offsetDegrees) {
         addParallelCommand(new HeadingSetPiece(this, offsetDegrees, true));
+    }
+
+    /**
+     * When this part is run, the robot will stop in place and rotate until it
+     * reaches the angle.
+     * It will also set the heading the robot tries to achieve while driving, so it
+     * keeps this angle as it moves towards the following waypoints.
+     * 
+     * @param angleDegrees Target angle to face. Positive is counterclockwise
+     */
+    public void pivotInPlace(double angleDegrees) {
+        addSequentialCommand(new PivotPiece(drivetrain, angleDegrees, this));
+        setHeading(angleDegrees);
     }
 
     /**
@@ -179,7 +195,7 @@ public class MultiPartPath {
      * velocity or acceleration, use the changeMaxVelocity/Acceleration methods.
      * This piece allows you to change other properties if needed.
      * 
-     * @param name the name of the property in the drivetrainConfig. 
+     * @param name  the name of the property in the drivetrainConfig.
      * @param value the new value of the property
      */
     public void changeDrivetrainConfigProperty(String name, double value) {
@@ -189,11 +205,58 @@ public class MultiPartPath {
     /**
      * When this part is run, it will overwrite where the robot thinks it is
      * with the new coordinates.
+     * 
      * @param x meters
      * @param y meters
      */
-    public void resetPosition(double x, double y){
-        addParallelCommand(new ResetPosePiece(this, new Pose2d(x, y, new Rotation2d()))); // the rot 
+    public void resetPosition(double x, double y) {
+        addParallelCommand(new ResetPosePiece(this, new Pose2d(x, y, new Rotation2d()))); // the rot
+    }
+
+    /**
+     * Flips all waypoints in this command over the short center line on the field.
+     * It also flips the resetPosition pieces.
+     * Doesn't change any angles set, so the auto must do that itself.
+     * Used for making a blue autonomous work for the red side also.
+     */
+    public void flipAllX() {
+        for (var pieceInfo : pieces) {
+            var piece = pieceInfo.getFirst();
+            double totalWidth = 16.54;
+            if (piece.getPieceType() == PieceType.Waypoint) {
+                WaypointPiece wpPiece = (WaypointPiece) piece;
+                Translation2d point = wpPiece.getPoint();
+                wpPiece.setPoint(new Translation2d(totalWidth - point.getX(), point.getY()));
+            } else if (piece instanceof ResetPosePiece) {
+                ResetPosePiece rpPiece = (ResetPosePiece) piece;
+                Pose2d point = rpPiece.getPose();
+                rpPiece.setPose(new Pose2d(totalWidth - point.getX(), point.getY(), point.getRotation()));
+            }
+        }
+    }
+
+    /**
+     * Flips all waypoints in this command over the long center line on the field.
+     * It also flips the resetPosition pieces.
+     * Doesn't change any angles set, so the auto must do that itself.
+     * On a year where the sides are 180* rotations of each other, this
+     * along with flipAllX allows you to use true field positioning if you want,
+     * meaning 0 is always the blue side.
+     */
+    public void flipAllY() {
+        for (var pieceInfo : pieces) {
+            double totalHeight = 8.21;
+            var piece = pieceInfo.getFirst();
+            if (piece.getPieceType() == PieceType.Waypoint) {
+                WaypointPiece wpPiece = (WaypointPiece) piece;
+                Translation2d point = wpPiece.getPoint();
+                wpPiece.setPoint(new Translation2d(point.getX(), totalHeight - point.getY()));
+            } else if (piece instanceof ResetPosePiece) {
+                ResetPosePiece rpPiece = (ResetPosePiece) piece;
+                Pose2d point = rpPiece.getPose();
+                rpPiece.setPose(new Pose2d(point.getX(), totalHeight - point.getY(), point.getRotation()));
+            }
+        }
     }
 
     public SequentialCommandGroup finalizePath() {
@@ -208,16 +271,20 @@ public class MultiPartPath {
             } else {
                 var commandPiece = (CommandPathPiece) piece;
                 if (interrupts) { // ok, this takes over driving so we should make the
-                                                           // trajectory leading up to here.
+                                  // trajectory leading up to here.
                     if (waypoints.size() > 0) {
-                        actualCommands.add(new TrajectoryFollowPiece(drivetrain, new ArrayList<WaypointPiece>(waypoints), //copy of current list
+                        actualCommands.add(new TrajectoryFollowPiece(drivetrain,
+                                new ArrayList<WaypointPiece>(waypoints), // copy of current list
                                 commandPiece.getRequestedStartSpeed(), this));
                         waypoints.clear();
                     }
                     actualCommands.add(commandPiece);
                 } else {
-                    //TODO make this work on waypoints!!
-                    actualCommands.add(new ScheduleCommand(commandPiece));
+                    if(waypoints.size() > 0){
+                        waypoints.get(waypoints.size() - 1).addParallelCommand(commandPiece); // add to the most recent waypoint
+                    } else {
+                        actualCommands.add(new ScheduleCommand(commandPiece));
+                    }
                 }
             }
         }
@@ -225,7 +292,7 @@ public class MultiPartPath {
         for (Command command : actualCommands) {
             group.addCommands(command);
         }
-        group.addRequirements((Subsystem)drivetrain);
+        group.addRequirements((Subsystem) drivetrain);
         return group;
     }
 

@@ -31,6 +31,10 @@ public class WaypointPiece implements PathPiece{
         return point;
     }
 
+    public void setPoint(Translation2d point){
+        this.point = point;
+    }
+    
     @Override
     public PieceType getPieceType() {
         return PieceType.Waypoint;
