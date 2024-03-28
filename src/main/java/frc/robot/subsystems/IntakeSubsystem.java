@@ -23,7 +23,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private boolean hasNote;
     private long timeOut;
     private long timeToStop = 0;
-    private boolean triggered = false;
+    private boolean triggered = true;
     private double ticksToStopIntake;
     private double ticksToStopFeed;
 
@@ -56,7 +56,7 @@ public class IntakeSubsystem extends SubsystemBase {
         updateMotorStats();
         hasNote = !prox.get();
         if (!triggered && hasNote) {
-            ticksToStopIntake = motorEncoder.getPosition() + 3;
+            ticksToStopIntake = motorEncoder.getPosition() + 3 + (Util.clamp(2.5 - RobotContainer.driveTrain.getSpeeds().vxMetersPerSecond, 0, 2.5));
             timeToStop = 0;
         }
         if (hasNote) {
@@ -65,19 +65,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
         if (motorEncoder.getPosition() < ticksToStopFeed) {
             setMotorRaw(1);
-            // indexerPID.setReference(.3, CANSparkMax.ControlType.kDutyCycle);
 
         } else if (motorEncoder.getPosition() < ticksToStopIntake) {
             setMotorRaw(Constants.minIntakePower);
-            // indexerPID.setReference(0, CANSparkMax.ControlType.kDutyCycle);
 
         } else if (System.currentTimeMillis() < timeToStop) {
             setMotorRaw(Constants.minIntakePower);
-            // indexerPID.setReference(0, CANSparkMax.ControlType.kDutyCycle);
 
         } else {
             setMotorRaw(0);
-            // indexerPID.setReference(0, CANSparkMax.ControlType.kDutyCycle);
 
         }
 

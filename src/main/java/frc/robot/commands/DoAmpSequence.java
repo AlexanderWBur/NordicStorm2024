@@ -76,7 +76,7 @@ public class DoAmpSequence extends SequentialCommandGroup {
 
             @Override
             public void execute() {
-                double targetX = 1.842;
+                double targetX = RobotContainer.isRed ? 5.93: 1.842;
                 double currentX = RobotContainer.driveTrain.getPose().getX();
                 double error = targetX - currentX;
                 double forward;

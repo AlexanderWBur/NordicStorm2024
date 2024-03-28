@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 // import com.ctre.phoenix.Util;
 
@@ -17,18 +18,19 @@ public class TurnAndShoot extends CommandPathPiece {
 
     public TurnAndShoot() {
         addRequirements(RobotContainer.intake);
-        // rotationPID.enableContinuousInput(-180, 180);
+        SmartDashboard.putNumber("targetRPM", 0);
+        SmartDashboard.putNumber("targetPitch", 0);
     }
 
-    public static double getNeededTurnAngle(){
+    public static double getNeededTurnAngle() {
         Pose2d futurePose = RobotContainer.driveTrain.getPose();
 
-        double angleNeeded = Util.angleBetweenPoses(futurePose, RobotContainer.targetLocation)+Math.PI;
+        double angleNeeded = Util.angleBetweenPoses(futurePose, RobotContainer.targetLocation) + Math.PI;
 
         return Math.toDegrees(angleNeeded);
 
     }
-     
+
     public boolean rotateTowardTarget() {
         double angleNeeded = getNeededTurnAngle();
         double angleDiff = Util.angleDiff(RobotContainer.driveTrain.getGyroDegrees(), angleNeeded);
@@ -39,16 +41,26 @@ public class TurnAndShoot extends CommandPathPiece {
     @Override
     public void initialize() {
         hasSent = false;
-        RobotContainer.shooterSubsystem.setShooterAngle(-30);
     }
 
     @Override
     public void execute() {
-       boolean isAngleGood = rotateTowardTarget();
-        if (Math.abs(RobotContainer.shooterSubsystem.getAngleError()) < .5 && !hasSent && isAngleGood) {
+        double targetRPM = SmartDashboard.getNumber("targetRPM", 0);
+        RobotContainer.shooterSubsystem.setAmp(targetRPM);
+        RobotContainer.shooterSubsystem.setShooter(targetRPM);
+        double targetPitch = SmartDashboard.getNumber("targetPitch", 0);
+        RobotContainer.shooterSubsystem.setShooterAngle(-targetPitch);
+
+        boolean isAngleGood = true;//rotateTowardTarget();
+        if (Math.abs(RobotContainer.shooterSubsystem.getAngleError()) < .5 &&
+         !hasSent && isAngleGood && Math.abs(RobotContainer.shooterSubsystem.getShooterError()) < 3 
+         && Math.abs(RobotContainer.shooterSubsystem.getAmpError()) < 3) {
+
             RobotContainer.intake.sendToShooter();
             hasSent = true;
         }
+
+    
     }
 
     @Override

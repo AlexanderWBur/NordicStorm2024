@@ -41,7 +41,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     public static PhotonPoseEstimator poseEstimator;
 
-    public static RollingAverage distanceAverage = new RollingAverage(5);
+    public static RollingAverage distanceAverage = new RollingAverage(1);
 
     List<PhotonTrackedTarget> notes = new ArrayList<PhotonTrackedTarget>();
 
@@ -85,9 +85,13 @@ public class VisionSubsystem extends SubsystemBase {
         return notes;
     }
 
+    public double getDistanceToTarget(){
+        return Util.distance(RobotContainer.driveTrain.getPose(), RobotContainer.targetLocation);
+    }
+
     @Override
     public void periodic() {
-
+        SmartDashboard.putNumber("DistanceTo", getDistanceToTarget());
         notes = noteCamera.getLatestResult().targets;
         poseEstimator.setReferencePose(RobotContainer.driveTrain.getPose()); // sets reference pose to (0,0,
                                                                              // Rotation2d.fromDegrees(0))

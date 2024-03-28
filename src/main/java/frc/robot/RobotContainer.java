@@ -7,12 +7,12 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoWithInit;
 import frc.robot.commands.DisableClimberLimits;
+import frc.robot.commands.DoAmpDumb;
 import frc.robot.commands.DoAmpSequence;
 import frc.robot.commands.DriveToPos;
 import frc.robot.commands.FollowNote;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OperatorControl;
-import frc.robot.commands.RawAmpCommand;
 import frc.robot.commands.RawPinionCommand;
 import frc.robot.commands.TurnAndShoot;
 import frc.robot.commands.RawIndexerCommand;
@@ -97,9 +97,9 @@ public class RobotContainer {
     isRed = DriverStation.getAlliance().get() == Alliance.Red;
 
     if(isRed){
-      targetLocation = new Pose2d(16.32, 5.546, new Rotation2d(0));
+      targetLocation = new Pose2d(16.54 + 0.05, 5.5478, new Rotation2d(0));
     } else {
-      targetLocation = new Pose2d(0.239, 5.626, new Rotation2d(0));
+      targetLocation = new Pose2d(-0.05, 5.5478, new Rotation2d(0));
     }
 
     driveTrain.setDefaultCommand(new OperatorControl());
@@ -127,23 +127,13 @@ public class RobotContainer {
    */
   private void configureBindings() {
     new JoystickButton(rightJoystick, 2).onTrue(new IntakeCommand(1, 0));
-
-    // new JoystickButton(xbox, 3).whileTrue(new FollowNote(true, false, 3.3, 2.5, false, 300));
-
-    // new JoystickButton(rightJoystick, 1).whileTrue(new FollowNote(true, false, 3.3, 3, false, 300));
-
-    // new JoystickButton(leftJoystick, 3).whileTrue(new TurnAndShoot());
-
-    // new JoystickButton(rightJoystick, 3).whileTrue(new TurnAndShoot());
-
     new JoystickButton(leftJoystick, 9).whileTrue(new DisableClimberLimits());
     new JoystickButton(xbox, 5).whileTrue(new DoAmpSequence());
     new JoystickButton(rightJoystick, 11).whileTrue(new DriveToPos());
-    // new JoystickButton(xbox,)
+    new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new DoAmpDumb());
+    new JoystickButton(xbox,XboxController.Button.kRightBumper.value).whileTrue(new FollowNote(true, false, 1, .75, false, 1000));
 
 
-
-    // new JoystickButton(xbox,)
 
 
     // Reset gyro
@@ -165,7 +155,22 @@ public class RobotContainer {
       @Override
       public void execute() {
 
-        driveTrain.setPose(1.589, 3.7624, 0); // x was 1.38
+        driveTrain.setPose(3.327, 7.766, 0); // x was 1.38
+      }
+
+      @Override
+      public boolean runsWhenDisabled() {
+        return true;
+      }
+    });
+
+    new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new InstantCommand() {
+
+      @Override
+      public void execute() {
+
+        SmartDashboard.putNumber("targetRPM", 0);
+        SmartDashboard.putNumber("targetPitch", 0);
       }
 
       @Override

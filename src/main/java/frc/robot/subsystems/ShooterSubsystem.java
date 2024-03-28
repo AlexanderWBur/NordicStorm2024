@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.StaticBrake;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -17,108 +20,91 @@ public class ShooterSubsystem extends SubsystemBase {
 
     double targetAngle = 0;
 
-        private DigitalInput prox = new DigitalInput(1);
+    private DigitalInput prox = new DigitalInput(1);
 
     private CANSparkMax pinion = new CANSparkMax(Constants.shooterPitchID, MotorType.kBrushless);
-   private SparkPIDController pinionPID = pinion.getPIDController();
-   private RelativeEncoder pinionEncoder = pinion.getEncoder();
-
-    private CANSparkMax shooter = new CANSparkMax(Constants.shooterID, MotorType.kBrushless);
-    private SparkPIDController shooterPID = shooter.getPIDController();
-    private RelativeEncoder shooterEncoder = shooter.getEncoder();
-
-    private CANSparkMax amp = new CANSparkMax(Constants.ampID, MotorType.kBrushless);
-    private SparkPIDController ampPID = amp.getPIDController();
-    private RelativeEncoder ampEncoder = amp.getEncoder();
+    private SparkPIDController pinionPID = pinion.getPIDController();
+    private RelativeEncoder pinionEncoder = pinion.getEncoder();
 
     private CANSparkMax indexer = new CANSparkMax(Constants.indexerID, MotorType.kBrushless);
     private SparkPIDController indexerPID = indexer.getPIDController();
     private RelativeEncoder indexerEncoder = indexer.getEncoder();
 
+    private TalonFX shooter = new TalonFX(16);
+    private VelocityVoltage shooterRequest = new VelocityVoltage(0).withSlot(0);
 
-    
+    private TalonFX amp = new TalonFX(17);
+    private VelocityVoltage ampRequest = new VelocityVoltage(0).withSlot(0);
 
     public ShooterSubsystem() {
-       
+        setShooter(0);
     }
 
-    private void configureFlywheelMotor(CANSparkMax motor) {
-        motor.setInverted(true);
-        motor.enableVoltageCompensation(12);
-        motor.setIdleMode(IdleMode.kCoast);
-    }
-
-    public void configurePinion(){
+    public void configurePinion() {
         pinion.setInverted(false);
         pinion.enableVoltageCompensation(12);
         pinion.setIdleMode(IdleMode.kBrake);
     }
 
+    double targetAmp = 0;
+
     @Override
     public void periodic() {
-        //shooter.set(-.3);
-        //indexer.set(.15);
-        //amp.set(.4);
+
+        indexer.set(.2);
+        if (Math.signum(amp.getVelocity().getValueAsDouble()) != Math.signum(targetAmp)
+                && Math.abs(amp.getVelocity().getValueAsDouble()) > 10) {
+            amp.setControl(new StaticBrake());
+        } else {
+            amp.setControl(ampRequest.withVelocity(targetAmp));
+
+        }
         SmartDashboard.putNumber("Pinion", pinionEncoder.getPosition());
-        //  updateShooter(); // top then bottom
-    // setFlywheelsRaw(.25 * RobotContainer.leftJoystick.getY(), -.4 * RobotContainer.leftJoystick.getY());
+        SmartDashboard.putNumber("Am", shooter.getVelocity().getValue());
+        SmartDashboard.putNumber("Sh", amp.getVelocity().getValue());
+        SmartDashboard.putNumber("AmTe", shooter.getDeviceTemp().getValue());
+        SmartDashboard.putNumber("ShTe", amp.getDeviceTemp().getValue());
+
     }
-
-
 
     private double topCurrentRPM;
     private double bottomCurrentRPM;
 
     public void setFlywheelsRaw(double top, double bottom) {
-       
 
     }
 
     private void updateShooter() {
-       
+
     }
 
+    public double getAmpError() {
+        return amp.getVelocity().getValueAsDouble() - targetAmp;
+    }
 
-    public void setPinionRaw(double power){
+    public double getShooterError() {
+        return shooter.getClosedLoopError().getValueAsDouble();
+    }
+
+    public void setPinionRaw(double power) {
         pinionPID.setReference(power, CANSparkMax.ControlType.kDutyCycle);
     }
 
-    public double getAngleError(){
+    public double getAngleError() {
         return pinionEncoder.getPosition() - targetAngle;
     }
 
-    private void setPinion(){
-
+    public void setShooter(double velocity) {
+        shooter.setControl(shooterRequest.withVelocity(velocity));
     }
 
-    public void setShooterAngle(double ticks){
+    public void setShooterAngle(double ticks) {
         targetAngle = ticks;
         pinionPID.setReference(ticks, CANSparkMax.ControlType.kPosition);
     }
 
-    public void setShooterRaw(double power){
-        shooterPID.setReference(power, CANSparkMax.ControlType.kDutyCycle);
+    public void setAmp(double velocity) {
+        targetAmp = velocity;
     }
 
-    public void setAmpRaw(double power){
-        ampPID.setReference(power * .3, CANSparkMax.ControlType.kDutyCycle);
-    }
-
-    public void setAmp(){
-
-    }
-
-    private double topTargetRPM;
-    private double bottomTargetRPM;
-
-    public void updateFlywheels(double topRPM, double bottomRPM) {
-        if (topRPM < 0 || bottomRPM < 0) {
-            System.out.println("Error tried to set shooter to negative RPM");
-        }
-
-        topTargetRPM = topRPM;
-        bottomTargetRPM = bottomRPM;
-
-    
-    }
 }
