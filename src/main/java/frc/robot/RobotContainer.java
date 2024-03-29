@@ -88,15 +88,15 @@ public class RobotContainer {
   public static Pose2d targetLocation;
 
   public static ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
 
-    
     isRed = DriverStation.getAlliance().get() == Alliance.Red;
 
-    if(isRed){
+    if (isRed) {
       targetLocation = new Pose2d(16.54 + 0.05, 5.5478, new Rotation2d(0));
     } else {
       targetLocation = new Pose2d(-0.05, 5.5478, new Rotation2d(0));
@@ -110,7 +110,6 @@ public class RobotContainer {
     configureBindings();
   }
 
-  
   /**
    * Use this method to define your trigger->command mappings. Triggers can be
    * created via the
@@ -131,10 +130,8 @@ public class RobotContainer {
     new JoystickButton(xbox, 5).whileTrue(new DoAmpSequence());
     new JoystickButton(rightJoystick, 11).whileTrue(new DriveToPos());
     new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new DoAmpDumb());
-    new JoystickButton(xbox,XboxController.Button.kRightBumper.value).whileTrue(new FollowNote(true, false, 1, .75, false, 1000));
-
-
-
+    new JoystickButton(xbox, XboxController.Button.kRightBumper.value)
+        .whileTrue(new FollowNote(true, false, 1, .75, false, 1000));
 
     // Reset gyro
     new JoystickButton(xbox, XboxController.Button.kBack.value).onTrue(new InstantCommand() {
@@ -149,7 +146,17 @@ public class RobotContainer {
         return true;
       }
     });
+    new JoystickButton(leftJoystick, 3).onTrue(new InstantCommand() {
 
+      @Override
+      public void execute() {
+      }
+
+      @Override
+      public boolean runsWhenDisabled() {
+        return true;
+      }
+    });
     new JoystickButton(xbox, XboxController.Button.kStart.value).onTrue(new InstantCommand() {
 
       @Override
@@ -170,7 +177,7 @@ public class RobotContainer {
       public void execute() {
 
         SmartDashboard.putNumber("targetRPM", 0);
-        SmartDashboard.putNumber("targetPitch", 0);
+        SmartDashboard.putNumber("targetPitch", 2);
       }
 
       @Override

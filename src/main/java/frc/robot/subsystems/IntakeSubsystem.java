@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
+import frc.robot.commands.SetRumble;
 
 public class IntakeSubsystem extends SubsystemBase {
 
@@ -20,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private SparkPIDController motorPID = motor.getPIDController();
     private RelativeEncoder motorEncoder = motor.getEncoder();
 
-    private boolean hasNote;
+    public boolean hasNote;
     private long timeOut;
     private long timeToStop = 0;
     private boolean triggered = true;
@@ -56,8 +57,9 @@ public class IntakeSubsystem extends SubsystemBase {
         updateMotorStats();
         hasNote = !prox.get();
         if (!triggered && hasNote) {
-            ticksToStopIntake = motorEncoder.getPosition() + 3 + (Util.clamp(2.5 - RobotContainer.driveTrain.getSpeeds().vxMetersPerSecond, 0, 2.5));
+            ticksToStopIntake = motorEncoder.getPosition() + 0.5 + 0.2*(Util.clamp(2.5 - RobotContainer.driveTrain.getSpeeds().vxMetersPerSecond, 0, 2.5));
             timeToStop = 0;
+            new SetRumble(1).schedule();
         }
         if (hasNote) {
             triggered = true;
@@ -83,7 +85,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void sendToShooter() {
-        ticksToStopFeed = motorEncoder.getPosition() + 300;
+        ticksToStopFeed = motorEncoder.getPosition() + 30;
 
     }
 

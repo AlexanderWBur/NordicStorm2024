@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
@@ -166,19 +167,13 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
         for (SwerveModule module : swerveModules) {
             TalonFX driveMotor = module.getTalonDriveMotor();
-
-            // driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0,
-            // 0);
-            // driveMotor.config_kF(0, 0.048);
-            // driveMotor.config_kP(0, 0.04);
-
+            driveMotor.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.1));
             var slot0Configs = new Slot0Configs();
             slot0Configs.kP = 0.096093;
             slot0Configs.kV = 0.11531;
             driveMotor.getConfigurator().apply(slot0Configs, 0.01);
-
         }
-        drivetrainConfig.maxAcceleration = 1;
+        drivetrainConfig.maxAcceleration = 4;
         drivetrainConfig.maxVelocity = 4;
         drivetrainConfig.maxAnglularVelocity = 10;
         drivetrainConfig.maxAngularAcceleration = 5;

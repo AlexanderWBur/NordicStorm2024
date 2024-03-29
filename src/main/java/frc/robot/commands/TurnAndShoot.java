@@ -51,7 +51,7 @@ public class TurnAndShoot extends CommandPathPiece {
         double targetPitch = SmartDashboard.getNumber("targetPitch", 0);
         RobotContainer.shooterSubsystem.setShooterAngle(-targetPitch);
 
-        boolean isAngleGood = true;//rotateTowardTarget();
+        boolean isAngleGood = rotateTowardTarget();
         if (Math.abs(RobotContainer.shooterSubsystem.getAngleError()) < .5 &&
          !hasSent && isAngleGood && Math.abs(RobotContainer.shooterSubsystem.getShooterError()) < 3 
          && Math.abs(RobotContainer.shooterSubsystem.getAmpError()) < 3) {

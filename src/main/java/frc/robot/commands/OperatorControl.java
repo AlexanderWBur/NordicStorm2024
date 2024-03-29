@@ -55,7 +55,8 @@ public class OperatorControl extends Command {
 
         forward = Util.applyDeadzone(forward, 0.1) * throttle;
         sideways = Util.applyDeadzone(sideways, 0.1) * throttle;
-        rot = Util.applyDeadzone(rot, 0.2);
+        rot = Util.applyDeadzone(rot, 
+        0.2);
         rot = Util.signedSquare(rot);
         rot *= 5;
 

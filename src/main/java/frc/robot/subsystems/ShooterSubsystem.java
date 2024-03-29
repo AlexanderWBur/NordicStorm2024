@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -38,6 +40,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterSubsystem() {
         setShooter(0);
+        amp.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.5));  
+        shooter.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.5));  
     }
 
     public void configurePinion() {
@@ -60,11 +64,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
         }
         SmartDashboard.putNumber("Pinion", pinionEncoder.getPosition());
-        SmartDashboard.putNumber("Am", shooter.getVelocity().getValue());
-        SmartDashboard.putNumber("Sh", amp.getVelocity().getValue());
-        SmartDashboard.putNumber("AmTe", shooter.getDeviceTemp().getValue());
-        SmartDashboard.putNumber("ShTe", amp.getDeviceTemp().getValue());
-
+        SmartDashboard.putNumber("Am", amp.getVelocity().getValue());
+        SmartDashboard.putNumber("Sh", shooter.getVelocity().getValue());
+        SmartDashboard.putNumber("AmTe", amp.getDeviceTemp().getValue());
+        SmartDashboard.putNumber("ShTe", shooter.getDeviceTemp().getValue());
+        SmartDashboard.putNumber("AmCur", amp.getTorqueCurrent().getValue());
+        SmartDashboard.putNumber("ShCur", shooter.getTorqueCurrent().getValue());
     }
 
     private double topCurrentRPM;

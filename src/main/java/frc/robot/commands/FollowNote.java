@@ -76,6 +76,8 @@ public class FollowNote extends CommandPathPiece {
         targetTracker = new DriveToObject(pVal, forwardMod, maxTurn, stopWidth * 0, proxPVal, camWidth, camHeight);
         targetTracker.setOffset(0);
         RobotContainer.intake.doIntake(999999999);
+        hasGotABall = false;
+        shouldStop = false;
     }
 
     private ProcessedTarget findTarget(List<PhotonTrackedTarget> possibleTargets) {
@@ -143,8 +145,8 @@ public class FollowNote extends CommandPathPiece {
         //forwardValue *= Math.abs(RobotContainer.rightJoystick.getY());
         RobotContainer.driveTrain.limitDrive(new ChassisSpeeds(forwardValue, -turnValue * 0.1, -turnValue), 2);
         if(RobotContainer.intake.hasNote()){
-            turnValue = 0;
-            shouldStop = true;
+           turnValue = 0;
+           shouldStop = true;
         }
     }
 
