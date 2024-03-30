@@ -262,7 +262,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
 
     }
 
-    private PIDController rotationPID = new PIDController(0.115, 0, 0.007);
+    private PIDController rotationPID = new PIDController(0.115, 0, 0.006);
 
     public double getTurnToTarget(double target) {
         double angleDiff = Util.angleDiff(RobotContainer.driveTrain.getGyroDegrees(), target);

@@ -87,6 +87,7 @@ public class RobotContainer {
   public static IntakeSubsystem intake = new IntakeSubsystem();
 
   public static Pose2d targetLocation;
+  public static Pose2d aimingLocation;
 
   public static ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
@@ -99,8 +100,10 @@ public class RobotContainer {
 
     if (isRed) {
       targetLocation = new Pose2d(16.54 + 0.05, 5.5478, new Rotation2d(0));
+      aimingLocation = new Pose2d();
     } else {
-      targetLocation = new Pose2d(-0.05, 5.5478, new Rotation2d(0));
+      targetLocation = new Pose2d(-0.038099999, 5.547867999999999, new Rotation2d(0));
+      aimingLocation = new Pose2d(-0.038099999 + Units.inchesToMeters(15), 5.547867999999999, new Rotation2d(0));
     }
 
     driveTrain.setDefaultCommand(new OperatorControl());
@@ -132,7 +135,7 @@ public class RobotContainer {
     new JoystickButton(rightJoystick, 11).whileTrue(new DriveToPos());
     new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new DoAmpDumb());
     new JoystickButton(xbox, XboxController.Button.kRightBumper.value)
-        .whileTrue(new FollowNote(true, false, 1, .75, false, 1000));
+        .whileTrue(new FollowNote(true, false, 1, .75, 0.2, 1000));
 
     // Reset gyro
     new JoystickButton(xbox, XboxController.Button.kBack.value).onTrue(new InstantCommand() {
@@ -152,6 +155,7 @@ public class RobotContainer {
       public void execute() {
         shooterSubsystem.setAmpMode();
       }
+
       @Override
       public boolean runsWhenDisabled() {
         return true;
@@ -162,6 +166,7 @@ public class RobotContainer {
       public void execute() {
         shooterSubsystem.setShooterMode();
       }
+
       @Override
       public boolean runsWhenDisabled() {
         return true;
@@ -172,6 +177,7 @@ public class RobotContainer {
       public void execute() {
         shooterSubsystem.setOffMode();
       }
+
       @Override
       public boolean runsWhenDisabled() {
         return true;

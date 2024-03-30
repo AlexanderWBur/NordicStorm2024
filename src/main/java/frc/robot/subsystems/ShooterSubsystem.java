@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Util;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -35,13 +36,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private TalonFX amp = new TalonFX(17);
     private VelocityVoltage ampRequest = new VelocityVoltage(0).withSlot(0);
-
+    public double distance;
     public ShooterSubsystem() {
         setShooter(0);
-        amp.getConfigurator().apply(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast));  
-        shooter.getConfigurator().apply(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast));  
-        amp.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.75));  
-        shooter.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.75));  
+        amp.getConfigurator().apply(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast));
+        shooter.getConfigurator().apply(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast));
+        amp.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.75));
+        shooter.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.75));
     }
 
     public void configurePinion() {
@@ -50,24 +51,41 @@ public class ShooterSubsystem extends SubsystemBase {
         pinion.setIdleMode(IdleMode.kBrake);
     }
 
+    public double getRPM(double distance) {
+        double x = distance;
+        //double result = SmartDashboard.getNumber("targetRPM", 0);
+        double result = 14.082536524647525*x*x*x + -90.64982788146996*x*x + 193.83620420611223*x + -82.2031756848759; // CURVE:rpm,12:05,03/30
+        return result;
+    }
+
+    public double getAngleForDist(double distance){
+        double x = distance;
+        double result = -1.0334761902961649*x*x + -2.3808994090463096*x + 51.792659364992474; // CURVE:angle,12:05,03/30
+        return  result;
+    }
+
     double targetAmp = 0;
     private int mode = 0;
+
     @Override
     public void periodic() {
-        if(mode == 0){
+        distance = Util.distance(RobotContainer.driveTrain.getPose(), RobotContainer.targetLocation);
+
+        SmartDashboard.putNumber("distance", distance);
+
+        if (mode == 0) {
             setAmp(0);
             setShooter(0);
-        } else if (mode == 1){
+        } else if (mode == 1) {
             setAmp(-25);
             setShooter(25);
-        } else if (mode == 2){
-            double targetRPM = SmartDashboard.getNumber("targetRPM", 0);
+        } else if (mode == 2) {
+            double targetRPM = getRPM(distance);
             setAmp(targetRPM);
             setShooter(targetRPM);
-            setShooter(30);
-            setAmp(30);
+
         }
-        
+
         if (Math.signum(amp.getVelocity().getValueAsDouble()) != Math.signum(targetAmp)
                 && Math.abs(amp.getVelocity().getValueAsDouble()) > 10 && mode != 0) {
             amp.setControl(new StaticBrake());
@@ -83,13 +101,15 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("ShCur", shooter.getTorqueCurrent().getValue());
     }
 
-    public void setAmpMode(){
+    public void setAmpMode() {
         mode = 1;
     }
-    public void setShooterMode(){
+
+    public void setShooterMode() {
         mode = 2;
     }
-    public void setOffMode(){
+
+    public void setOffMode() {
         mode = 0;
     }
 

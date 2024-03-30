@@ -167,9 +167,8 @@ public class TrajectoryFollowPiece extends CommandPathPiece {
 
         ChassisSpeeds speeds = controller.calculate(currentPose, goal, new Rotation2d(targetRotation));
         drivetrain.drive(speeds);
-        // System.out.println(speeds);
+        //System.out.println(timeProgressSeconds);
         if (timeProgressSeconds >= trajectory.getTotalTimeSeconds()) {
-
             if (controller.atReference()) {
                 done = true;
             }

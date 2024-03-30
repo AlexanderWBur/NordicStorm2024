@@ -115,19 +115,22 @@ public class VisionSubsystem extends SubsystemBase {
 
         SmartDashboard.putBoolean("Can it see a tag? ", estimated.isPresent());
         PhotonTrackedTarget bestTarget = null;
+        //System.out.println("start");
         if(result.hasTargets()){
             bestTarget = result.targets.get(0);
             for(PhotonTrackedTarget possible: result.targets){
-                if(possible.getFiducialId() == 9 || possible.getFiducialId() == 10 || possible.getFiducialId() == 9 || possible.getFiducialId() == 9)
+                if(possible.getFiducialId() == 9 || possible.getFiducialId() == 10 || possible.getFiducialId() == 9 || possible.getFiducialId() == 9){ continue;}
+                //System.out.println("NUMBER"+possible.getFiducialId()+" is "+possible.getYaw());
                 if(Math.abs(possible.getYaw()) < Math.abs(bestTarget.getYaw())){
                     bestTarget = possible;
+                    //System.out.println("newbest:"+bestTarget.getFiducialId());
                 }
             }
         }
         if (result.hasTargets() && Math.abs(bestTarget.getYaw()) < 7) {
 
             // var bestTarget = result.getBestTarget();
-            System.out.println("used "+bestTarget.getFiducialId());
+            //System.out.println("used "+bestTarget.getFiducialId());
             var tagPose = layout.getTagPose(bestTarget.getFiducialId());
 
             double yaw = 180 + visToRealYaw(bestTarget.getYaw()) -
@@ -138,7 +141,6 @@ public class VisionSubsystem extends SubsystemBase {
 
             double height = bottomCorner.y - topCorner.y;
             double targetsY = topCorner.y + height / 2;
-            SmartDashboard.putNumber("targetsY", targetsY);
             double pitch = visToRealAngle(bestTarget.getPitch());
             double distance = PhotonUtils.calculateDistanceToTargetMeters(
                     CAMERA_HEIGHT_METERS,
@@ -152,9 +154,7 @@ public class VisionSubsystem extends SubsystemBase {
                     new Transform2d(transform3d.getX(), transform3d.getY(), new Rotation2d()));*/
 
             distanceAverage.put(distance);
-            SmartDashboard.putNumber("Pitch", bestTarget.getPitch());
-            SmartDashboard.putNumber("Height", height);
-            SmartDashboard.putNumber("Distance", distance);
+            SmartDashboard.putNumber("visDistance", distance);
 
             double y = Math.sin(Math.toRadians(yaw)) * distanceAverage.get();
             double x = Math.cos(Math.toRadians(yaw)) * distanceAverage.get();

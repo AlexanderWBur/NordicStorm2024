@@ -25,9 +25,9 @@ public class TurnAndShoot extends CommandPathPiece {
     public static double getNeededTurnAngle() {
         Pose2d futurePose = RobotContainer.driveTrain.getPose();
 
-        double angleNeeded = Util.angleBetweenPoses(futurePose, RobotContainer.targetLocation) + Math.PI;
+        double angleNeeded = Util.angleBetweenPoses(futurePose, RobotContainer.aimingLocation) + Math.PI;
 
-        return Math.toDegrees(angleNeeded);
+        return Math.toDegrees(angleNeeded) +10;
 
     }
 
@@ -47,6 +47,7 @@ public class TurnAndShoot extends CommandPathPiece {
     @Override
     public void execute() {
         double targetPitch = SmartDashboard.getNumber("targetPitch", 0);
+        targetPitch = RobotContainer.shooterSubsystem.getAngleForDist(RobotContainer.shooterSubsystem.distance);
         RobotContainer.shooterSubsystem.setShooterAngle(-targetPitch);
 
         boolean isAngleGood = rotateTowardTarget();
@@ -63,6 +64,7 @@ public class TurnAndShoot extends CommandPathPiece {
 
     @Override
     public void end(boolean interrupted) {
+        
         RobotContainer.shooterSubsystem.setShooterAngle(-2);
     }
 

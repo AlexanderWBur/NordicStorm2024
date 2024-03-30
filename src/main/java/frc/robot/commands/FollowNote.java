@@ -47,13 +47,13 @@ public class FollowNote extends CommandPathPiece {
 
     boolean doIntake;
     boolean endWhenClose;
-    boolean canAbort = false;
     double chargeSpeed = 0;
 
     public int targetColor = -1;
+    double searchDirection;
 
     public FollowNote(boolean handleIntake, boolean endWhenClose,
-            double forwardMod, double chargeSpeed, boolean canAbort, long chargeTime) {
+            double forwardMod, double chargeSpeed, double searchDirection, long chargeTime) {
 
         this.doIntake = handleIntake;
         this.endWhenClose = endWhenClose;
@@ -61,9 +61,9 @@ public class FollowNote extends CommandPathPiece {
         this.targetColor = targetColor;
 
         this.chargeSpeed = chargeSpeed;
-        this.canAbort = canAbort;
         // chargeTime = (long) ((2/chargeSpeed)*300);
         this.chargeTime = chargeTime;
+        this.searchDirection = searchDirection;
         addRequirements(RobotContainer.driveTrain);
 
     }
@@ -94,14 +94,13 @@ public class FollowNote extends CommandPathPiece {
 
         if (timeToEndDrive < System.currentTimeMillis()) {
             if (turnValue == 0) {
-                turnValue = 0.2;
+                turnValue = searchDirection;
             }
             if(hasGotABall){
                new SetRumble(1).schedule();
             }
             if (hasGotABall && endWhenClose) {
                 shouldStop = true;// The timer has run out after we have grabbed a ball
-
             }
             List<PhotonTrackedTarget> objects = RobotContainer.visionSubsystem.getTargets();
             ProcessedTarget object = findTarget(objects);

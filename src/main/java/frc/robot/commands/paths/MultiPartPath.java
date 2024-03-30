@@ -267,11 +267,10 @@ public class MultiPartPath {
             boolean interrupts = pieceInfo.getSecond();
             if (piece.getPieceType() == PieceType.Waypoint) {
                 waypoints.add((WaypointPiece) piece);
-                                                        System.out.println("wayp");
+                System.out.println("wayp");
 
             } else {
-                                        System.out.println("seq");
-
+                System.out.println("seq" + piece.getClass().getSimpleName());
                 var commandPiece = (CommandPathPiece) piece;
                 if (interrupts) { // ok, this takes over driving so we should make the
                                   // trajectory leading up to here.
