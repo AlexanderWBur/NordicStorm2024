@@ -55,6 +55,7 @@ public class TrajectoryFollowPiece extends CommandPathPiece {
 
     @Override
     public void initialize() {
+        System.out.println("Taj");
         done = false;
         Pose2d currentPose = drivetrain.getPose();
         ChassisSpeeds currentSpeeds = drivetrain.getSpeeds();

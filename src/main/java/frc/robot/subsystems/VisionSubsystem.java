@@ -60,7 +60,7 @@ public class VisionSubsystem extends SubsystemBase {
         }
 
         noteCamera = new PhotonCamera("NoteCam");
-        photonCamera = new PhotonCamera("AmpCam");
+        photonCamera = new PhotonCamera("USB_2M_GS_camera");
         poseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, photonCamera,
                 transform3d);
 
@@ -69,14 +69,14 @@ public class VisionSubsystem extends SubsystemBase {
     public static double visToRealAngle(double ang) {
 
         double x = ang;
-        double result = -0.0001186658485288733*x*x + 1.006091360515186*x + -0.9259037493455889; // CURVE:real,08:39,03/24
+        double result = -0.0022353984792142715*x*x + 1.2784362463339942*x + 1.236184555478578; // CURVE:real,09:19,03/29
         return result;
     }
 
      public static double visToRealYaw(double ang) {
 
         double x = ang;
-        double result = 3.234345372689341e-05*x*x*x + 0.0004929175979537224*x*x + 0.9054243758812673*x + -0.3461211847874382; // CURVE:realyaw,09:06,03/25
+        double result = 0.0017841955221501891*x*x + 1.1980512961716467*x + 0.47031697208479567; // CURVE:realyaw,09:50,03/29
         return result;
     }
 
@@ -118,12 +118,13 @@ public class VisionSubsystem extends SubsystemBase {
         if(result.hasTargets()){
             bestTarget = result.targets.get(0);
             for(PhotonTrackedTarget possible: result.targets){
+                if(possible.getFiducialId() == 9 || possible.getFiducialId() == 10 || possible.getFiducialId() == 9 || possible.getFiducialId() == 9)
                 if(Math.abs(possible.getYaw()) < Math.abs(bestTarget.getYaw())){
                     bestTarget = possible;
                 }
             }
         }
-        if (result.hasTargets() && Math.abs(bestTarget.getYaw()) < 10) {
+        if (result.hasTargets() && Math.abs(bestTarget.getYaw()) < 7) {
 
             // var bestTarget = result.getBestTarget();
             System.out.println("used "+bestTarget.getFiducialId());

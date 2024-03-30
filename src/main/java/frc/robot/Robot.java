@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.commands.FollowNote;
 // import frc.robot.subsystems.TimeOfFlightSubsystem;
 import frc.robot.commands.TurnAndShoot;
+import frc.robot.commands.auto.GeneralAuto;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    GeneralAuto.putToDashboard();
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.

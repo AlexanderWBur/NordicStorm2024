@@ -16,6 +16,7 @@ import frc.robot.commands.OperatorControl;
 import frc.robot.commands.RawPinionCommand;
 import frc.robot.commands.TurnAndShoot;
 import frc.robot.commands.RawIndexerCommand;
+import frc.robot.commands.auto.GeneralAuto;
 import frc.robot.commands.auto.StraightAuto;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -147,11 +148,30 @@ public class RobotContainer {
       }
     });
     new JoystickButton(leftJoystick, 3).onTrue(new InstantCommand() {
-
       @Override
       public void execute() {
+        shooterSubsystem.setAmpMode();
       }
-
+      @Override
+      public boolean runsWhenDisabled() {
+        return true;
+      }
+    });
+    new JoystickButton(leftJoystick, 1).onTrue(new InstantCommand() {
+      @Override
+      public void execute() {
+        shooterSubsystem.setShooterMode();
+      }
+      @Override
+      public boolean runsWhenDisabled() {
+        return true;
+      }
+    });
+    new JoystickButton(leftJoystick, 2).onTrue(new InstantCommand() {
+      @Override
+      public void execute() {
+        shooterSubsystem.setOffMode();
+      }
       @Override
       public boolean runsWhenDisabled() {
         return true;
@@ -162,7 +182,20 @@ public class RobotContainer {
       @Override
       public void execute() {
 
-        driveTrain.setPose(3.327, 7.766, 0); // x was 1.38
+        driveTrain.setPose(3.327, 7.766, 0); // 8.21 - 7.766
+      }
+
+      @Override
+      public boolean runsWhenDisabled() {
+        return true;
+      }
+    });
+    new JoystickButton(xbox, XboxController.Button.kX.value).onTrue(new InstantCommand() {
+
+      @Override
+      public void execute() {
+
+        driveTrain.setPose(2.0, driveTrain.getPose().getY(), 0); // 8.21 - 7.766
       }
 
       @Override
@@ -194,7 +227,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    AutoWithInit auto = new StraightAuto();
+    AutoWithInit auto = new GeneralAuto();
     // var auto = new ExamplePathAuto(driveTrain);
     auto.initializeCommands();
 

@@ -96,6 +96,9 @@ public class FollowNote extends CommandPathPiece {
             if (turnValue == 0) {
                 turnValue = 0.2;
             }
+            if(hasGotABall){
+               new SetRumble(1).schedule();
+            }
             if (hasGotABall && endWhenClose) {
                 shouldStop = true;// The timer has run out after we have grabbed a ball
 
@@ -107,9 +110,7 @@ public class FollowNote extends CommandPathPiece {
                 System.out.println("height:" + object.height);
                 System.out.println("y:" + object.y);
                 if (object.y + object.height > 170) {
-                    if (endWhenClose) {
-                        hasGotABall = true;
-                    }
+                    hasGotABall = true;
                      System.out.println("charge!");
 
                     timeToEndDrive = System.currentTimeMillis() + chargeTime;

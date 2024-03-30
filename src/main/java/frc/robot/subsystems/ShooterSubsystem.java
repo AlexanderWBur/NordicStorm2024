@@ -1,10 +1,12 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -28,10 +30,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private SparkPIDController pinionPID = pinion.getPIDController();
     private RelativeEncoder pinionEncoder = pinion.getEncoder();
 
-    private CANSparkMax indexer = new CANSparkMax(Constants.indexerID, MotorType.kBrushless);
-    private SparkPIDController indexerPID = indexer.getPIDController();
-    private RelativeEncoder indexerEncoder = indexer.getEncoder();
-
     private TalonFX shooter = new TalonFX(16);
     private VelocityVoltage shooterRequest = new VelocityVoltage(0).withSlot(0);
 
@@ -40,8 +38,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterSubsystem() {
         setShooter(0);
-        amp.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.5));  
-        shooter.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.5));  
+        amp.getConfigurator().apply(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast));  
+        shooter.getConfigurator().apply(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast));  
+        amp.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.75));  
+        shooter.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(0.75));  
     }
 
     public void configurePinion() {
@@ -51,17 +51,28 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     double targetAmp = 0;
-
+    private int mode = 0;
     @Override
     public void periodic() {
-
-        indexer.set(.2);
+        if(mode == 0){
+            setAmp(0);
+            setShooter(0);
+        } else if (mode == 1){
+            setAmp(-25);
+            setShooter(25);
+        } else if (mode == 2){
+            double targetRPM = SmartDashboard.getNumber("targetRPM", 0);
+            setAmp(targetRPM);
+            setShooter(targetRPM);
+            setShooter(30);
+            setAmp(30);
+        }
+        
         if (Math.signum(amp.getVelocity().getValueAsDouble()) != Math.signum(targetAmp)
-                && Math.abs(amp.getVelocity().getValueAsDouble()) > 10) {
+                && Math.abs(amp.getVelocity().getValueAsDouble()) > 10 && mode != 0) {
             amp.setControl(new StaticBrake());
         } else {
             amp.setControl(ampRequest.withVelocity(targetAmp));
-
         }
         SmartDashboard.putNumber("Pinion", pinionEncoder.getPosition());
         SmartDashboard.putNumber("Am", amp.getVelocity().getValue());
@@ -72,15 +83,14 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("ShCur", shooter.getTorqueCurrent().getValue());
     }
 
-    private double topCurrentRPM;
-    private double bottomCurrentRPM;
-
-    public void setFlywheelsRaw(double top, double bottom) {
-
+    public void setAmpMode(){
+        mode = 1;
     }
-
-    private void updateShooter() {
-
+    public void setShooterMode(){
+        mode = 2;
+    }
+    public void setOffMode(){
+        mode = 0;
     }
 
     public double getAmpError() {
@@ -99,8 +109,8 @@ public class ShooterSubsystem extends SubsystemBase {
         return pinionEncoder.getPosition() - targetAngle;
     }
 
-    public void setShooter(double velocity) {
-        shooter.setControl(shooterRequest.withVelocity(velocity));
+    private void setShooter(double velocity) {
+        shooter.setControl(shooterRequest.withVelocity(-velocity));
     }
 
     public void setShooterAngle(double ticks) {
@@ -108,8 +118,12 @@ public class ShooterSubsystem extends SubsystemBase {
         pinionPID.setReference(ticks, CANSparkMax.ControlType.kPosition);
     }
 
-    public void setAmp(double velocity) {
-        targetAmp = velocity;
+    private void setAmp(double velocity) {
+        targetAmp = -velocity;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
     }
 
 }

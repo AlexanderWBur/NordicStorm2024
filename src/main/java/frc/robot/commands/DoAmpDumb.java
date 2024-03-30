@@ -11,7 +11,15 @@ public class DoAmpDumb extends SequentialCommandGroup {
 
     public DoAmpDumb() {
         addRequirements(RobotContainer.driveTrain);
-        addCommands( new Command() {
+        addCommands(new Command() {
+            // snaps wheels to amp
+            @Override
+            public boolean isFinished() {
+
+                return Math.abs(snapToSide()) < 3;
+            }
+
+        }, new Command() {
             long timeToEnd = 0;
 
             // send to shooter
@@ -57,9 +65,7 @@ public class DoAmpDumb extends SequentialCommandGroup {
         double angleNeeded = 90;
 
         double angleDiff = Util.angleDiff(RobotContainer.driveTrain.getGyroDegrees(), angleNeeded);
-        // if (vision.canSeeTarget) {
-        // angleDiff = -vision.bestTarget.getYaw();
-        // }
+
         RobotContainer.driveTrain.setRotationSpeed(RobotContainer.driveTrain.getTurnToTarget(angleNeeded), 1);
         return angleDiff;
     }

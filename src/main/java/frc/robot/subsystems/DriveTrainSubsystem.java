@@ -177,7 +177,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         drivetrainConfig.maxVelocity = 4;
         drivetrainConfig.maxAnglularVelocity = 10;
         drivetrainConfig.maxAngularAcceleration = 5;
-        drivetrainConfig.rotationCorrectionP = 2;
+        drivetrainConfig.rotationCorrectionP = 3;
         drivetrainConfig.maxCentripetalAcceleration = 8;
 
         pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0)); // x1
@@ -315,7 +315,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         driveActualMotors(targetChassisSpeeds);
         currentRotationPrivilegeNeeded = 0;
         fieldDisplay.setRobotPose(pose.getX(), pose.getY(), new Rotation2d(getGyroRadians()));
-        // SmartDashboard.putNumber("Pitch", navx.getRoll());
+        SmartDashboard.putNumber("y",pose.getY());
 
         SmartDashboard.putNumber("driveAng", getGyroDegrees());
 
@@ -351,7 +351,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         boolean vWalls = false;// Robot.vision.hasSeenTarget;
         var currentLocalSpeeds = getSpeeds();
 
-        double maxAccelLocal = 3;
+        double maxAccelLocal = 5;
         localSpeeds.vxMetersPerSecond = doAccelerationLimit(currentLocalSpeeds.vxMetersPerSecond,
                 localSpeeds.vxMetersPerSecond, maxAccelLocal, maxAccelLocal);
         localSpeeds.vyMetersPerSecond = doAccelerationLimit(currentLocalSpeeds.vyMetersPerSecond,

@@ -21,6 +21,10 @@ public class IntakeSubsystem extends SubsystemBase {
     private SparkPIDController motorPID = motor.getPIDController();
     private RelativeEncoder motorEncoder = motor.getEncoder();
 
+    private CANSparkMax indexer = new CANSparkMax(Constants.indexerID, MotorType.kBrushless);
+    private SparkPIDController indexerPID = indexer.getPIDController();
+    private RelativeEncoder indexerEncoder = indexer.getEncoder();
+
     public boolean hasNote;
     private long timeOut;
     private long timeToStop = 0;
@@ -35,13 +39,13 @@ public class IntakeSubsystem extends SubsystemBase {
     private void configureIntakeMotor(CANSparkMax motor) {
         motor.setInverted(true);
         motor.enableVoltageCompensation(12);
-        motor.setIdleMode(IdleMode.kCoast);
+        motor.setIdleMode(IdleMode.kBrake);
     }
 
     public void doIntake(long timeOut) {
         triggered = hasNote;
         timeToStop = System.currentTimeMillis() + timeOut;
-        if(hasNote){
+        if (hasNote) {
             timeToStop = 0;
         }
     }
@@ -57,25 +61,30 @@ public class IntakeSubsystem extends SubsystemBase {
         updateMotorStats();
         hasNote = !prox.get();
         if (!triggered && hasNote) {
-            ticksToStopIntake = motorEncoder.getPosition() + 0.5 + 0.2*(Util.clamp(2.5 - RobotContainer.driveTrain.getSpeeds().vxMetersPerSecond, 0, 2.5));
+            ticksToStopIntake = motorEncoder.getPosition() + 0.4
+                    + 0.13 * (Util.clamp(2.0
+                     - RobotContainer.driveTrain.getSpeeds().vxMetersPerSecond, -0.5, 2.5));
             timeToStop = 0;
-            new SetRumble(1).schedule();
         }
         if (hasNote) {
             triggered = true;
         }
-
+        indexer.set(0.2);
         if (motorEncoder.getPosition() < ticksToStopFeed) {
             setMotorRaw(1);
+            //indexer.set(0.5);
 
         } else if (motorEncoder.getPosition() < ticksToStopIntake) {
             setMotorRaw(Constants.minIntakePower);
+            //indexer.set(0);
 
         } else if (System.currentTimeMillis() < timeToStop) {
             setMotorRaw(Constants.minIntakePower);
+            //indexer.set(0);
 
         } else {
             setMotorRaw(0);
+            //indexer.set(0);
 
         }
 
@@ -93,8 +102,8 @@ public class IntakeSubsystem extends SubsystemBase {
         timeToStop = 0;
     }
 
-    public void idleIndexer(){
-        
+    public void idleIndexer() {
+
     }
 
     private double currentRPM;

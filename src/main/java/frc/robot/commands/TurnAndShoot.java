@@ -15,11 +15,11 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class TurnAndShoot extends CommandPathPiece {
 
     boolean hasSent;
-
+    long timeToEnd = 0;
     public TurnAndShoot() {
         addRequirements(RobotContainer.intake);
-        SmartDashboard.putNumber("targetRPM", 0);
-        SmartDashboard.putNumber("targetPitch", 0);
+        SmartDashboard.putNumber("targetRPM", 50);
+        SmartDashboard.putNumber("targetPitch", 40);
     }
 
     public static double getNeededTurnAngle() {
@@ -41,13 +41,11 @@ public class TurnAndShoot extends CommandPathPiece {
     @Override
     public void initialize() {
         hasSent = false;
+        timeToEnd = 0;
     }
 
     @Override
     public void execute() {
-        double targetRPM = SmartDashboard.getNumber("targetRPM", 0);
-        RobotContainer.shooterSubsystem.setAmp(targetRPM);
-        RobotContainer.shooterSubsystem.setShooter(targetRPM);
         double targetPitch = SmartDashboard.getNumber("targetPitch", 0);
         RobotContainer.shooterSubsystem.setShooterAngle(-targetPitch);
 
@@ -55,9 +53,9 @@ public class TurnAndShoot extends CommandPathPiece {
         if (Math.abs(RobotContainer.shooterSubsystem.getAngleError()) < .5 &&
          !hasSent && isAngleGood && Math.abs(RobotContainer.shooterSubsystem.getShooterError()) < 3 
          && Math.abs(RobotContainer.shooterSubsystem.getAmpError()) < 3) {
-
             RobotContainer.intake.sendToShooter();
             hasSent = true;
+            timeToEnd = System.currentTimeMillis() + 1000;
         }
 
     
@@ -66,11 +64,10 @@ public class TurnAndShoot extends CommandPathPiece {
     @Override
     public void end(boolean interrupted) {
         RobotContainer.shooterSubsystem.setShooterAngle(-2);
-
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return System.currentTimeMillis() > timeToEnd  && hasSent;
     }
 }
