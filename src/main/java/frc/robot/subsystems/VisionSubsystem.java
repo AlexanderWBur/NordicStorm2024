@@ -113,13 +113,14 @@ public class VisionSubsystem extends SubsystemBase {
 
         }
 
-        SmartDashboard.putBoolean("Can it see a tag? ", estimated.isPresent());
+        SmartDashboard.putBoolean("Can it see a tag? ", result.hasTargets());
+        SmartDashboard.putNumber("latency", result.getLatencyMillis());
         PhotonTrackedTarget bestTarget = null;
         //System.out.println("start");
         if(result.hasTargets()){
             bestTarget = result.targets.get(0);
             for(PhotonTrackedTarget possible: result.targets){
-                if(possible.getFiducialId() == 9 || possible.getFiducialId() == 10 || possible.getFiducialId() == 9 || possible.getFiducialId() == 9){ continue;}
+                if(possible.getFiducialId() == 9 || possible.getFiducialId() == 10 || possible.getFiducialId() == 1 || possible.getFiducialId() == 2){ continue;}
                 //System.out.println("NUMBER"+possible.getFiducialId()+" is "+possible.getYaw());
                 if(Math.abs(possible.getYaw()) < Math.abs(bestTarget.getYaw())){
                     bestTarget = possible;

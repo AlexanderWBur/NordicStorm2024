@@ -40,14 +40,17 @@ public class TurnAndShoot extends CommandPathPiece {
 
     @Override
     public void initialize() {
+        RobotContainer.shooterSubsystem.resetHasShot();
         hasSent = false;
         timeToEnd = 0;
     }
 
     @Override
     public void execute() {
-        double targetPitch = SmartDashboard.getNumber("targetPitch", 0);
-        targetPitch = RobotContainer.shooterSubsystem.getAngleForDist(RobotContainer.shooterSubsystem.distance);
+        RobotContainer.driveTrain.drive(0,0,0);
+        double targetPitch = RobotContainer.shooterSubsystem.getAngleForDist(RobotContainer.shooterSubsystem.distance);
+        SmartDashboard.putNumber("curvePitch", targetPitch);
+        targetPitch = SmartDashboard.getNumber("targetPitch", 0);
         RobotContainer.shooterSubsystem.setShooterAngle(-targetPitch);
 
         boolean isAngleGood = rotateTowardTarget();
@@ -70,6 +73,6 @@ public class TurnAndShoot extends CommandPathPiece {
 
     @Override
     public boolean isFinished() {
-        return System.currentTimeMillis() > timeToEnd  && hasSent;
+        return (System.currentTimeMillis() > timeToEnd  && hasSent) || RobotContainer.shooterSubsystem.hasShot();
     }
 }

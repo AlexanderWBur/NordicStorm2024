@@ -96,6 +96,9 @@ public class FollowNote extends CommandPathPiece {
             if (turnValue == 0) {
                 turnValue = searchDirection;
             }
+            if(RobotContainer.intake.hasNote){
+                hasGotABall = true;
+            }
             if(hasGotABall){
                new SetRumble(1).schedule();
             }
@@ -144,10 +147,7 @@ public class FollowNote extends CommandPathPiece {
         //turnValue *= Math.abs(RobotContainer.rightJoystick.getY());
         //forwardValue *= Math.abs(RobotContainer.rightJoystick.getY());
         RobotContainer.driveTrain.limitDrive(new ChassisSpeeds(forwardValue, -turnValue * 0.1, -turnValue), 2);
-        if(RobotContainer.intake.hasNote()){
-           turnValue = 0;
-           shouldStop = true;
-        }
+        
     }
 
     // Make this return true when this Command no longer needs to run execute()

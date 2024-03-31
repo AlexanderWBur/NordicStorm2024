@@ -6,9 +6,9 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.paths.CommandPathPiece;
 
 public class SetShooter extends CommandPathPiece {
-    private int mode;
+    private ShooterMode mode;
 
-    public SetShooter(int mode) {
+    public SetShooter(ShooterMode mode) {
         this.mode = mode;
     }
 

@@ -36,7 +36,7 @@ public class DoAmpDumb extends SequentialCommandGroup {
                     RobotContainer.intake.sendToShooter();
                     timeToEnd = 0;
                 }
-                if (!RobotContainer.intake.hasNote()) {
+                if (!RobotContainer.intake.hasNote) {
                     timeToEnd = System.currentTimeMillis() + 500;
                 }
             }

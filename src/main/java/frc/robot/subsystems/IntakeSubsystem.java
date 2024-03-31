@@ -28,7 +28,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public boolean hasNote;
     private long timeOut;
     private long timeToStop = 0;
-    private boolean triggered = true;
+    public boolean triggered = true;
     private double ticksToStopIntake;
     private double ticksToStopFeed;
 
@@ -117,16 +117,6 @@ public class IntakeSubsystem extends SubsystemBase {
         currentRPM = motorEncoder.getVelocity();
         SmartDashboard.putNumber("Top wheel velocity", currentRPM);
 
-    }
-
-    public boolean hasNote() {
-
-        return false;
-    }
-
-    public boolean noteDetected() {
-
-        return false;
     }
 
     private double targetRPM;

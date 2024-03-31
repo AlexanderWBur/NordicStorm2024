@@ -269,7 +269,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         double correction = rotationPID.calculate(-angleDiff, 0); // rotController.calculate(drivetrain.getGyroRadians(),
                                                                   // angleNeeded);
 
-        correction = Util.absClamp(correction, 5);
+        correction = Util.absClamp(correction, 7);
         return correction;
     }
 

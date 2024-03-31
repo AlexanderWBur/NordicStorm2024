@@ -20,12 +20,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
+import frc.robot.commands.ShooterMode;
 
 public class ShooterSubsystem extends SubsystemBase {
 
+    private boolean hasSeenSensor;
     double targetAngle = 0;
 
-    private DigitalInput prox = new DigitalInput(1);
+    private DigitalInput sensor = new DigitalInput(1);
 
     private CANSparkMax pinion = new CANSparkMax(Constants.shooterPitchID, MotorType.kBrushless);
     private SparkPIDController pinionPID = pinion.getPIDController();
@@ -37,6 +39,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private TalonFX amp = new TalonFX(17);
     private VelocityVoltage ampRequest = new VelocityVoltage(0).withSlot(0);
     public double distance;
+
     public ShooterSubsystem() {
         setShooter(0);
         amp.getConfigurator().apply(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast));
@@ -51,43 +54,60 @@ public class ShooterSubsystem extends SubsystemBase {
         pinion.setIdleMode(IdleMode.kBrake);
     }
 
+    public void resetHasShot() {
+        hasSeenSensor = false;
+    }
+
+    public boolean hasShot(){
+
+        return hasSeenSensor && sensor.get();
+    }
+
     public double getRPM(double distance) {
         double x = distance;
-        //double result = SmartDashboard.getNumber("targetRPM", 0);
-        double result = 14.082536524647525*x*x*x + -90.64982788146996*x*x + 193.83620420611223*x + -82.2031756848759; // CURVE:rpm,12:05,03/30
+        // double
+        double result = 14.090402138235705*x*x*x + -90.70571373301571*x*x + 193.96508080598372*x + -82.29977684052209; // CURVE:rpm,07:54,03/30
+        SmartDashboard.putNumber("curveRPM", result);
+        // result = SmartDashboard.getNumber("targetRPM", 0);
         return result;
     }
 
-    public double getAngleForDist(double distance){
+    public double getAngleForDist(double distance) {
         double x = distance;
-        double result = -1.0334761902961649*x*x + -2.3808994090463096*x + 51.792659364992474; // CURVE:angle,12:05,03/30
-        return  result;
+        double result = -0.7778772364876996*x*x + -3.8044661669014608*x + 53.57618819385001; // CURVE:angle,07:54,03/30
+        return result;
     }
 
     double targetAmp = 0;
-    private int mode = 0;
+    private ShooterMode mode = ShooterMode.OFF;
 
     @Override
     public void periodic() {
+        if(!sensor.get()){
+            hasSeenSensor = true;
+        }
         distance = Util.distance(RobotContainer.driveTrain.getPose(), RobotContainer.targetLocation);
 
         SmartDashboard.putNumber("distance", distance);
 
-        if (mode == 0) {
+        if (mode == ShooterMode.OFF) {
             setAmp(0);
             setShooter(0);
-        } else if (mode == 1) {
+        } else if (mode == ShooterMode.AMP) {
             setAmp(-25);
             setShooter(25);
-        } else if (mode == 2) {
+        } else if (mode == ShooterMode.SHOOT) {
             double targetRPM = getRPM(distance);
-            setAmp(targetRPM);
-            setShooter(targetRPM);
+            setAmp(15); // was target RPM changed when shooter broke
+            setShooter(15);
 
+        } else if (mode == ShooterMode.PLOOP){
+            setAmp(15);
+            setShooter(15);
         }
 
         if (Math.signum(amp.getVelocity().getValueAsDouble()) != Math.signum(targetAmp)
-                && Math.abs(amp.getVelocity().getValueAsDouble()) > 10 && mode != 0) {
+                && Math.abs(amp.getVelocity().getValueAsDouble()) > 10 && mode != ShooterMode.OFF) {
             amp.setControl(new StaticBrake());
         } else {
             amp.setControl(ampRequest.withVelocity(targetAmp));
@@ -102,15 +122,15 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setAmpMode() {
-        mode = 1;
+        mode = ShooterMode.AMP;
     }
 
     public void setShooterMode() {
-        mode = 2;
+        mode = ShooterMode.SHOOT;
     }
 
     public void setOffMode() {
-        mode = 0;
+        mode = ShooterMode.OFF;
     }
 
     public double getAmpError() {
@@ -142,7 +162,7 @@ public class ShooterSubsystem extends SubsystemBase {
         targetAmp = -velocity;
     }
 
-    public void setMode(int mode) {
+    public void setMode(ShooterMode mode) {
         this.mode = mode;
     }
 
