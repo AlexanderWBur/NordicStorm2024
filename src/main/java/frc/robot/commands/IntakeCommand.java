@@ -4,19 +4,11 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.Util;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class IntakeCommand extends Command {
-  private double power;
-  private long timeOut = 0;
-  private long timeToStop = 0;
-
-
   /**
    * Creates a new ExampleCommand.
    *
@@ -24,8 +16,7 @@ public class IntakeCommand extends Command {
    */
   public IntakeCommand(double power, long timeOut) {
     addRequirements(RobotContainer.intake);
-    this.power = power;
-    this.timeOut = timeOut;
+
 
   }
 

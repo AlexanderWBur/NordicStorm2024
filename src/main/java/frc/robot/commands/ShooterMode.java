@@ -5,5 +5,6 @@ public enum ShooterMode {
     OFF, 
     AMP,
     PLOOP,
-    SHOOT
+    SHOOT,
+    PASS,
 }

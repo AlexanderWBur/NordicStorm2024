@@ -118,17 +118,17 @@ public class VisionSubsystem extends SubsystemBase {
         PhotonTrackedTarget bestTarget = null;
         //System.out.println("start");
         if(result.hasTargets()){
-            bestTarget = result.targets.get(0);
+
             for(PhotonTrackedTarget possible: result.targets){
                 if(possible.getFiducialId() == 9 || possible.getFiducialId() == 10 || possible.getFiducialId() == 1 || possible.getFiducialId() == 2){ continue;}
                 //System.out.println("NUMBER"+possible.getFiducialId()+" is "+possible.getYaw());
-                if(Math.abs(possible.getYaw()) < Math.abs(bestTarget.getYaw())){
+                if(bestTarget == null || Math.abs(possible.getYaw()) < Math.abs(bestTarget.getYaw())){
                     bestTarget = possible;
                     //System.out.println("newbest:"+bestTarget.getFiducialId());
                 }
             }
         }
-        if (result.hasTargets() && Math.abs(bestTarget.getYaw()) < 7) {
+        if (bestTarget != null && Math.abs(bestTarget.getYaw()) < 7) {
 
             // var bestTarget = result.getBestTarget();
             //System.out.println("used "+bestTarget.getFiducialId());

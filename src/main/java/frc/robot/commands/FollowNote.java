@@ -15,11 +15,9 @@ import java.util.List;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotContainer;
 import frc.robot.commands.paths.CommandPathPiece;
-import frc.robot.subsystems.DriveTrainSubsystem;
 
 /**
  *
@@ -58,7 +56,7 @@ public class FollowNote extends CommandPathPiece {
         this.doIntake = handleIntake;
         this.endWhenClose = endWhenClose;
         this.forwardMod = forwardMod;
-        this.targetColor = targetColor;
+        // this.targetColor = targetColor;
 
         this.chargeSpeed = chargeSpeed;
         // chargeTime = (long) ((2/chargeSpeed)*300);
@@ -99,7 +97,7 @@ public class FollowNote extends CommandPathPiece {
             if(RobotContainer.intake.hasNote){
                 hasGotABall = true;
             }
-            if(hasGotABall){
+            if(hasGotABall && !DriverStation.isAutonomous()){
                new SetRumble(1).schedule();
             }
             if (hasGotABall && endWhenClose) {

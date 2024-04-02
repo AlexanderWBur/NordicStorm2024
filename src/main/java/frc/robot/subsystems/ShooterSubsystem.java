@@ -104,6 +104,10 @@ public class ShooterSubsystem extends SubsystemBase {
         } else if (mode == ShooterMode.PLOOP){
             setAmp(15);
             setShooter(15);
+        } else if(mode == ShooterMode.PASS){
+            setAmp(30);
+            setShooter(30);
+            setShooterAngle(-40);
         }
 
         if (Math.signum(amp.getVelocity().getValueAsDouble()) != Math.signum(targetAmp)

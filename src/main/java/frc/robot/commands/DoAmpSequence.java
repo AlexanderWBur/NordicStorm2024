@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
-import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class DoAmpSequence extends SequentialCommandGroup {
 
@@ -77,8 +76,8 @@ public class DoAmpSequence extends SequentialCommandGroup {
             @Override
             public void execute() {
                 double targetX = RobotContainer.isRed ? 5.95: 1.75;
-                double currentX = RobotContainer.driveTrain.getPose().getX();
-                double error = targetX - currentX;
+                // double currentX = RobotContainer.driveTrain.getPose().getX();
+                // double error = targetX - currentX;
                 double forward;
                 if (RobotContainer.driveTrain.isRangeValid() && (RobotContainer.driveTrain.getRange() < .5)) {
                     forward = 0.75; //RobotContainer.driveTrain.getRange() * 0.001;

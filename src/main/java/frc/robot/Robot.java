@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public static TurnAndShoot turnAndShoot = new TurnAndShoot();
+  public static TurnAndShoot turnAndShoot = new TurnAndShoot(0);
   public static FollowNote followNote = new FollowNote(true, false, 3.3, 2.5, 0.2, 300);
   /** This function is called periodically during operator control. */
   @Override

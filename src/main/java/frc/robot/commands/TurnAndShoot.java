@@ -15,11 +15,13 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class TurnAndShoot extends CommandPathPiece {
 
     boolean hasSent;
+    static double angleAdjust;
     long timeToEnd = 0;
-    public TurnAndShoot() {
+    public TurnAndShoot(double angleAdjust) {
         addRequirements(RobotContainer.intake);
         SmartDashboard.putNumber("targetRPM", 50);
         SmartDashboard.putNumber("targetPitch", 40);
+        this.angleAdjust = angleAdjust;
     }
 
     public static double getNeededTurnAngle() {
@@ -27,7 +29,7 @@ public class TurnAndShoot extends CommandPathPiece {
 
         double angleNeeded = Util.angleBetweenPoses(futurePose, RobotContainer.aimingLocation) + Math.PI;
 
-        return Math.toDegrees(angleNeeded) +10;
+        return Math.toDegrees(angleNeeded) + 10 + angleAdjust; // 10
 
     }
 
@@ -50,7 +52,7 @@ public class TurnAndShoot extends CommandPathPiece {
         RobotContainer.driveTrain.drive(0,0,0);
         double targetPitch = RobotContainer.shooterSubsystem.getAngleForDist(RobotContainer.shooterSubsystem.distance);
         SmartDashboard.putNumber("curvePitch", targetPitch);
-        targetPitch = SmartDashboard.getNumber("targetPitch", 0);
+        // targetPitch = SmartDashboard.getNumber("targetPitch", 0);
         RobotContainer.shooterSubsystem.setShooterAngle(-targetPitch);
 
         boolean isAngleGood = rotateTowardTarget();

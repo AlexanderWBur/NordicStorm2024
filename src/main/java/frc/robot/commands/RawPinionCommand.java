@@ -4,11 +4,8 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
-import frc.robot.Util;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 
 /** An example command that uses an example subsystem. */
 public class RawPinionCommand extends Command {

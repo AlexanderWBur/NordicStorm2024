@@ -3,8 +3,9 @@ package frc.robot.commands;
 import frc.robot.RobotContainer;
 import frc.robot.commands.paths.CommandPathPiece;
 
-public class Ploop extends CommandPathPiece {
-     public Ploop() {    
+public class Pass extends CommandPathPiece {
+     public Pass() {   
+
   }
 
   // Called when the command is initially scheduled.
