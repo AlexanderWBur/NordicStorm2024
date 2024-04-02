@@ -79,7 +79,7 @@ public class DoAmpSequence extends SequentialCommandGroup {
                 // double currentX = RobotContainer.driveTrain.getPose().getX();
                 // double error = targetX - currentX;
                 double forward;
-                if (RobotContainer.driveTrain.isRangeValid() && (RobotContainer.driveTrain.getRange() < .5)) {
+                if (RobotContainer.driveTrain.isRangeValid() && (RobotContainer.driveTrain.getRange() < 900)) {
                     forward = 0.75; //RobotContainer.driveTrain.getRange() * 0.001;
                     if (RobotContainer.driveTrain.getRange() < 150 && timeToEnd == 0) {
                         timeToEnd = System.currentTimeMillis() + 100;

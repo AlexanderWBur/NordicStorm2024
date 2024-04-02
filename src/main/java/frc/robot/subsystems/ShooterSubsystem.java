@@ -98,8 +98,8 @@ public class ShooterSubsystem extends SubsystemBase {
             setShooter(25);
         } else if (mode == ShooterMode.SHOOT) {
             double targetRPM = getRPM(distance);
-            setAmp(15); // was target RPM changed when shooter broke
-            setShooter(15);
+            setAmp(targetRPM); // was target RPM changed when shooter broke
+            setShooter(targetRPM);
 
         } else if (mode == ShooterMode.PLOOP){
             setAmp(15);

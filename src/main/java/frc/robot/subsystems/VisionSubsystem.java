@@ -128,7 +128,7 @@ public class VisionSubsystem extends SubsystemBase {
                 }
             }
         }
-        if (bestTarget != null && Math.abs(bestTarget.getYaw()) < 7) {
+        if (bestTarget != null && Math.abs(bestTarget.getYaw()) < 2) {
 
             // var bestTarget = result.getBestTarget();
             //System.out.println("used "+bestTarget.getFiducialId());
