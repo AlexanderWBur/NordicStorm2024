@@ -76,7 +76,7 @@ public class VisionSubsystem extends SubsystemBase {
      public static double visToRealYaw(double ang) {
 
         double x = ang;
-        double result = 0.0010597745189868859*x*x + 1.3506273579880654*x + -1.0232804624798524; // CURVE:realyaw,04:38,04/03
+        double result = 0.001375129001337856*x*x + 1.2974749941216455*x + -0.5037514979083114; // CURVE:realyaw,04:49,04/03
         return result;
     }
 
