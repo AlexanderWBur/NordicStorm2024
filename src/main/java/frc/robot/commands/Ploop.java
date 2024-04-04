@@ -11,6 +11,7 @@ public class Ploop extends CommandPathPiece {
   @Override
   public void initialize() {
    RobotContainer.shooterSubsystem.resetHasShot();
+   RobotContainer.intake.sendToShooter();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

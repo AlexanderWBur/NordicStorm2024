@@ -52,7 +52,7 @@ public class TurnAndShoot extends CommandPathPiece {
         RobotContainer.driveTrain.drive(0,0,0);
         double targetPitch = RobotContainer.shooterSubsystem.getAngleForDist(RobotContainer.shooterSubsystem.distance);
         SmartDashboard.putNumber("curvePitch", targetPitch);
-        // targetPitch = SmartDashboard.getNumber("targetPitch", 0);
+        targetPitch = SmartDashboard.getNumber("targetPitch", 0);
         RobotContainer.shooterSubsystem.setShooterAngle(-targetPitch);
 
         boolean isAngleGood = rotateTowardTarget();
