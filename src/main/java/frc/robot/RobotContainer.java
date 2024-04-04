@@ -111,6 +111,7 @@ public class RobotContainer {
     new JoystickButton(rightJoystick, 2).onTrue(new IntakeCommand(1, 0));
     new JoystickButton(leftJoystick, 9).whileTrue(new DisableClimberLimits());
     new JoystickButton(xbox, 5).whileTrue(new DoAmpSequence());
+    new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new IntakeCommand(1, 0));
     new JoystickButton(rightJoystick, 11).whileTrue(new DriveToPos());
     new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new DoAmpDumb());
     new JoystickButton(xbox, XboxController.Button.kRightBumper.value)

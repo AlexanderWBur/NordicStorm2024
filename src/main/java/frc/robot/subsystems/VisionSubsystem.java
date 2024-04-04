@@ -13,11 +13,7 @@ import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
@@ -128,10 +124,11 @@ public class VisionSubsystem extends SubsystemBase {
                 }
             }
         }
-        if (bestTarget != null && Math.abs(bestTarget.getYaw()) < 2) {
+        if (bestTarget != null && Math.abs(bestTarget.getYaw()) < 5) {
 
             // var bestTarget = result.getBestTarget();
             //System.out.println("used "+bestTarget.getFiducialId());
+            SmartDashboard.putNumber("used", bestTarget.getFiducialId());
             var tagPose = layout.getTagPose(bestTarget.getFiducialId());
 
             double yaw = 180 + visToRealYaw(bestTarget.getYaw()) -
