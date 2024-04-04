@@ -63,7 +63,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public double getRPM(double distance) {
         double x = distance;
         // double
-        double result = 14.090402138235705*x*x*x + -90.70571373301571*x*x + 193.96508080598372*x + -82.29977684052209; // CURVE:rpm,07:54,03/30
+        double result = 3.2293351495433664*x*x + -9.86258449217143*x + 61.97625397345697; // CURVE:rpm,10:03,04/03
         SmartDashboard.putNumber("curveRPM", result);
         // result = SmartDashboard.getNumber("targetRPM", 0);
         return result;
@@ -71,7 +71,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public double getAngleForDist(double distance) {
         double x = distance;
-        double result = -0.7778772364876996*x*x + -3.8044661669014608*x + 53.57618819385001; // CURVE:angle,07:54,03/30
+        double result = -0.5242625992273672*x*x + -3.346259183790715*x + 53.9610902841046; // CURVE:angle,10:03,04/03
         return result;
     }
 
