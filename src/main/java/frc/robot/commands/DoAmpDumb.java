@@ -18,6 +18,42 @@ public class DoAmpDumb extends SequentialCommandGroup {
                 return Math.abs(snapToSide()) < 3;
             }
 
+        },  new Command() {
+            long timeToEnd = 0;
+
+            // drive Forward
+            @Override
+            public void initialize() {
+                timeToEnd = 0;
+            }
+
+            @Override
+            public void execute() {
+                // double currentX = RobotContainer.driveTrain.getPose().getX();
+                // double error = targetX - currentX;
+                double forward;
+                if (RobotContainer.driveTrain.isRangeValid() && (RobotContainer.driveTrain.getRange() < 900)) {
+                    forward = 0.75; //RobotContainer.driveTrain.getRange() * 0.001;
+                    if (RobotContainer.driveTrain.getRange() < 150 && timeToEnd == 0) {
+                        timeToEnd = System.currentTimeMillis() + 100;
+                    }
+                } else {
+                    forward = 2;
+                }
+                RobotContainer.driveTrain.drive(forward, 0, 0);
+                snapToSide();
+            }
+
+            @Override
+            public void end(boolean isInterupted) {
+                RobotContainer.driveTrain.drive(0, 0, 0);
+            }
+
+            @Override
+            public boolean isFinished() {
+                return timeToEnd != 0 && System.currentTimeMillis() > timeToEnd;
+            }
+
         }, new Command() {
             long timeToEnd = 0;
 

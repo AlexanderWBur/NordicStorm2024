@@ -73,13 +73,14 @@ public class RobotContainer {
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
+  double totalWidth = 16.54;
   public RobotContainer() {
 
     isRed = DriverStation.getAlliance().get() == Alliance.Red;
 
     if (isRed) {
-      targetLocation = new Pose2d(16.54 + 0.05, 5.5478, new Rotation2d(0));
-      aimingLocation = new Pose2d();
+      targetLocation = new Pose2d(totalWidth - (-0.038099999), 5.547867999999999, new Rotation2d(0));
+      aimingLocation = new Pose2d(totalWidth - (-0.038099999 + Units.inchesToMeters(15)), 5.547867999999999, new Rotation2d(0));
     } else {
       targetLocation = new Pose2d(-0.038099999, 5.547867999999999, new Rotation2d(0));
       aimingLocation = new Pose2d(-0.038099999 + Units.inchesToMeters(15), 5.547867999999999, new Rotation2d(0));
@@ -122,7 +123,8 @@ public class RobotContainer {
 
       @Override
       public void execute() {
-        driveTrain.zeroGyroscope();
+        driveTrain.resetAngle();
+        driveTrain.setAngleOffset(AllianceAngleDeg);
       }
 
       @Override
@@ -190,20 +192,7 @@ public class RobotContainer {
       }
     });
 
-    new JoystickButton(xbox, XboxController.Button.kB.value).onTrue(new InstantCommand() {
-
-      @Override
-      public void execute() {
-
-        SmartDashboard.putNumber("targetRPM", 0);
-        SmartDashboard.putNumber("targetPitch", 2);
-      }
-
-      @Override
-      public boolean runsWhenDisabled() {
-        return true;
-      }
-    });
+    new JoystickButton(xbox, XboxController.Button.kB.value).whileTrue(new DoAmpDumb());
 
   }
 

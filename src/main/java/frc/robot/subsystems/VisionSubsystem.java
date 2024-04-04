@@ -115,7 +115,7 @@ public class VisionSubsystem extends SubsystemBase {
         if(result.hasTargets()){
 
             for(PhotonTrackedTarget possible: result.targets){
-                if(possible.getFiducialId() == 9 || possible.getFiducialId() == 10 || possible.getFiducialId() == 1 || possible.getFiducialId() == 2){ continue;}
+                // if(possible.getFiducialId() == 9 || possible.getFiducialId() == 10 || possible.getFiducialId() == 1 || possible.getFiducialId() == 2){ continue;}
                 //System.out.println("NUMBER"+possible.getFiducialId()+" is "+possible.getYaw());
                 if(bestTarget == null || Math.abs(possible.getYaw()) < Math.abs(bestTarget.getYaw())){
                     bestTarget = possible;

@@ -188,11 +188,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         drive(0, 0, 0);
 
     }
-
-    public void zeroGyroscope() {
-        navx.zeroYaw();
-    }
-
+    
     public double getRange() {
         return timeOf.getRange();
     }
