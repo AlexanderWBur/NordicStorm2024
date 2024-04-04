@@ -109,7 +109,6 @@ public class VisionSubsystem extends SubsystemBase {
 
         }
 
-        SmartDashboard.putBoolean("Can it see a tag? ", result.hasTargets());
         SmartDashboard.putNumber("latency", result.getLatencyMillis());
         PhotonTrackedTarget bestTarget = null;
         //System.out.println("start");
@@ -124,7 +123,8 @@ public class VisionSubsystem extends SubsystemBase {
                 }
             }
         }
-        if (bestTarget != null && Math.abs(bestTarget.getYaw()) < 5) {
+        if (bestTarget != null && Math.abs(bestTarget.getYaw()) < 7) {
+                    SmartDashboard.putBoolean("Can it see a tag? ",true);
 
             // var bestTarget = result.getBestTarget();
             //System.out.println("used "+bestTarget.getFiducialId());
@@ -170,6 +170,9 @@ public class VisionSubsystem extends SubsystemBase {
             RobotContainer.driveTrain.setPose(robotX, robotY, 0);
             //RobotContainer.driveTrain.addVisionMeasurment(new Pose2d(robotX, robotY, new Rotation2d(RobotContainer.driveTrain.getGyroRadians())), System.currentTimeMillis() - result.getLatencyMillis());
             return;
+        } else{
+                                SmartDashboard.putBoolean("Can it see a tag? ",false);
+
         }
 
     }

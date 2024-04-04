@@ -65,7 +65,6 @@ public class ShooterSubsystem extends SubsystemBase {
         // double
         double result = 3.2293351495433664*x*x + -9.86258449217143*x + 61.97625397345697; // CURVE:rpm,10:03,04/03
         SmartDashboard.putNumber("curveRPM", result);
-        // result = SmartDashboard.getNumber("targetRPM", 0);
         return result;
     }
 

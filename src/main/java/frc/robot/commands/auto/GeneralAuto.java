@@ -54,7 +54,7 @@ public class GeneralAuto extends AutoWithInit {
         if (chooser.getSelected().equals("Right")) {
             MultiPartPath pathB = new MultiPartPath(RobotContainer.driveTrain, config, null);
             pathB.resetPosition(1.426, 3.727);
-            if (SmartDashboard.getBoolean("ShootFirst", false)) { //path off
+            if (SmartDashboard.getBoolean("ShootFirst", false)) { // path off
                 pathB.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// ENDPOS:1.211,3.715
                 pathB.addWaypoint(1.772, 4.156);
                 pathB.addSequentialCommand(new TurnAndShoot(0));// ENDPOS:1.569,4.037
@@ -71,19 +71,13 @@ public class GeneralAuto extends AutoWithInit {
                 pathB.addWaypoint(4.854, 3.990);
                 pathB.addWaypoint(7.105, 4.037);
                 pathB.addSequentialCommand(new FollowNote(true, true, 3, 2, correctSeek, 300));// ENDPOS:8.274,4.038
-                if (SmartDashboard.getBoolean("ShootSecond", false)) { //path off
-                    pathB.addWaypoint(6.620, 4.022);
-                    pathB.addWaypoint(4.742, 3.990);
-                    pathB.addWaypoint(3.669, 2.844);
-                    pathB.addWaypoint(2.130, 3.214);
-                    pathB.addWaypoint(2.058, 4.932);
-                    pathB.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// ENDPOS:2.034,4.955
-                    pathB.addSequentialCommand(new TurnAndShoot(0));// ENDPOS:1.998,4.979
-                    
-
-                } else {
-
-                }
+                pathB.addWaypoint(6.620, 4.022);
+                pathB.addWaypoint(4.742, 3.990);
+                pathB.addWaypoint(3.669, 2.844);
+                pathB.addWaypoint(2.130, 3.214);
+                pathB.addWaypoint(2.058, 4.932);
+                pathB.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// ENDPOS:2.034,4.955
+                pathB.addSequentialCommand(new TurnAndShoot(0));// ENDPOS:1.998,4.979
 
             } else if (SmartDashboard.getBoolean("far 4", false)) { // path off
 
@@ -111,7 +105,7 @@ public class GeneralAuto extends AutoWithInit {
                 pathB.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// ENDPOS:2.022,4.430
                 pathB.addSequentialCommand(new TurnAndShoot(0));// ENDPOS:1.951,4.490
             }
-            if(SmartDashboard.getBoolean("ShootSecond", false)){ // path off
+            if (SmartDashboard.getBoolean("ShootSecond", false)) { // path off
                 pathB.addSequentialCommand(new FollowNote(true, true, 1, .75, -correctSeek, 900));// ENDPOS:2.929,4.156
                 pathB.addSequentialCommand(new TurnAndShoot(0));
             }
