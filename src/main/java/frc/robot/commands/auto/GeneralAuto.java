@@ -57,7 +57,7 @@ public class GeneralAuto extends AutoWithInit {
         config.maxCentripetalAcceleration = 11;
         config.maxAngularAcceleration = 8;
         config.maxAnglularVelocity = 12;
-        double correctSeek = RobotContainer.isRed ? 0.2 : -0.2;
+        double correctSeek = RobotContainer.isRed ? -0.2 : 0.2;
         MultiPartPath pathA = new MultiPartPath(RobotContainer.driveTrain, config, null);
         if (chooser.getSelected().equals("Right")) { // path on
             pathA.resetPosition(1.426, 3.727);
@@ -110,13 +110,13 @@ public class GeneralAuto extends AutoWithInit {
         }
         if (farThree) {// path on
             pathA.addWaypoint(2.845, 2.832);
-            pathA.addWaypoint(3.698, 2.770);
+            pathA.addWaypoint(3.811, 2.979);
             pathA.addWaypoint(4.854, 3.990);
             pathA.addWaypoint(7.105, 4.037);
             pathA.addSequentialCommand(new FollowNote(true, true, 3, 2, correctSeek, 300));// ENDPOS:8.274,4.038
             pathA.addWaypoint(6.620, 4.022);
             pathA.addWaypoint(4.742, 3.990);
-            pathA.addWaypoint(3.669, 2.844);
+            pathA.addWaypoint(4.276, 3.123);
             pathA.addWaypoint(2.130, 3.214);
             pathA.addWaypoint(2.058, 4.932);
             pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// ENDPOS:2.034,4.955
@@ -151,6 +151,7 @@ public class GeneralAuto extends AutoWithInit {
         if (SmartDashboard.getBoolean("ShootSecond", false)) { // path on
             pathA.addSequentialCommand(new FollowNote(true, true, 1, .75, -correctSeek, 900));// ENDPOS:1.306,4.096
             pathA.addSequentialCommand(new TurnAndShoot(0));// ENDPOS:1.294,4.144
+            pathA.addWaypoint(14.711, 7.955);
         }
 
         pathA.addStop();
