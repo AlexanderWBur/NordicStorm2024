@@ -49,7 +49,12 @@ public class IntakeSubsystem extends SubsystemBase {
             timeToStop = 0;
         }
     }
-
+    public void resetIntake(){
+        triggered = true;
+        timeToStop = 0;
+        ticksToStopFeed = 0;
+        ticksToStopIntake = 0;
+    }
     @Override
     public void periodic() {
         SmartDashboard.putNumber("feed", ticksToStopFeed);
