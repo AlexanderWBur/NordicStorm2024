@@ -105,9 +105,10 @@ public class GeneralAuto extends AutoWithInit {
                 pathB.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// ENDPOS:1.925,4.954
                 pathB.addSequentialCommand(new TurnAndShoot(0));// ENDPOS:1.936,5.045
             }
-            if (SmartDashboard.getBoolean("ShootSecond", false)) { // path off
-                pathB.addSequentialCommand(new FollowNote(true, true, 1, .75, -correctSeek, 900));// ENDPOS:2.929,4.156
-                pathB.addSequentialCommand(new TurnAndShoot(0));
+            if (SmartDashboard.getBoolean("ShootSecond", false)) { // path on
+                pathB.addSequentialCommand(new FollowNote(true, true, 1, .75, -correctSeek, 900));// ENDPOS:1.287,3.906
+                pathB.addWaypoint(1.925, 5.068);
+                pathB.addSequentialCommand(new TurnAndShoot(0));// ENDPOS:1.925,4.954
             }
             pathB.addStop();
             if (RobotContainer.isRed) {
