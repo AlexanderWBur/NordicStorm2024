@@ -50,7 +50,7 @@ public class GeneralAuto extends AutoWithInit {
         boolean farFour = SmartDashboard.getBoolean("far 4", false);
         boolean farFive = SmartDashboard.getBoolean("far 5", false);
 
-        RobotContainer.intake.triggered = true;
+        RobotContainer.intake.resetIntake();
         DriveTrainConfig config = RobotContainer.driveTrain.getConfig().makeClone();
         config.maxVelocity = 4;
         config.maxAcceleration = 3;
