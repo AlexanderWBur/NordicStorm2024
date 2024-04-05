@@ -167,7 +167,7 @@ public class GeneralAuto extends AutoWithInit {
                 pathA.addWaypoint(3.811, 2.979);
                 pathA.addWaypoint(4.854, 3.990);
                 pathA.addWaypoint(7.105, 4.037);
-                pathA.addSequentialCommand(new FollowNote(true, true, 3, 2, correctSeek, 300));// ENDPOS:8.274,4.038
+                pathA.addSequentialCommand(new FollowNote(true, true, 3, 2, correctSeek, 300));// ENDPOS:8.226,4.108
                 pathA.addWaypoint(6.620, 4.022);
                 pathA.addWaypoint(4.742, 3.990);
                 pathA.addWaypoint(4.276, 3.123);
