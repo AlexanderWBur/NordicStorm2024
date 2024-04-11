@@ -52,8 +52,8 @@ public class IntakeSubsystem extends SubsystemBase {
     public void resetIntake(){
         triggered = true;
         timeToStop = 0;
-        ticksToStopFeed = 0;
-        ticksToStopIntake = 0;
+        ticksToStopFeed = -10000;
+        ticksToStopIntake = -10000;
     }
     @Override
     public void periodic() {

@@ -25,6 +25,7 @@ import frc.robot.commands.DriveToPos;
 import frc.robot.commands.FollowNote;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OperatorControl;
+import frc.robot.commands.ReallyDumbAmp;
 import frc.robot.commands.auto.GeneralAuto;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -113,7 +114,8 @@ public class RobotContainer {
     new JoystickButton(leftJoystick, 9).whileTrue(new DisableClimberLimits());
     new JoystickButton(xbox, 5).whileTrue(new DoAmpSequence());
     new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new IntakeCommand(1, 0));
-    new JoystickButton(rightJoystick, 11).whileTrue(new DriveToPos());
+    //new JoystickButton(rightJoystick, 11).whileTrue(new DriveToPos());
+    new JoystickButton(rightJoystick, 12).whileTrue(new ReallyDumbAmp());
     new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new DoAmpDumb());
     new JoystickButton(xbox, XboxController.Button.kRightBumper.value)
         .whileTrue(new FollowNote(true, false, 1, .75, 0.2, 1000));
@@ -178,18 +180,21 @@ public class RobotContainer {
         return true;
       }
     });
-    new JoystickButton(xbox, XboxController.Button.kX.value).onTrue(new InstantCommand() {
+    new JoystickButton(xbox, XboxController.Button.kX.value).whileTrue(new Command() {
+      @Override
+      public void initialize(){
+        RobotContainer.shooterSubsystem.setShooterAngle(-70);
+      }
+      
 
       @Override
-      public void execute() {
-
-        driveTrain.setPose(2.0, driveTrain.getPose().getY(), 0); // 8.21 - 7.766
+      public void end(boolean i){
+        RobotContainer.shooterSubsystem.setShooterAngle(-2);
       }
 
       @Override
-      public boolean runsWhenDisabled() {
-        return true;
-      }
+      public boolean isFinished(){
+        return false;     }
     });
 
     new JoystickButton(xbox, XboxController.Button.kB.value).whileTrue(new DoAmpDumb());
