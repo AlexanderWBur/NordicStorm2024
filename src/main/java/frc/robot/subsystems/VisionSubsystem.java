@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
 import frc.robot.Utils.RollingAverage;
@@ -58,7 +59,7 @@ public class VisionSubsystem extends SubsystemBase {
         noteCamera = new PhotonCamera("NoteCam");
         photonCamera = new PhotonCamera("USB_2M_GS_camera");
         poseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, photonCamera,
-                transform3d);
+        transform3d);
 
     }
 
@@ -87,6 +88,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+
         SmartDashboard.putNumber("DistanceTo", getDistanceToTarget());
         notes = noteCamera.getLatestResult().targets;
         poseEstimator.setReferencePose(RobotContainer.driveTrain.getPose()); // sets reference pose to (0,0,
@@ -112,7 +114,7 @@ public class VisionSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("latency", result.getLatencyMillis());
         PhotonTrackedTarget bestTarget = null;
         //System.out.println("start");
-        if(result.hasTargets()){
+        if(result.hasTargets() && Math.abs(RobotContainer.driveTrain.getRotationSpeed()) < 10){
 
             for(PhotonTrackedTarget possible: result.targets){
                 // if(possible.getFiducialId() == 9 || possible.getFiducialId() == 10 || possible.getFiducialId() == 1 || possible.getFiducialId() == 2){ continue;}

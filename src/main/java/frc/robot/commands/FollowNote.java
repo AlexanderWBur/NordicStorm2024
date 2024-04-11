@@ -97,7 +97,7 @@ public class FollowNote extends CommandPathPiece {
             if(RobotContainer.intake.hasNote){
                 hasGotABall = true;
             }
-            if(hasGotABall && !DriverStation.isAutonomous()){
+            if(hasGotABall && !DriverStation.isAutonomous() && RobotContainer.intake.hasNote){
                new SetRumble(1).schedule();
             }
             if (hasGotABall && endWhenClose) {

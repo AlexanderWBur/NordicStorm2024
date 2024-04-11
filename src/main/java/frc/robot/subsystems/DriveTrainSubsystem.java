@@ -197,6 +197,10 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         return timeOf.isRangeValid();
     }
 
+    public double getRotationSpeed(){
+        return navx.getRate();
+    }
+
     /**
      * Goes positive as it goes counterclockwise. Degrees!
      * 

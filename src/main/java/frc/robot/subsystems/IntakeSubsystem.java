@@ -7,6 +7,9 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -49,14 +52,24 @@ public class IntakeSubsystem extends SubsystemBase {
             timeToStop = 0;
         }
     }
-    public void resetIntake(){
+
+    public void resetIntake() {
         triggered = true;
         timeToStop = 0;
         ticksToStopFeed = -10000;
         ticksToStopIntake = -10000;
     }
+
     @Override
     public void periodic() {
+
+        if (!hasNote) {
+            if (RobotContainer.visionSubsystem.getTargets().size() > 0 && DriverStation.isTeleop()) {
+                RobotContainer.xbox.setRumble(RumbleType.kRightRumble, 1);
+            } else {
+                RobotContainer.xbox.setRumble(RumbleType.kRightRumble, 0);
+            }
+        }
         SmartDashboard.putNumber("feed", ticksToStopFeed);
         SmartDashboard.putNumber("stop", ticksToStopIntake);
         SmartDashboard.putNumber("current", motorEncoder.getPosition());
@@ -68,7 +81,7 @@ public class IntakeSubsystem extends SubsystemBase {
         if (!triggered && hasNote) {
             ticksToStopIntake = motorEncoder.getPosition() + 0.4
                     + 0.3 * (Util.clamp(2.5
-                     - RobotContainer.driveTrain.getSpeeds().vxMetersPerSecond, -0.5, 2.5));
+                            - RobotContainer.driveTrain.getSpeeds().vxMetersPerSecond, -0.5, 2.5));
             timeToStop = 0;
         }
         if (hasNote) {
@@ -77,19 +90,19 @@ public class IntakeSubsystem extends SubsystemBase {
         indexer.set(0.2);
         if (motorEncoder.getPosition() < ticksToStopFeed) {
             setMotorRaw(1);
-            //indexer.set(0.5);
+            // indexer.set(0.5);
 
         } else if (motorEncoder.getPosition() < ticksToStopIntake) {
             setMotorRaw(Constants.minIntakePower);
-            //indexer.set(0);
+            // indexer.set(0);
 
         } else if (System.currentTimeMillis() < timeToStop) {
             setMotorRaw(Constants.minIntakePower);
-            //indexer.set(0);
+            // indexer.set(0);
 
         } else {
             setMotorRaw(0);
-            //indexer.set(0);
+            // indexer.set(0);
 
         }
 
