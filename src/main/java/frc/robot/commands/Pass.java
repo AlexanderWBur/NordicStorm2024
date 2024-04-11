@@ -17,6 +17,8 @@ public class Pass extends CommandPathPiece {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    RobotContainer.shooterSubsystem.setShooterAngle(-45);
+    
 
 }
 

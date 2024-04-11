@@ -66,12 +66,12 @@ public class GeneralAuto extends AutoWithInit {
             pathA.resetPosition(1.366, 6.554);
             pathA.setHeading(RobotContainer.AllianceAngleDeg);
             pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
-            pathA.addSequentialCommand(new TurnAndShoot(0));// NOMOVE
+            pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
             if (doOne) { // path on
                 pathA.addWaypoint(1.795, 7.019);
                 pathA.addSequentialCommand(new FollowNote(true, true, 1, .75, correctSeek, 900));// ENDPOS:2.929,7.007
                 pathA.addWaypoint(1.366, 6.554);
-                pathA.addSequentialCommand(new TurnAndShoot(0));// NOMOVE
+                pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
             } else { // path off
                 pathA.addWaypoint(2.106, 7.628);
                 pathA.addWaypoint(2.666, 7.699);
@@ -110,7 +110,7 @@ public class GeneralAuto extends AutoWithInit {
 
             }
             pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
-            pathA.addSequentialCommand(new TurnAndShoot(0));// NOMOVE
+            pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
 
         } else { // path on
             if (chooser.getSelected().equals("Right")) { // path on
@@ -119,7 +119,7 @@ public class GeneralAuto extends AutoWithInit {
                 if (SmartDashboard.getBoolean("ShootFirst", false)) { // path on
                     pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
                     pathA.addWaypoint(1.162, 4.359);
-                    pathA.addSequentialCommand(new TurnAndShoot(0));// NOMOVE
+                    pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
                 } else { // path off
                     pathA.addSequentialCommand(new SetShooter(ShooterMode.PLOOP));// NOMOVE
                     pathA.addSequentialCommand(new Ploop());// NOMOVE
@@ -130,7 +130,7 @@ public class GeneralAuto extends AutoWithInit {
                 pathA.setHeading(RobotContainer.AllianceAngleDeg);
                 if (SmartDashboard.getBoolean("ShootFirst", false)) { // path on
                     pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
-                    pathA.addSequentialCommand(new TurnAndShoot(0));// NOMOVE
+                    pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
                 } else { // path off
                     pathA.addSequentialCommand(new SetShooter(ShooterMode.PLOOP));// NOMOVE
                     pathA.addSequentialCommand(new Ploop());
@@ -144,14 +144,14 @@ public class GeneralAuto extends AutoWithInit {
                 pathA.addWaypoint(1.795, 4.204);
                 pathA.addSequentialCommand(new FollowNote(true, true, 1, .75, correctSeek, 900));// ENDPOS:2.929,4.156
                 pathA.addWaypoint(1.951, 5.015);
-                pathA.addSequentialCommand(new TurnAndShoot(-3));// NOMOVE
+                pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
                 // pathA.pivotInPlace(90);
             }
             if (doTwo) {// path off
                        
                 pathA.addSequentialCommand(new FollowNote(true, true, 2, 2, correctSeek, 400));// ENDPOS:2.917,5.576
                 pathA.addWaypoint(1.903, 5.612);
-                pathA.addSequentialCommand(new TurnAndShoot(0));// NOMOVE
+                pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
                 // pathA.pivotInPlace(90);
 
             }
@@ -159,7 +159,7 @@ public class GeneralAuto extends AutoWithInit {
                          // pathA.addWaypoint(1.951, 6.828);
                 pathA.addSequentialCommand(new FollowNote(true, true, 2, 2, correctSeek, 400));// ENDPOS:2.917,6.888
                 pathA.addWaypoint(2.010, 5.946);
-                pathA.addSequentialCommand(new TurnAndShoot(0));// NOMOVE
+                pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
             }
             if (farFive || farThree || farFour) { // path on
                 pathA.addSequentialCommand(new SetShooter(ShooterMode.OFF));// NOMOVE
@@ -176,7 +176,7 @@ public class GeneralAuto extends AutoWithInit {
                 pathA.addWaypoint(2.130, 3.214);
                 pathA.addWaypoint(2.058, 4.932);
                 pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
-                pathA.addSequentialCommand(new TurnAndShoot(0));// NOMOVE
+                pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
 
             } else if (farFour) { // path off
 
@@ -191,7 +191,7 @@ public class GeneralAuto extends AutoWithInit {
                 pathA.addWaypoint(2.130, 3.214);
                 pathA.addWaypoint(1.581, 4.335);
                 pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
-                pathA.addSequentialCommand(new TurnAndShoot(0));// NOMOVE
+                pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
             } else if (farFive) {// path on
                 pathA.addWaypoint(1.139, 2.868);
                 pathA.addWaypoint(3.108, 1.555);
@@ -202,11 +202,11 @@ public class GeneralAuto extends AutoWithInit {
                 pathA.addWaypoint(2.130, 3.214);
                 pathA.addWaypoint(1.557, 4.096);
                 pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
-                pathA.addSequentialCommand(new TurnAndShoot(0));// NOMOVE
+                pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
             }
             if (SmartDashboard.getBoolean("ShootSecond", false)) { // path on
                 pathA.addSequentialCommand(new FollowNote(true, true, 1, .75, -correctSeek, 900));// ENDPOS:1.664,4.514
-                pathA.addSequentialCommand(new TurnAndShoot(0));// NOMOVE
+                pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
             }
         }
         pathA.addStop();

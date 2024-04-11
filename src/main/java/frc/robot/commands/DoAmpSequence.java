@@ -44,7 +44,8 @@ public class DoAmpSequence extends SequentialCommandGroup {
 
             @Override
             public void execute() {
-                double targetX = RobotContainer.isRed ? 14.7: 1.84;
+                double targetX = RobotContainer.isRed ? 14.85
+                        : 1.59;
                 double currentX = RobotContainer.driveTrain.getPose().getX();
                 double error = targetX - currentX;
                 RobotContainer.driveTrain.drive(0, getStrafeSpeed(targetX), 0);
@@ -61,7 +62,7 @@ public class DoAmpSequence extends SequentialCommandGroup {
             @Override
             public boolean isFinished() {
 
-                return isDone;
+                return true;
             }
 
         }, new Command() {
@@ -75,12 +76,14 @@ public class DoAmpSequence extends SequentialCommandGroup {
 
             @Override
             public void execute() {
-                double targetX = RobotContainer.isRed ? 14.7: 1.84;
+
+                double targetX = RobotContainer.isRed ? 14.85 : 1.59;
                 // double currentX = RobotContainer.driveTrain.getPose().getX();
                 // double error = targetX - currentX;''
                 double forward;
-                if (RobotContainer.driveTrain.isRangeValid() && (RobotContainer.driveTrain.getRange() < 900)) {
-                    forward = 0.75; //RobotContainer.driveTrain.getRange() * 0.001;
+                if (RobotContainer.driveTrain.isRangeValid() && (RobotContainer.driveTrain.getRange() < 700)) {
+                    RobotContainer.shooterSubsystem.setShooterAngle(-70);
+                    forward = 0.75; // RobotContainer.driveTrain.getRange() * 0.001;
                     if (RobotContainer.driveTrain.getRange() < 150 && timeToEnd == 0) {
                         timeToEnd = System.currentTimeMillis() + 100;
                     }
@@ -95,6 +98,9 @@ public class DoAmpSequence extends SequentialCommandGroup {
             @Override
             public void end(boolean isInterupted) {
                 RobotContainer.driveTrain.drive(0, 0, 0);
+                if (isInterupted) {
+                    RobotContainer.shooterSubsystem.setShooterAngle(-2);
+                }
             }
 
             @Override
@@ -138,7 +144,8 @@ public class DoAmpSequence extends SequentialCommandGroup {
         });
     }
 
-    PIDController strafePID = new PIDController(3, 0, .1);
+    PIDController strafePID = new PIDController(4, 0, .1);
+
     public double getStrafeSpeed(double targetX) {
         double currentX = RobotContainer.driveTrain.getPose().getX();
         return -Util.absClamp(strafePID.calculate(currentX, targetX), 3);

@@ -76,6 +76,9 @@ public class ShooterSubsystem extends SubsystemBase {
         result = Util.clamp(result, 1, 70); // +3, same ang
         SmartDashboard.putNumber("curvePitch", result);
         //result = SmartDashboard.getNumber("targetPitch", 0);
+        if(mode == ShooterMode.PASS){
+            return 40;
+        }
         return result;
     }
 
@@ -106,9 +109,8 @@ public class ShooterSubsystem extends SubsystemBase {
             setAmp(15);
             setShooter(15);
         } else if(mode == ShooterMode.PASS){
-            setAmp(30);
-            setShooter(30);
-            setShooterAngle(-40);
+            setAmp(70);
+            setShooter(70);
         }
 
         if (Math.signum(amp.getVelocity().getValueAsDouble()) != Math.signum(targetAmp)

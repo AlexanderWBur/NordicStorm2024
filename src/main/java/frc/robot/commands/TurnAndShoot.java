@@ -15,26 +15,31 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class TurnAndShoot extends CommandPathPiece {
 
     boolean hasSent;
-    static double angleAdjust;
     long timeToEnd = 0;
-    public TurnAndShoot(double angleAdjust) {
+    Pose2d aimingTarget;
+
+    public TurnAndShoot(Pose2d aimingTarget) {
         addRequirements(RobotContainer.intake);
         SmartDashboard.putNumber("targetRPM", 50);
         SmartDashboard.putNumber("targetPitch", 40);
-        this.angleAdjust = angleAdjust;
+        this.aimingTarget = aimingTarget;
     }
 
-    public static double getNeededTurnAngle() {
+    public TurnAndShoot(){
+        this(RobotContainer.aimingLocation);
+    }
+
+    public static double getNeededTurnAngle(Pose2d aimingTarget) {
         Pose2d futurePose = RobotContainer.driveTrain.getPose();
 
-        double angleNeeded = Util.angleBetweenPoses(futurePose, RobotContainer.aimingLocation) + Math.PI;
+        double angleNeeded = Util.angleBetweenPoses(futurePose, aimingTarget) + Math.PI;
 
-        return Math.toDegrees(angleNeeded) + 10 + angleAdjust; // 10
+        return Math.toDegrees(angleNeeded) + 10; // 10
 
     }
 
     public boolean rotateTowardTarget() {
-        double angleNeeded = getNeededTurnAngle();
+        double angleNeeded = getNeededTurnAngle(aimingTarget);
         double angleDiff = Util.angleDiff(RobotContainer.driveTrain.getGyroDegrees(), angleNeeded);
         RobotContainer.driveTrain.setRotationSpeed(RobotContainer.driveTrain.getTurnToTarget(angleNeeded), 1);
         return Math.abs(angleDiff) < 3;
@@ -49,31 +54,30 @@ public class TurnAndShoot extends CommandPathPiece {
 
     @Override
     public void execute() {
-        RobotContainer.driveTrain.drive(0,0,0);
+        RobotContainer.driveTrain.drive(0, 0, 0);
         double targetPitch = RobotContainer.shooterSubsystem.getAngleForDist(RobotContainer.shooterSubsystem.distance);
-        
+
         RobotContainer.shooterSubsystem.setShooterAngle(-targetPitch);
 
         boolean isAngleGood = rotateTowardTarget();
         if (Math.abs(RobotContainer.shooterSubsystem.getAngleError()) < .5 &&
-         !hasSent && isAngleGood && Math.abs(RobotContainer.shooterSubsystem.getShooterError()) < 3 
-         && Math.abs(RobotContainer.shooterSubsystem.getAmpError()) < 3) {
+                !hasSent && isAngleGood && Math.abs(RobotContainer.shooterSubsystem.getShooterError()) < 3
+                && Math.abs(RobotContainer.shooterSubsystem.getAmpError()) < 3) {
             RobotContainer.intake.sendToShooter();
             hasSent = true;
             timeToEnd = System.currentTimeMillis() + 1000;
         }
 
-    
     }
 
     @Override
     public void end(boolean interrupted) {
-        
+
         RobotContainer.shooterSubsystem.setShooterAngle(-2);
     }
 
     @Override
     public boolean isFinished() {
-        return (System.currentTimeMillis() > timeToEnd  && hasSent) || RobotContainer.shooterSubsystem.hasShot();
+        return (System.currentTimeMillis() > timeToEnd && hasSent) || RobotContainer.shooterSubsystem.hasShot();
     }
 }

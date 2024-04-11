@@ -64,7 +64,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public void periodic() {
 
         if (!hasNote) {
-            if (RobotContainer.visionSubsystem.getTargets().size() > 0 && DriverStation.isTeleop()) {
+            if (RobotContainer.visionSubsystem.getTargets().size() > 0 && DriverStation.isTeleopEnabled()) {
                 RobotContainer.xbox.setRumble(RumbleType.kRightRumble, 1);
             } else {
                 RobotContainer.xbox.setRumble(RumbleType.kRightRumble, 0);

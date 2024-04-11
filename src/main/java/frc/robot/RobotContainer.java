@@ -26,6 +26,8 @@ import frc.robot.commands.FollowNote;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OperatorControl;
 import frc.robot.commands.ReallyDumbAmp;
+import frc.robot.commands.ShooterMode;
+import frc.robot.commands.TurnAndShoot;
 import frc.robot.commands.auto.GeneralAuto;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -68,6 +70,7 @@ public class RobotContainer {
 
   public static Pose2d targetLocation;
   public static Pose2d aimingLocation;
+  public static Pose2d passingTargetLocation;
 
   public static ClimberSubsystem climberSubsystem = new ClimberSubsystem();
 
@@ -75,16 +78,21 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   double totalWidth = 16.54;
+
   public RobotContainer() {
 
     isRed = DriverStation.getAlliance().get() == Alliance.Red;
 
     if (isRed) {
       targetLocation = new Pose2d(totalWidth - (-0.038099999), 5.547867999999999, new Rotation2d(0));
-      aimingLocation = new Pose2d(totalWidth - (-0.038099999 + Units.inchesToMeters(15)), 5.547867999999999, new Rotation2d(0));
+      aimingLocation = new Pose2d(totalWidth - (-0.038099999 + Units.inchesToMeters(15)), 5.547867999999999,
+          new Rotation2d(0));
+      passingTargetLocation = new Pose2d(totalWidth - (1.438), 8.216, new Rotation2d());
     } else {
       targetLocation = new Pose2d(-0.038099999, 5.547867999999999, new Rotation2d(0));
       aimingLocation = new Pose2d(-0.038099999 + Units.inchesToMeters(15), 5.547867999999999, new Rotation2d(0));
+      passingTargetLocation = new Pose2d( (1.438), 8.216, new Rotation2d());
+
     }
 
     driveTrain.setDefaultCommand(new OperatorControl());
@@ -114,7 +122,7 @@ public class RobotContainer {
     new JoystickButton(leftJoystick, 9).whileTrue(new DisableClimberLimits());
     new JoystickButton(xbox, 5).whileTrue(new DoAmpSequence());
     new JoystickButton(xbox, XboxController.Button.kA.value).onTrue(new IntakeCommand(1, 0));
-    //new JoystickButton(rightJoystick, 11).whileTrue(new DriveToPos());
+    // new JoystickButton(rightJoystick, 11).whileTrue(new DriveToPos());
     new JoystickButton(rightJoystick, 12).whileTrue(new ReallyDumbAmp());
     new JoystickButton(xbox, XboxController.Button.kY.value).whileTrue(new DoAmpDumb());
     new JoystickButton(xbox, XboxController.Button.kRightBumper.value)
@@ -167,6 +175,17 @@ public class RobotContainer {
         return true;
       }
     });
+    new JoystickButton(leftJoystick, 5).onTrue(new InstantCommand() {
+      @Override
+      public void execute() {
+        shooterSubsystem.setMode(ShooterMode.PASS);
+      }
+
+      @Override
+      public boolean runsWhenDisabled() {
+        return true;
+      }
+    });
     new JoystickButton(xbox, XboxController.Button.kStart.value).onTrue(new InstantCommand() {
 
       @Override
@@ -182,22 +201,22 @@ public class RobotContainer {
     });
     new JoystickButton(xbox, XboxController.Button.kX.value).whileTrue(new Command() {
       @Override
-      public void initialize(){
+      public void initialize() {
         RobotContainer.shooterSubsystem.setShooterAngle(-70);
       }
-      
 
       @Override
-      public void end(boolean i){
+      public void end(boolean i) {
         RobotContainer.shooterSubsystem.setShooterAngle(-2);
       }
 
       @Override
-      public boolean isFinished(){
-        return false;     }
+      public boolean isFinished() {
+        return false;
+      }
     });
 
-    new JoystickButton(xbox, XboxController.Button.kB.value).whileTrue(new DoAmpDumb());
+    new JoystickButton(xbox, XboxController.Button.kB.value).whileTrue(new TurnAndShoot(passingTargetLocation));
 
   }
 
