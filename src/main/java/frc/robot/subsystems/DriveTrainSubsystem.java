@@ -130,7 +130,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Drive train");
 
         frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
-                shuffleboardTab.getLayout("Front left", BuiltInLayouts.kList).withSize(2, 4).withPosition(0, 0),
+                null,
                 new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_LEFT_MODULE_STEER_MOTOR, Constants.FRONT_LEFT_MODULE_STEER_ENCODER,
@@ -139,7 +139,7 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
                 Units.degreesToRadians(-183.07342529296875)); // -175.60546875
 
         frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
-                shuffleboardTab.getLayout("Front Right", BuiltInLayouts.kList).withSize(2, 4).withPosition(2, 0),
+                null,
                 new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.FRONT_RIGHT_MODULE_STEER_MOTOR, Constants.FRONT_RIGHT_MODULE_STEER_ENCODER,
@@ -148,14 +148,14 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         // -Math.toRadians(197.80059814453125 + 180));
         // SmartDashboard.putNumber("Front right" , ) -258.2267761230469
         backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
-                shuffleboardTab.getLayout("Back left", BuiltInLayouts.kList).withSize(2, 4).withPosition(4, 0),
+                null,
                 new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_LEFT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_LEFT_MODULE_STEER_MOTOR, Constants.BACK_LEFT_MODULE_STEER_ENCODER,
                 Units.degreesToRadians(0)); // -255.849609375
 
         backRightModule = Mk3SwerveModuleHelper.createFalcon500(
-                shuffleboardTab.getLayout("Back Right", BuiltInLayouts.kList).withSize(2, 4).withPosition(6, 0),
+                null,
                 new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR,
                 Constants.BACK_RIGHT_MODULE_STEER_MOTOR, Constants.BACK_RIGHT_MODULE_STEER_ENCODER,
@@ -295,10 +295,10 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
     public void periodic() {
 
         SmartDashboard.putNumber("Time of", timeOf.getRange());
-
+        double totalTemp = 0;
         for (int i = 0; i < swerveModules.size(); i++) {
             currentSwerveStates[i] = Util.stateFromModule(swerveModules.get(i));
-
+            totalTemp += swerveModules.get(i).getTalonDriveMotor().getDeviceTemp().getValue();
             // SmartDashboard.putNumber("Module " + i,
             // Units.radiansToDegrees(swerveModules.get(i).getSteerAngle()));
             // SmartDashboard.putNumber("Module speed " + i,
@@ -318,6 +318,8 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
         SmartDashboard.putNumber("y",pose.getY());
 
         SmartDashboard.putNumber("driveAng", getGyroDegrees());
+
+        SmartDashboard.putNumber("driveTemp", totalTemp/4);
 
     }
 
