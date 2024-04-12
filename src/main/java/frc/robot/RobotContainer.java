@@ -87,11 +87,11 @@ public class RobotContainer {
       targetLocation = new Pose2d(totalWidth - (-0.038099999), 5.547867999999999, new Rotation2d(0));
       aimingLocation = new Pose2d(totalWidth - (-0.038099999 + Units.inchesToMeters(15)), 5.547867999999999,
           new Rotation2d(0));
-      passingTargetLocation = new Pose2d(totalWidth - (1.438), 8.216, new Rotation2d());
+      passingTargetLocation = new Pose2d(totalWidth - (1.438), 6.216, new Rotation2d());
     } else {
       targetLocation = new Pose2d(-0.038099999, 5.547867999999999, new Rotation2d(0));
       aimingLocation = new Pose2d(-0.038099999 + Units.inchesToMeters(15), 5.547867999999999, new Rotation2d(0));
-      passingTargetLocation = new Pose2d( (1.438), 8.216, new Rotation2d());
+      passingTargetLocation = new Pose2d( (1.438), 6.216, new Rotation2d());
 
     }
 

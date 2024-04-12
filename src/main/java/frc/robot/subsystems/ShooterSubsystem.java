@@ -77,7 +77,7 @@ public class ShooterSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("curvePitch", result);
         //result = SmartDashboard.getNumber("targetPitch", 0);
         if(mode == ShooterMode.PASS){
-            return 40;
+            return 45;
         }
         return result;
     }

@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
+    turnAndShoot = new TurnAndShoot(RobotContainer.aimingLocation);
   }
 
   /**
@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
     }
   }
 
-  public static TurnAndShoot turnAndShoot = new TurnAndShoot();
+  public static TurnAndShoot turnAndShoot; 
   public static FollowNote followNote = new FollowNote(true, false, 3.3, 2.5, 0.2, 300);
   /** This function is called periodically during operator control. */
   @Override

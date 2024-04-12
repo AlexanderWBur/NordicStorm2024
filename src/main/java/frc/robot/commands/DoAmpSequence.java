@@ -62,7 +62,7 @@ public class DoAmpSequence extends SequentialCommandGroup {
             @Override
             public boolean isFinished() {
 
-                return true;
+                return isDone;
             }
 
         }, new Command() {
