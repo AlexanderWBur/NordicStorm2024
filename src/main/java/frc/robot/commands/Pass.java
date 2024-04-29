@@ -4,7 +4,8 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.paths.CommandPathPiece;
 
 public class Pass extends CommandPathPiece {
-     public Pass() {   
+     public Pass
+     () {   
 
   }
 

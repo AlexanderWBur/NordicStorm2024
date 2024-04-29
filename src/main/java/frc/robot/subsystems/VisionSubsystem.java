@@ -67,7 +67,7 @@ public class VisionSubsystem extends SubsystemBase {
     public static double visToRealAngle(double ang) {
 
         double x = ang;
-        double result = -0.0014616533340579727*x*x + 1.2844392880100985*x + 2.806435799133628; // CURVE:real,04:09,04/03
+        double result = -0.0014616533340579727*x*x + 1.2844392880100985*x + 3.006435799133628; // CURVE:real,04:09,04/03
         return result;
     }
 
