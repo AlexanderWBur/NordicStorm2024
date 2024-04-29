@@ -79,8 +79,8 @@ public class IntakeSubsystem extends SubsystemBase {
         updateMotorStats();
         hasNote = !prox.get();
         if (!triggered && hasNote) {
-            ticksToStopIntake = motorEncoder.getPosition() + 0.4
-                    + 0.3 * (Util.clamp(2.5
+            ticksToStopIntake = motorEncoder.getPosition() + 0.2
+                    + 0.27 * (Util.clamp(2.5
                             - RobotContainer.driveTrain.getSpeeds().vxMetersPerSecond, -0.5, 2.5));
             timeToStop = 0;
         }

@@ -23,6 +23,7 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
 import frc.robot.Utils.RollingAverage;
+import frc.robot.commands.FollowNote;
 
 public class VisionSubsystem extends SubsystemBase {
 
@@ -66,7 +67,7 @@ public class VisionSubsystem extends SubsystemBase {
     public static double visToRealAngle(double ang) {
 
         double x = ang;
-        double result = -0.0014616533340579727*x*x + 1.2844392880100985*x + 3.056435799133628; // CURVE:real,04:09,04/03
+        double result = -0.0014616533340579727*x*x + 1.2844392880100985*x + 2.806435799133628; // CURVE:real,04:09,04/03
         return result;
     }
 
@@ -91,6 +92,9 @@ public class VisionSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("DistanceTo", getDistanceToTarget());
         notes = noteCamera.getLatestResult().targets;
+        for(var note : notes){
+           FollowNote.printStuff(note);
+        }
         poseEstimator.setReferencePose(RobotContainer.driveTrain.getPose()); // sets reference pose to (0,0,
                                                                              // Rotation2d.fromDegrees(0))
         var estimated = poseEstimator.update();

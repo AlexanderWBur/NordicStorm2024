@@ -16,6 +16,7 @@ import java.util.List;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
@@ -172,7 +173,9 @@ public class DriveTrainSubsystem extends SubsystemBase implements PathableDrivet
             slot0Configs.kP = 0.096093;
             slot0Configs.kV = 0.11531;
             driveMotor.getConfigurator().apply(slot0Configs, 0.01);
+            driveMotor.getConfigurator().apply(new CurrentLimitsConfigs().withStatorCurrentLimit(80));
         }
+    
         drivetrainConfig.maxAcceleration = 4;
         drivetrainConfig.maxVelocity = 4;
         drivetrainConfig.maxAnglularVelocity = 10;

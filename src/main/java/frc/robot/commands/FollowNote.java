@@ -72,7 +72,7 @@ public class FollowNote extends CommandPathPiece {
     @Override
     public void initialize() {
         targetTracker = new DriveToObject(pVal, forwardMod, maxTurn, stopWidth * 0, proxPVal, camWidth, camHeight);
-        targetTracker.setOffset(0);
+        targetTracker.setOffset(0); // -5
         RobotContainer.intake.doIntake(999999999);
         hasGotABall = false;
         shouldStop = false;
@@ -106,10 +106,11 @@ public class FollowNote extends CommandPathPiece {
             List<PhotonTrackedTarget> objects = RobotContainer.visionSubsystem.getTargets();
             ProcessedTarget object = findTarget(objects);
             if (object != null) {
+                
                 System.out.println("width:" + object.width);
                 System.out.println("height:" + object.height);
                 System.out.println("y:" + object.y);
-                if (object.y + object.height > 170) {
+                if (object.y + object.height > 165) {
                     hasGotABall = true;
                      System.out.println("charge!");
 
@@ -164,8 +165,14 @@ public class FollowNote extends CommandPathPiece {
     public double getRequestedStartSpeed() {
         return 1;
     }
-
-    private class ProcessedTarget {
+    public static void printStuff(PhotonTrackedTarget note){
+        var object = new ProcessedTarget(note);
+        System.out.println("width:" + object.width);
+        System.out.println("height:" + object.height);
+        System.out.println("y:" + object.y);
+        
+    }
+    private static class ProcessedTarget {
         double x;
         double y;
         double width;

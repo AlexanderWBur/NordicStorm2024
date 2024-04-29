@@ -17,7 +17,7 @@ public class ReallyDumbAmp extends SequentialCommandGroup {
             @Override
             public void initialize() {
                 timeToEnd = 0;
-                RobotContainer.shooterSubsystem.setShooterAngle(-70); // need measure before enable
+                RobotContainer.shooterSubsystem.setShooterAngle(-67); // need measure before enable
 
             }
 
