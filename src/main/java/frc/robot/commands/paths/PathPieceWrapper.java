@@ -37,9 +37,7 @@ public class PathPieceWrapper extends CommandPathPiece {
 
     @Override
     public final boolean isFinished() {
-        return command.isFinished();
+        return !command.isScheduled();
     }
-
-
 
 }
