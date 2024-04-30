@@ -22,10 +22,12 @@ public class PathPieceWrapper extends CommandPathPiece {
     public double getRequestedStartSpeed() {
         return startSpeed;
     }
-
+    @Override
+    public void initialize(){
+        command.schedule();
+    }
     @Override
     public final void execute() {
-        command.execute();
     }
 
     @Override
