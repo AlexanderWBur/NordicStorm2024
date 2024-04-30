@@ -24,10 +24,11 @@ public class PathPieceWrapper extends CommandPathPiece {
     }
     @Override
     public void initialize(){
-        command.schedule();
+        command.initialize();
     }
     @Override
     public final void execute() {
+        command.execute();
     }
 
     @Override
@@ -37,7 +38,7 @@ public class PathPieceWrapper extends CommandPathPiece {
 
     @Override
     public final boolean isFinished() {
-        return !command.isScheduled();
+        return command.isFinished();
     }
 
 }
