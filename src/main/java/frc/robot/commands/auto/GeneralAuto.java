@@ -1,5 +1,6 @@
 package frc.robot.commands.auto;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
@@ -63,16 +64,21 @@ public class GeneralAuto extends AutoWithInit {
         double correctSeek = RobotContainer.isRed ? 0.2 : -0.2;
         MultiPartPath pathA = new MultiPartPath(RobotContainer.driveTrain, config, null);
         if (chooser.getSelected().equals("Left")) { // path on
-            pathA.resetPosition(1.497, 6.339);
+            pathA.resetPosition(1.402, 5.850);
             pathA.setHeading(RobotContainer.AllianceAngleDeg);
             pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
-            pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
+            pathA.addSequentialCommand(new TurnAndShoot(RobotContainer.aimingLocation, -2));// NOMOVE
+            pathA.setHeading(-30);
+            pathA.addWaypoint(1.644, 6.960);
+
             if (doOne) { // path On
-                pathA.addWaypoint(1.748, 6.972);
                 pathA.addSequentialCommand(new FollowNote(true, true, 1, .75, correctSeek, 900));// ENDPOS:2.929,7.007
-                pathA.addWaypoint(2.392, 6.435);
+                pathA.setHeading(41 + RobotContainer.AllianceAngleDeg);
+                // pathA.addWaypoint(2.392, 6.435);
                 pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
+                pathA.setHeading(RobotContainer.AllianceAngleDeg);
             } else { // path off
+                pathA.addWaypoint(4.516, 7.222);
                 pathA.addWaypoint(2.106, 7.628);
                 pathA.addWaypoint(2.666, 7.699);
                 pathA.addWaypoint(3.263, 7.664);
@@ -84,28 +90,35 @@ public class GeneralAuto extends AutoWithInit {
             // pathA.addWaypoint(5.589, 7.282);
             // }
             if (farOne) { // path on
-                pathA.addWaypoint(6.663, 7.282);
-                pathA.addSequentialCommand(new FollowNote(true, true, 3, 2.5, correctSeek, 300));// ENDPOS:8.333,7.461
+                pathA.addWaypoint(6.878, 7.234);
+                pathA.addSequentialCommand(new FollowNote(true, true, 3, 2.5, correctSeek, 250),2);// ENDPOS:8.333,7.461
+                pathA.addWaypoint(6.735, 7.222);
                 pathA.addWaypoint(5.589, 7.163);
-                pathA.addWaypoint(3.800, 6.733);
+                pathA.setHeading(RobotContainer.AllianceAngleDeg + 28);
+                pathA.addWaypoint(3.907, 6.697);
                 pathA.addWaypoint(2.655, 6.172);
                 pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
                 pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
+                pathA.setHeading(RobotContainer.AllianceAngleDeg);
             }
             if (farTwo) { // path on
-                pathA.addWaypoint(4.444, 6.280);
-                pathA.addWaypoint(6.592, 6.375);
-                pathA.addSequentialCommand(new FollowNote(true, true, 3, 2.5, correctSeek, 300));// ENDPOS:8.310,5.791
-                pathA.addWaypoint(6.055, 6.339);
+                pathA.setHeading(RobotContainer.AllianceAngleDeg -10);
+                pathA.addWaypoint(4.432, 6.363);
+                pathA.addWaypoint(6.281, 6.304);
+                pathA.addWaypoint(6.759, 6.327);
+                pathA.addSequentialCommand(new FollowNote(true, true, 3, 2.5, correctSeek, 250), 2);// ENDPOS:8.310,5.791
+                pathA.setHeading(RobotContainer.AllianceAngleDeg + 30);
+                pathA.addWaypoint(5.625, 6.411);
                 pathA.addWaypoint(2.476, 6.172);
                 pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
                 pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
+                pathA.setHeading(RobotContainer.AllianceAngleDeg);
 
             }
             if (farThree) { // path off
                 pathA.addWaypoint(6.675, 6.113);
                 pathA.addWaypoint(6.866, 4.049);
-                pathA.addSequentialCommand(new FollowNote(true, true, 3, 2.5, correctSeek, 300));// ENDPOS:8.286,4.120
+                pathA.addSequentialCommand(new FollowNote(true, true, 3, 2, correctSeek, 300));// ENDPOS:8.286,4.120
                 pathA.addWaypoint(6.293, 4.013);
                 pathA.addWaypoint(4.850, 4.061);
                 pathA.addWaypoint(4.038, 5.671);

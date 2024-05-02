@@ -17,6 +17,7 @@ public class TurnAndShoot extends CommandPathPiece {
     boolean hasSent;
     long timeToEnd = 0;
     Pose2d aimingTarget;
+    double offset = 0;
 
     public TurnAndShoot(Pose2d aimingTarget) {
         addRequirements(RobotContainer.intake);
@@ -24,22 +25,29 @@ public class TurnAndShoot extends CommandPathPiece {
         SmartDashboard.putNumber("targetPitch", 40);
         this.aimingTarget = aimingTarget;
     }
+     public TurnAndShoot(Pose2d aimingTarget, double offset) {
+        addRequirements(RobotContainer.intake);
+        SmartDashboard.putNumber("targetRPM", 50);
+        SmartDashboard.putNumber("targetPitch", 40);
+        this.aimingTarget = aimingTarget;
+        this.offset = offset;
+    }
 
     public TurnAndShoot(){
         this(RobotContainer.aimingLocation);
     }
 
-    public static double getNeededTurnAngle(Pose2d aimingTarget) {
+    public static double getNeededTurnAngle(Pose2d aimingTarget, double offset) {
         Pose2d futurePose = RobotContainer.driveTrain.getPose();
 
         double angleNeeded = Util.angleBetweenPoses(futurePose, aimingTarget) + Math.PI;
 
-        return Math.toDegrees(angleNeeded) + 10; // 10
+        return Math.toDegrees(angleNeeded) + 10 + offset; // 10
 
     }
 
     public boolean rotateTowardTarget() {
-        double angleNeeded = getNeededTurnAngle(aimingTarget);
+        double angleNeeded = getNeededTurnAngle(aimingTarget, offset);
         double angleDiff = Util.angleDiff(RobotContainer.driveTrain.getGyroDegrees(), angleNeeded);
         RobotContainer.driveTrain.setRotationSpeed(RobotContainer.driveTrain.getTurnToTarget(angleNeeded), 1);
         return Math.abs(angleDiff) < 3;

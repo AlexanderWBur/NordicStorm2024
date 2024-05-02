@@ -93,7 +93,7 @@ public class VisionSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("DistanceTo", getDistanceToTarget());
         notes = noteCamera.getLatestResult().targets;
         for(var note : notes){
-           FollowNote.printStuff(note);
+        //    FollowNote.printStuff(note);
         }
         poseEstimator.setReferencePose(RobotContainer.driveTrain.getPose()); // sets reference pose to (0,0,
                                                                              // Rotation2d.fromDegrees(0))
