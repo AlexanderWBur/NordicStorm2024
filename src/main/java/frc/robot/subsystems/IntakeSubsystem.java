@@ -88,22 +88,22 @@ public class IntakeSubsystem extends SubsystemBase {
         if (hasNote) {
             triggered = true;
         }
-        indexer.set(0.2);
+        // indexer.set(0.2);
         if (motorEncoder.getPosition() < ticksToStopFeed) {
             setMotorRaw(1);
-            // indexer.set(0.5);
+            indexer.set(0.5);
 
         } else if (motorEncoder.getPosition() < ticksToStopIntake) {
             setMotorRaw(Constants.minIntakePower);
-            // indexer.set(0);
+             indexer.set(0);
 
         } else if (System.currentTimeMillis() < timeToStop) {
             setMotorRaw(Constants.minIntakePower);
-            // indexer.set(0);
+             indexer.set(0);
 
         } else {
             setMotorRaw(0);
-            // indexer.set(0);
+             indexer.set(0);
 
         }
 
