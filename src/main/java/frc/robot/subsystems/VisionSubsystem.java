@@ -173,7 +173,10 @@ public class VisionSubsystem extends SubsystemBase {
             Math.sin(RobotContainer.driveTrain.getGyroRadians())) + (transform3d.getY() *
             Math.cos(RobotContainer.driveTrain.getGyroRadians()));
 
+            if(distance <= 5){
             RobotContainer.driveTrain.setPose(robotX, robotY, 0);
+
+            }
             //RobotContainer.driveTrain.addVisionMeasurment(new Pose2d(robotX, robotY, new Rotation2d(RobotContainer.driveTrain.getGyroRadians())), System.currentTimeMillis() - result.getLatencyMillis());
             return;
         } else{

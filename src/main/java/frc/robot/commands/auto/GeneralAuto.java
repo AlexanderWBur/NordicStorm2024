@@ -63,22 +63,22 @@ public class GeneralAuto extends AutoWithInit {
         config.maxAnglularVelocity = 12;
         double correctSeek = RobotContainer.isRed ? 0.2 : -0.2;
         MultiPartPath pathA = new MultiPartPath(RobotContainer.driveTrain, config, null);
-        if (chooser.getSelected().equals("Left")) { // path on
+        if (chooser.getSelected().equals("Left")) { // path off
             pathA.resetPosition(1.378, 6.578);
             pathA.setHeading(RobotContainer.AllianceAngleDeg);
             pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
-            pathA.setHeading(-30);
-            pathA.addWaypoint(1.581, 6.554);
+            pathA.setHeading(30);
+            pathA.addWaypoint(1.676, 6.530);
             pathA.addSequentialCommand(new TurnAndShoot(RobotContainer.aimingLocation, -2));// NOMOVE
 
            
 
             if (doOne) { // path on
-                pathA.addSequentialCommand(new FollowNote(true, true, 1, .75, correctSeek, 900));// ENDPOS:2.929,7.007
+                pathA.addSequentialCommand(new FollowNote(true, true, 1, 1, -correctSeek, 600));// ENDPOS:2.941,7.007
                 pathA.setHeading(41 + RobotContainer.AllianceAngleDeg);
                 // pathA.addWaypoint(2.392, 6.435);
                 pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
-                pathA.setHeading(RobotContainer.AllianceAngleDeg);
+                pathA.setHeading(RobotContainer.AllianceAngleDeg );
             } else { // path off
                 pathA.addWaypoint(4.516, 7.222);
                 pathA.addWaypoint(2.106, 7.628);
@@ -91,39 +91,43 @@ public class GeneralAuto extends AutoWithInit {
             // pathA.addWaypoint(4.027, 7.616);
             // pathA.addWaypoint(5.589, 7.282);
             // }
-            if (farOne) { // path on
+            if (farOne) { // path off
                 pathA.addWaypoint(6.878, 7.234);
-                pathA.addSequentialCommand(new FollowNote(true, true, 3, 2.5, correctSeek, 250),2);// ENDPOS:8.333,7.461
-                pathA.addWaypoint(6.735, 7.222);
+                pathA.addSequentialCommand(new FollowNote(true, true, 3, 2, -correctSeek, 300),2);// ENDPOS:8.333,7.461
+                pathA.addWaypoint(6.830, 7.222);
                 pathA.addWaypoint(5.589, 7.163);
                 pathA.setHeading(RobotContainer.AllianceAngleDeg + 28);
                 pathA.addWaypoint(3.907, 6.697);
-                pathA.addWaypoint(2.655, 6.172);
+                pathA.addWaypoint(2.857, 6.411);
+                pathA.addWaypoint(1.939, 5.993);
                 pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
                 pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
                 pathA.setHeading(RobotContainer.AllianceAngleDeg);
             }
-            if (farTwo) { // path on
-                pathA.setHeading(RobotContainer.AllianceAngleDeg -10);
+            if (farTwo) { // path off
+                pathA.setHeading(RobotContainer.AllianceAngleDeg - 15);
                 pathA.addWaypoint(4.432, 6.363);
                 pathA.addWaypoint(6.281, 6.304);
-                pathA.addWaypoint(6.759, 6.327);
-                pathA.addSequentialCommand(new FollowNote(true, true, 3, 2.5, correctSeek, 250), 2);// ENDPOS:8.310,5.791
+                pathA.addWaypoint(7.367, 6.005);
+                pathA.addSequentialCommand(new FollowNote(true, true, 3, 2, correctSeek, 300), 2);// ENDPOS:8.310,5.791
                 pathA.setHeading(RobotContainer.AllianceAngleDeg + 30);
                 pathA.addWaypoint(5.625, 6.411);
-                pathA.addWaypoint(2.476, 6.172);
+                pathA.addWaypoint(2.714, 6.232);
                 pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
                 pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
                 pathA.setHeading(RobotContainer.AllianceAngleDeg);
 
             }
-            if (farThree) { // path off
+            if (farThree) { // path on
+                pathA.setHeading(-15 + RobotContainer.AllianceAngleDeg);
                 pathA.addWaypoint(6.675, 6.113);
-                pathA.addWaypoint(6.866, 4.049);
+                pathA.addWaypoint(7.200, 4.454);
                 pathA.addSequentialCommand(new FollowNote(true, true, 3, 2, correctSeek, 300));// ENDPOS:8.286,4.120
-                pathA.addWaypoint(6.293, 4.013);
-                pathA.addWaypoint(4.850, 4.061);
-                pathA.addWaypoint(4.038, 5.671);
+                 pathA.setHeading( RobotContainer.AllianceAngleDeg);
+                pathA.addWaypoint(6.997, 5.540);
+                pathA.addWaypoint(6.234, 6.435);
+                pathA.addWaypoint(4.253, 6.733);
+                pathA.addWaypoint(2.774, 6.423);
                 pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
                 pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
             }
@@ -141,10 +145,10 @@ public class GeneralAuto extends AutoWithInit {
                     pathA.addSequentialCommand(new Ploop());// NOMOVE
                 }
             }
-            if (chooser.getSelected().equals("Speaker")) { // path off
+            if (chooser.getSelected().equals("Speaker")) { // path on
                 pathA.resetPosition(1.402, 5.552);
                 pathA.setHeading(RobotContainer.AllianceAngleDeg);
-                if (SmartDashboard.getBoolean("ShootFirst", false)) { // path off
+                if (SmartDashboard.getBoolean("ShootFirst", false)) { // path on
                     pathA.addSequentialCommand(new SetShooter(ShooterMode.SHOOT));// NOMOVE
                     pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
                 } else { // path off
@@ -154,7 +158,7 @@ public class GeneralAuto extends AutoWithInit {
                 }
             }
 
-            if (doThree) {// path off
+            if (doThree) {// path on
                 pathA.addWaypoint(1.515, 4.777);
 
                 pathA.addWaypoint(1.795, 4.204);
@@ -163,7 +167,7 @@ public class GeneralAuto extends AutoWithInit {
                 pathA.addSequentialCommand(new TurnAndShoot());// NOMOVE
                 // pathA.pivotInPlace(90);
             }
-            if (doTwo) {// path off
+            if (doTwo) {// path on
 
                 pathA.addSequentialCommand(new FollowNote(true, true, 2, 2, correctSeek, 400));// ENDPOS:2.917,5.576
                 pathA.addWaypoint(1.903, 5.612);
